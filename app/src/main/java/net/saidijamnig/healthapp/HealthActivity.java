@@ -68,4 +68,10 @@ public class HealthActivity extends AppCompatActivity {
 
         stepsTextView.setText("Steps: " + stepsCount);
     }
+
+    private void measurePulse() {
+        pulseRate = (int) (Math.random() * 100) + 50;
+
+        pulseTextView.setText("Pulse: " + pulseRate + " bpm");
+    }
 }
