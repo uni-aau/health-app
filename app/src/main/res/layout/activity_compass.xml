@@ -14,4 +14,14 @@
         android:src="@drawable/compass_image"
         android:contentDescription="@string/compass_image" />
 
+    <TextView
+        android:id="@+id/orientationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/compassImage"
+        android:layout_marginTop="16dp"
+        android:text="@string/orientation"
+        android:textSize="16sp" />
+
+
 </RelativeLayout>
