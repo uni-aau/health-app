@@ -50,5 +50,13 @@
         android:text="@string/latitude"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/longitudeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/latitudeTextView"
+        android:layout_marginTop="8dp"
+        android:text="@string/longitude"
+        android:textSize="16sp" />
 
 </RelativeLayout>
