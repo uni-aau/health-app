@@ -39,5 +39,32 @@
         android:text="Pulse: -- bpm"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/waterTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pulseTextView"
+        android:layout_marginTop="16dp"
+        android:text="Water: 0 glasses"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/waterPlusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/waterTextView"
+        android:layout_marginTop="16dp"
+        android:text="+" />
+
+    <Button
+        android:id="@+id/waterMinusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/waterTextView"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/waterPlusButton"
+        android:text="-" />
+
 
 </RelativeLayout>
