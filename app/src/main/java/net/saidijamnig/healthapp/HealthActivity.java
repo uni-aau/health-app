@@ -74,4 +74,20 @@ public class HealthActivity extends AppCompatActivity {
 
         pulseTextView.setText("Pulse: " + pulseRate + " bpm");
     }
+
+    private void incrementWaterCount() {
+        waterCount++;
+        updateWaterCount();
+    }
+
+    private void decrementWaterCount() {
+        if (waterCount > 0) {
+            waterCount--;
+            updateWaterCount();
+        }
+    }
+
+    private void updateWaterCount() {
+        waterTextView.setText("Water: " + waterCount + " glasses");
+    }
 }
