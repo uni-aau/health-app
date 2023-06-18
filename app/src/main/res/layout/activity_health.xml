@@ -13,4 +13,13 @@
         android:layout_marginBottom="16dp"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:id="@+id/stepsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/healthTitleTextView"
+        android:layout_marginTop="16dp"
+        android:text="Steps: 0"
+        android:textSize="18sp" />
+
 </RelativeLayout>
