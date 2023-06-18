@@ -3,8 +3,10 @@ package net.saidijamnig.healthapp;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -22,6 +24,13 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
     private SensorManager sensorManager;
     private Sensor accelerometer, magnetometer;
+    private float[] gravity, geomagnetic;
+    private float azimuth = 0f;
+    private float currentAzimuth = 0f;
+
+    private LocationManager locationManager;
+
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +48,11 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    }
 
-        @Override
+
+    @Override
         protected void onResume() {
             super.onResume();
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -74,5 +86,26 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             if (gravity != null && geomagnetic != null) {
             }
         }
+
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
     }
 }
