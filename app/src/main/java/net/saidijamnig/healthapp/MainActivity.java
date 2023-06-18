@@ -14,11 +14,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    //When needed
-    /*public void openHealthActivity(View view) {
+    public void openHealthActivity(View view) {
         Intent intent = new Intent(this, HealthActivity.class);
         startActivity(intent);
-    }*/
+    }
 
     //When needed
 

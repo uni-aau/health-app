@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CompassActivity" />
+        <activity android:name=".HealthActivity" />
     </application>
 
 </manifest>
