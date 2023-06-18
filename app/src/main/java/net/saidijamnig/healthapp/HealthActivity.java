@@ -62,4 +62,10 @@ public class HealthActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void countSteps() {
+        stepsCount++;
+
+        stepsTextView.setText("Steps: " + stepsCount);
+    }
 }
