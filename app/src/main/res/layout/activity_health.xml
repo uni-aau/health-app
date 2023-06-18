@@ -22,4 +22,22 @@
         android:text="Steps: 0"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/pulseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stepsTextView"
+        android:layout_marginTop="16dp"
+        android:text="Measure Pulse" />
+
+    <TextView
+        android:id="@+id/pulseTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pulseButton"
+        android:layout_marginTop="16dp"
+        android:text="Pulse: -- bpm"
+        android:textSize="18sp" />
+
+
 </RelativeLayout>
