@@ -2,9 +2,13 @@ package net.saidijamnig.healthapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class HealthActivity extends AppCompatActivity {
@@ -89,5 +93,39 @@ public class HealthActivity extends AppCompatActivity {
 
     private void updateWaterCount() {
         waterTextView.setText("Water: " + waterCount + " glasses");
+    }
+
+    private void openFoodInput() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Calories");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String calories = input.getText().toString();
+                if (!calories.isEmpty()) {
+                    foodCalories = Integer.parseInt(calories);
+                    updateFoodCalories();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void updateFoodCalories() {
+        foodTextView.setText("Food: " + foodCalories + " kcal");
+
     }
 }
