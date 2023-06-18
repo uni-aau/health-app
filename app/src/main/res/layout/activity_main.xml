@@ -14,35 +14,63 @@
         android:layout_marginBottom="16dp"
         android:src="@drawable/logo" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to HealthApp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your health in sight"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:layout_marginBottom="16dp" />
+
     <Button
         android:id="@+id/healthButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gesundheit"
+        android:layout_height="90dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_background"
         android:onClick="openHealthActivity"
-        android:layout_marginBottom="16dp" />
+        android:text="Gesundheit"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/gpsButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GPS"
+        android:layout_height="88dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_background"
         android:onClick="openGPSActivity"
-        android:layout_marginBottom="16dp" />
+        android:text="GPS"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/compassButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kompass"
+        android:layout_height="83dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_background"
         android:onClick="openCompassActivity"
-        android:layout_marginBottom="16dp" />
+        android:text="Kompass"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/historyButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="99dp"
+        android:background="@drawable/button_background"
+        android:onClick="openHistoryActivity"
         android:text="Chronik"
-        android:onClick="openHistoryActivity" />
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>
