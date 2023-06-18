@@ -66,5 +66,21 @@
         android:layout_toEndOf="@id/waterPlusButton"
         android:text="-" />
 
+    <TextView
+        android:id="@+id/foodTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/waterPlusButton"
+        android:layout_marginTop="16dp"
+        android:text="Food: 0 kcal"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/foodInputButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/foodTextView"
+        android:layout_marginTop="16dp"
+        android:text="KCAL Input" />
 
 </RelativeLayout>
