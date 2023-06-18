@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Health App</string>
+    <string name="compass_image">Kompassbild</string>
+    <string name="orientation">Orientierung:</string>
+    <string name="gps_orientation">Ausrichtung (GPS):</string>
+    <string name="altitude">Höhe (m):</string>
+    <string name="latitude">Breitengrad (GPS):</string>
+    <string name="longitude">Längengrad (GPS):</string>
+    <string name="brightness">Helligkeit (lux):</string>
 </resources>
