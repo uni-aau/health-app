@@ -7,6 +7,13 @@
     android:gravity="center"
     android:padding="16dp">
 
+    <ImageView
+        android:layout_width="130dp"
+        android:layout_height="112dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/logo" />
+
     <Button
         android:id="@+id/healthButton"
         android:layout_width="wrap_content"
