@@ -108,4 +108,17 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
     }
+
+    private String getDirection(float azimuth) {
+        if (azimuth >= 315 || azimuth < 45) {
+            return "North";
+        } else if (azimuth >= 45 && azimuth < 135) {
+            return "East";
+        } else if (azimuth >= 135 && azimuth < 225) {
+            return "South";
+        } else {
+            return "West";
+        }
+    }
+
 }
