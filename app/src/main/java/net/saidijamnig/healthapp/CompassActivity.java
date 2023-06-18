@@ -62,5 +62,17 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             sensorManager.unregisterListener(this);
             locationManager.removeUpdates(this);
         }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                gravity = event.values;
+            }
+            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                geomagnetic = event.values;
+            }
+            if (gravity != null && geomagnetic != null) {
+            }
+        }
     }
 }
