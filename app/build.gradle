@@ -1,5 +1,14 @@
 plugins {
     id 'com.android.application'
+    id "org.sonarqube" version "4.2.1.3168"
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "uni-aau_health-app"
+    property "sonar.organization", "uni-aau"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
 
 android {
@@ -23,8 +32,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
