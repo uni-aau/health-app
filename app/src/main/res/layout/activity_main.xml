@@ -1,76 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    tools:context=".MainActivity">
 
-    <ImageView
-        android:layout_width="130dp"
-        android:layout_height="112dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/logo" />
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:id="@+id/bottomAppBar"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="10dp"
+        >
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/bottomNavigationView"
+            android:layout_marginRight="16dp"
+            app:menu="@menu/bottom_nav"
+            android:background="@drawable/transparent_background"
 
-    <TextView
+            />
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to HealthApp"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:src="@drawable/logo"
+        app:layout_anchor="@id/bottomAppBar"
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your health in sight"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        android:layout_marginBottom="16dp" />
+        />
 
-    <Button
-        android:id="@+id/healthButton"
-        android:layout_width="wrap_content"
-        android:layout_height="90dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/button_background"
-        android:onClick="openHealthActivity"
-        android:text="Gesundheit"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
 
-    <Button
-        android:id="@+id/gpsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="88dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/button_background"
-        android:onClick="openGPSActivity"
-        android:text="GPS"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
-
-    <Button
-        android:id="@+id/compassButton"
-        android:layout_width="wrap_content"
-        android:layout_height="83dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/button_background"
-        android:onClick="openCompassActivity"
-        android:text="Kompass"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
-
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="99dp"
-        android:background="@drawable/button_background"
-        android:onClick="openHistoryActivity"
-        android:text="Chronik"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
