@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Health App</string>
+    <string name="logo">Health App</string>
+    <string name="health">Health App</string>
+    <string name="gps">Health App</string>
+    <string name="chronik">Health App</string>
+    <string name="compass">Health App</string>
 </resources>
