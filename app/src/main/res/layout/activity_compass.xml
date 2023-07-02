@@ -5,12 +5,33 @@
     android:layout_height="match_parent"
     tools:context=".CompassActivity">
 
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Compass"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="Use the compass to track your orientation."
+        android:textSize="16sp" />
+
     <ImageView
         android:id="@+id/image_wheel"
         android:layout_width="320dp"
         android:layout_height="320dp"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/descriptionTextView"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/compass_wheel"
         android:src="@drawable/wheel_compass" />
 
@@ -18,70 +39,103 @@
         android:id="@+id/image_pointer"
         android:layout_width="20dp"
         android:layout_height="240dp"
+        android:layout_below="@id/descriptionTextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="131dp"
         android:contentDescription="@string/compass_pointer"
         android:scaleType="fitXY"
         android:src="@drawable/pointer_compass" />
 
     <TextView
-        android:id="@+id/sotw_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/orientationTextView"
+        android:id="@+id/descriptionQuote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_wheel"
-        android:layout_marginTop="16dp"
-        android:text="@string/orientation"
-        android:textSize="16sp" />
+        android:layout_below="@id/titleTextView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="376dp"
+        android:layout_marginEnd="18dp"
+        android:text="The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/sotw_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_wheel" />
 
     <TextView
         android:id="@+id/gpsOrientationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/orientationTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/gps_orientation"
-        android:textSize="16sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/altitudeTextView"
+        android:id="@+id/orientationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gpsOrientationTextView"
-        android:layout_marginTop="8dp"
-        android:text="@string/altitude"
-        android:textSize="16sp" />
+        android:layout_below="@id/sotw_label"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="52dp"
+        android:text="@string/orientation"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/latitudeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/altitudeTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/latitude"
-        android:textSize="16sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/longitudeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/latitudeTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/longitude"
-        android:textSize="16sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/brightnessTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/longitudeTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/brightness"
-        android:textSize="16sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/altitudeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gpsOrientationTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/altitude"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
