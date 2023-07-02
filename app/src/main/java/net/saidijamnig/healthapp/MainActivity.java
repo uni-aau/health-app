@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }*/
 
-    public void openCompassActivity(View view) {
+    /*public void openCompassActivity(View view) {
         Intent intent = new Intent(this, CompassActivity.class);
         startActivity(intent);
-    }
+    }*/
 
     //When needed
     /*public void openHistoryActivity(View view) {
