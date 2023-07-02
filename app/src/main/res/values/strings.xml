@@ -1,10 +1,24 @@
 <resources>
     <string name="app_name">Health App</string>
-    <string name="compass_image">Kompassbild</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="compass_wheel" translatable="false">Kompassbild</string>
+    <string name="compass_pointer" translatable="false">Kompassbild</string>
+
     <string name="orientation">Orientierung:</string>
     <string name="gps_orientation">Ausrichtung (GPS):</string>
     <string name="altitude">Höhe (m):</string>
     <string name="latitude">Breitengrad (GPS):</string>
     <string name="longitude">Längengrad (GPS):</string>
     <string name="brightness">Helligkeit (lux):</string>
+
+    <string name="sotw_north">N</string>
+    <string name="sotw_east">E</string>
+    <string name="sotw_south">S</string>
+    <string name="sotw_west">W</string>
+    <string name="sotw_northeast">NE</string>
+    <string name="sotw_northwest">NW</string>
+    <string name="sotw_southeast">SE</string>
+    <string name="sotw_southwest">SW</string>
 </resources>
