@@ -6,47 +6,55 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import net.saidijamnig.healthapp.databinding.ActivityMainBinding;
+
 public class MainActivity extends AppCompatActivity {
+    private static final int DEFAULT_SELECTED_ITEM_ID = R.id.gps;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding.bottomNavigationView.setSelectedItemId(DEFAULT_SELECTED_ITEM_ID); // start position
+        setContentView(binding.getRoot());
 
-        switchIntents();
+        replaceFragment(new GpsFragment());
+
+        switchFragments();
     }
 
-    private void switchIntents() {
-        BottomNavigationView bottomView = findViewById(R.id.bottomNavigationView);
-        bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                Intent intent = null;
+    private void switchFragments() {
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
 
-                if (id == R.id.health) {
-                    intent = new Intent(MainActivity.this, MainActivity.class);
-                } else if (id == R.id.gps) {
-                    intent = new Intent(MainActivity.this, MainActivity.class);
-                } else if (id == R.id.compass) {
-                    intent = new Intent(MainActivity.this, MainActivity.class);
-                } else if (id == R.id.history) {
-                    intent = new Intent(MainActivity.this, MainActivity.class);
-                }
-
-                if (intent != null) {
-                    startActivity(intent);
-                    finish();
-                    return true;
-                }
-                return false;
+            if (id == R.id.health) {
+                replaceFragment(new HealthFragment());
+            } else if (id == R.id.gps) {
+                replaceFragment(new GpsFragment());
+            } else if (id == R.id.compass) {
+                replaceFragment(new CompassFragment());
+            } else if (id == R.id.history) {
+                replaceFragment(new HistoryFragment());
             }
+
+
+            return true;
         });
+    }
 
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 }
