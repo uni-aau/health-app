@@ -21,7 +21,7 @@
         android:title="@string/compass"/>
 
     <item
-        android:id="@+id/chronik"
+        android:id="@+id/history"
         android:icon="@drawable/ic_chronik"
         android:title="@string/history"/>
 </menu>
