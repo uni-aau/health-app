@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Health App</string>
     <string name="logo">Health App</string>
-    <string name="health">Health App</string>
-    <string name="gps">Health App</string>
-    <string name="chronik">Health App</string>
-    <string name="compass">Health App</string>
+    <string name="health">Health</string>
+    <string name="gps">GPS</string>
+    <string name="history">History</string>
+    <string name="compass">Compass</string>
 </resources>

@@ -4,12 +4,12 @@
     <item
         android:id="@+id/health"
         android:icon="@drawable/ic_health"
-        android:title="Health"/>
+        android:title="@string/health"/>
 
     <item
         android:id="@+id/gps"
         android:icon="@drawable/ic_gps"
-        android:title="GPS"/>
+        android:title="@string/gps"/>
 
     <item
         android:id="@+id/placeholder"
@@ -18,10 +18,10 @@
     <item
         android:id="@+id/compass"
         android:icon="@drawable/ic_compass"
-        android:title="Compass"/>
+        android:title="@string/compass"/>
 
     <item
         android:id="@+id/chronik"
         android:icon="@drawable/ic_chronik"
-        android:title="Chronik"/>
+        android:title="@string/history"/>
 </menu>
