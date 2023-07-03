@@ -47,7 +47,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         setContentView(R.layout.activity_compass);
 
         sotwFormatter = new SOTWFormatter(this);
-
+        compassImage = findViewById(R.id.image_wheel);
         arrowView = findViewById(R.id.image_wheel);
         sotwLabel = findViewById(R.id.sotw_label);
         setupCompass();
