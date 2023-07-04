@@ -1,40 +1,52 @@
 package net.saidijamnig.healthapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import net.saidijamnig.healthapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int DEFAULT_SELECTED_ITEM_ID = R.id.gps;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding.bottomNavigationView.setSelectedItemId(DEFAULT_SELECTED_ITEM_ID); // start position
+        setContentView(binding.getRoot());
+
+        replaceFragment(new GpsFragment());
+
+        switchFragments();
     }
 
-    //When needed
-    /*public void openHealthActivity(View view) {
-        Intent intent = new Intent(this, HealthActivity.class);
-        startActivity(intent);
-    }*/
+    private void switchFragments() {
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
 
-    //When needed
-
-    /*public void openGPSActivity(View view) {
-        Intent intent = new Intent(this, GPSActivity.class);
-        startActivity(intent);
-    }*/
-
-    public void openCompassActivity(View view) {
-        Intent intent = new Intent(this, CompassActivity.class);
-        startActivity(intent);
+            if (id == R.id.health) {
+                replaceFragment(new HealthFragment());
+            } else if (id == R.id.gps) {
+                replaceFragment(new GpsFragment());
+            } else if (id == R.id.compass) {
+                replaceFragment(new CompassFragment());
+            } else if (id == R.id.history) {
+                replaceFragment(new HistoryFragment());
+            }
+            return true;
+        });
     }
 
-    //When needed
-    /*public void openHistoryActivity(View view) {
-        Intent intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
-    }*/
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
 }

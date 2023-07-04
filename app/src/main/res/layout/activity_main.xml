@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/healthButton"
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:id="@+id/bottomAppBar"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="10dp"
+        >
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/bottomNavigationView"
+            android:layout_marginRight="16dp"
+            app:menu="@menu/bottom_nav"
+            android:background="@drawable/transparent_background"
+
+            />
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gesundheit"
-        android:onClick="openHealthActivity"
-        android:layout_marginBottom="16dp" />
+        android:src="@drawable/logo"
+        app:layout_anchor="@id/bottomAppBar"
 
-    <Button
-        android:id="@+id/gpsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GPS"
-        android:onClick="openGPSActivity"
-        android:layout_marginBottom="16dp" />
+        />
 
-    <Button
-        android:id="@+id/compassButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kompass"
-        android:onClick="openCompassActivity"
-        android:layout_marginBottom="16dp" />
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="648dp"
+            android:id="@+id/frame_layout">
 
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chronik"
-        android:onClick="openHistoryActivity" />
+    </FrameLayout>
 
-</LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

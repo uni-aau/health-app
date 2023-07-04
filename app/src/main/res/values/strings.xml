@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Health App</string>
-
     <string name="action_settings">Settings</string>
 
     <string name="compass_wheel" translatable="false">Kompassbild</string>
@@ -21,4 +20,10 @@
     <string name="sotw_northwest">NW</string>
     <string name="sotw_southeast">SE</string>
     <string name="sotw_southwest">SW</string>
+    <string name="logo">Health App</string>
+    <string name="health">Health</string>
+    <string name="gps">GPS</string>
+    <string name="history">History</string>
+    <string name="compass">Compass</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
