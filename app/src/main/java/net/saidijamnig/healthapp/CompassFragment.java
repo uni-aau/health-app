@@ -294,5 +294,4 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 }
