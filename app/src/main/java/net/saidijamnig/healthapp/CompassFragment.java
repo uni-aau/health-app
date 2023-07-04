@@ -25,7 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-public class CompassF extends Fragment implements SensorEventListener, LocationListener {
+public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
     private static final String TAG = "CompassActivity";
     private ImageView compassImage;
 
@@ -47,7 +47,7 @@ public class CompassF extends Fragment implements SensorEventListener, LocationL
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
 
-    public CompassF() {
+    public CompassFragment() {
         // Required empty public constructor
     }
 
