@@ -1,14 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".GpsFragment"
-        android:background="#CAA3B0">
+        android:id="@+id/gps_constraintLayout">
+
+    <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            tools:src="@drawable/logo"
+            android:id="@+id/gps_logo"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:background="#FF0000" />
 
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:text="@string/text_gps_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gps_textview_distance"
+            android:textSize="12sp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/gps_textview_calories"
+            app:layout_constraintTop_toBottomOf="@+id/gps_textview_duration"
+            android:layout_marginTop="20dp" />
 
-</FrameLayout>
+    <TextView
+            android:text="@string/text_gps_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gps_textview_calories"
+            android:textSize="12sp"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@+id/gps_textview_distance"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gps_textview_duration"
+            android:layout_marginTop="20dp" />
+
+    <TextView
+            android:text="@string/text_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/gps_textview_duration"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/gps_textview_duration_status"
+            app:layout_constraintHorizontal_bias="0.5" />
+
+    <TextView
+            android:text="@string/text_gps_duration_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/gps_textview_duration_status"
+            android:textSize="26sp"
+            app:layout_constraintTop_toBottomOf="@+id/gps_logo"
+            android:layout_marginTop="28dp"
+            app:layout_constraintHorizontal_bias="0.5" />
+
+    <fragment
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="410dp"
+            android:layout_height="297dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gps_textview_calories"
+            android:layout_marginTop="48dp" />
+
+    <Button
+            android:text="Start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/button_gps_start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button_gps_stop"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginBottom="15dp" />
+
+    <Button
+            android:text="Stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_gps_stop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/button_gps_start"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_marginBottom="15dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
