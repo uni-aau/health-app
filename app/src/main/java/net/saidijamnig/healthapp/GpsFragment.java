@@ -15,6 +15,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 
+import java.util.Locale;
+
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private double totalDistance = 0.0;
     private int totalCalories = 0;
@@ -77,12 +79,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void initializeStartValues() {
         String durationStatus = getString(R.string.text_gps_duration_status);
-        String formattedDurationStatus = String.format(durationStatus, String.valueOf(hours), String.valueOf(minutes), String.valueOf(seconds));
+        String formattedDurationStatus = String.format(durationStatus, formatTime(hours), formatTime(minutes), formatTime(seconds));
         durationTV.setText(formattedDurationStatus);
 
         String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
         caloriesTV.setText(formattedCalories);
         String formattedDistance = String.format(getString(R.string.text_gps_distance), String.valueOf(totalDistance));
         distanceTV.setText(formattedDistance);
+    }
+
+    private String formatTime(int value) {
+        return String.format(Locale.getDefault(), "%02d", value); // two digits and the leading is a zero if necessary
     }
 }
