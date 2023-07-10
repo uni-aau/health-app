@@ -4,8 +4,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,9 +33,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
@@ -49,8 +51,11 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private int hours = 0;
     private boolean isTracking = false;
     private SupportMapFragment mapFragment;
-    private TextView durationTV, distanceTV, caloriesTV;
-    private Button startTrackingButton, stopTrackingButton;
+    private TextView durationTV;
+    private TextView distanceTV;
+    private TextView caloriesTV;
+    private Button startTrackingButton;
+    private Button stopTrackingButton;
     private FragmentGpsBinding binding;
     private LocationManager locationManager;
     private boolean foundLocation = false;
@@ -58,8 +63,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private int elapsedTime = 0;
     private Handler handler;
     private Location previousLocation;
-    private LocationListener locationListener;
     private FusedLocationProviderClient fusedLocationClient;
+    private List<LatLng> points = new ArrayList<>();
 
 
     public GpsFragment() {
@@ -72,7 +77,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGpsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
@@ -97,13 +102,13 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void startTracking() {
-        if(!foundLocation) {
+        if (!foundLocation) {
             Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
             return;
         }
         initializeStartValues();
 
-        if(!isTracking) {
+        if (!isTracking) {
             Log.d("TAG", "Starting tracking location");
             isTracking = true;
             stopTrackingButton.setEnabled(true);
@@ -136,33 +141,49 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private void trackLocation() {
-        if(getRequiredPermissions()) {
+        if (getRequiredPermissions()) {
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(location -> {
-                        if(location != null) {
-                            if(previousLocation == null) {
+                        if (location != null) {
+                            if (previousLocation == null) {
                                 previousLocation = location;
                             } else {
                                 double distance = previousLocation.distanceTo(location);
                                 totalDistance += distance;
                                 previousLocation = location;
 
-                                    String formattedDistance = String.format(getString(R.string.text_gps_distance), String.valueOf(totalDistance));
-                                    distanceTV.setText(formattedDistance);
+                                String formattedTotalDistance = String.format(Locale.getDefault(), "%.2f", totalDistance);
+                                String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
+                                distanceTV.setText(formattedDistance);
+
+                                // Visualization of distance path
+                                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                                points.add(currentLatLng);
+                                mapFragment.getMapAsync(mMap -> {
+                                    mMap.clear();
+                                    mMap.addPolyline(new PolylineOptions()
+                                            .width(10f)
+                                            .color(Color.BLUE)
+                                            .addAll(points)
+                                    );
+                                    float currentSelectedZoom = mMap.getCameraPosition().zoom;
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, currentSelectedZoom));
+                                });
                             }
                         }
                     })
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to get current location", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to get current location", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(requireContext(), "Some permissions are missing!", Toast.LENGTH_SHORT).show();
         }
 
         long postInterval = 10000L;
-        handler.postDelayed(this::trackLocation,postInterval);
+        handler.postDelayed(this::trackLocation, postInterval);
     }
 
     private void stopTracking() {
-        if(isTracking) {
+        if (isTracking) {
             Log.d("TAG", "Stopping tracking location");
             isTracking = false;
             stopTrackingButton.setEnabled(false);
@@ -172,6 +193,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             previousLocation = null;
             totalDistance = 0.0;
             totalCalories = 0;
+            points.clear();
         }
     }
 
@@ -181,7 +203,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         minutes = 0;
         seconds = 0;
 
-        if(timer != null) {
+        if (timer != null) {
             timer.cancel();
             timer = null;
         }
@@ -236,7 +258,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setDurationValue() {
-        Log.d("TAG", "Setting duration value - seconds = " + seconds);
         String durationStatus = getString(R.string.text_gps_duration_status);
         String formattedDurationStatus = String.format(durationStatus, formatTime(hours), formatTime(minutes), formatTime(seconds));
         durationTV.setText(formattedDurationStatus);
@@ -248,5 +269,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     /*
      * Tracking muss noch mit zB bewegung abgestimmt werden
+     * Fetchen der Location, wenn keine gefunden
      */
 }
