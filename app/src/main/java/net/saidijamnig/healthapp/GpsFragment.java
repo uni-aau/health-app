@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Button startTrackingButton, stopTrackingButton;
     private FragmentGpsBinding binding;
     private LocationManager locationManager;
+    private boolean foundLocation = false;
+    private CountDownTimer timer;
+    private int elapsedTime = 0;
 
 
     public GpsFragment() {
@@ -66,6 +70,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         startTrackingButton = binding.buttonGpsStart;
         startTrackingButton.setOnClickListener(view1 -> startTracking());
         stopTrackingButton = binding.buttonGpsStop;
+        stopTrackingButton.setEnabled(false);
         stopTrackingButton.setOnClickListener(view1 -> stopTracking());
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -76,16 +81,63 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
-    int test = 0;
-
     private void startTracking() {
-        durationTV.setText(Integer.toString(test));
-        test++;
-        System.out.println("Start Tracking works fine!");
+        if(!foundLocation) {
+            Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!isTracking) {
+            Log.d("TAG", "Starting tracking location");
+            isTracking = true;
+            stopTrackingButton.setEnabled(true);
+            startTrackingButton.setEnabled(false);
+            startTimer();
+        }
+    }
+
+    private void startTimer() {
+        Log.d("TAG", "Starting timer!");
+        timer = new CountDownTimer(Integer.MAX_VALUE, 1000) {
+            @Override
+            public void onTick(long l) {
+                elapsedTime += 1000;
+
+                hours = (elapsedTime / (1000 * 60 * 60)) % 24;
+                minutes = (elapsedTime / (1000 * 60)) % 60;
+                seconds = (elapsedTime / 1000) % 60;
+
+                setDurationValue();
+            }
+
+            @Override
+            public void onFinish() {
+                // Not used since it will be disabled by stopTrackingButton
+            }
+        }.start();
     }
 
     private void stopTracking() {
-        System.out.println("Stop Tracking works fine!");
+        if(isTracking) {
+            Log.d("TAG", "Stopping tracking location");
+            isTracking = false;
+            stopTrackingButton.setEnabled(false);
+            startTrackingButton.setEnabled(true);
+            stopTimer();
+        }
+    }
+
+    private void stopTimer() {
+        elapsedTime = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+        setDurationValue();
+
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     @SuppressLint("MissingPermission") // TODO
@@ -109,14 +161,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                 mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+                foundLocation = true;
+            } else {
+                foundLocation = false;
             }
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
             Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
         }
-
-
     }
 
     // Todo extract everything regarding permission to permission handler and rework it
@@ -127,14 +180,19 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initializeStartValues() {
-        String durationStatus = getString(R.string.text_gps_duration_status);
-        String formattedDurationStatus = String.format(durationStatus, formatTime(hours), formatTime(minutes), formatTime(seconds));
-        durationTV.setText(formattedDurationStatus);
+        setDurationValue();
 
         String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
         caloriesTV.setText(formattedCalories);
         String formattedDistance = String.format(getString(R.string.text_gps_distance), String.valueOf(totalDistance));
         distanceTV.setText(formattedDistance);
+    }
+
+    private void setDurationValue() {
+        Log.d("TAG", "Setting duration value - seconds = " + seconds);
+        String durationStatus = getString(R.string.text_gps_duration_status);
+        String formattedDurationStatus = String.format(durationStatus, formatTime(hours), formatTime(minutes), formatTime(seconds));
+        durationTV.setText(formattedDurationStatus);
     }
 
     private String formatTime(int value) {
