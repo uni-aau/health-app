@@ -107,6 +107,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         initializeStartValues();
+        mMap.clear();
 
         if (!isTracking) {
             Log.d("TAG", "Starting tracking location");
