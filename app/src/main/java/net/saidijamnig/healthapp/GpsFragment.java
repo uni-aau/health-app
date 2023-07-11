@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 
@@ -159,6 +160,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
                                 // Visualization of distance path
                                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                String debugValues = "Accuracy = " + location.getAccuracy() + " Speed = " + location.getSpeed() + " Other stuff = " + location.getVerticalAccuracyMeters();
+                                Log.d("TAG", debugValues);
+                                Snackbar.make(requireView(), debugValues, Snackbar.LENGTH_SHORT).show();
+//                                Toast.makeText(requireContext(), debugValues, Toast.LENGTH_SHORT).show();
 
                                 points.add(currentLatLng);
                                 mapFragment.getMapAsync(mMap -> {
@@ -179,22 +184,30 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(requireContext(), "Some permissions are missing!", Toast.LENGTH_SHORT).show();
         }
 
-        long postInterval = 10000L;
+        long postInterval = 3000L;
         handler.postDelayed(this::trackLocation, postInterval);
     }
+
+    /*
+    Möglichkeiten um Distanzproblem zu lösen:
+     * Accelerometer checken
+     * Accuracy < 15-10 nur nehmen und alles andere melden
+     *  Activity STILL - https://medium.com/@saishaddai/how-to-recognize-when-the-user-is-not-moving-in-android-be6dba7a90bb
+     */
 
     private void stopTracking() {
         if (isTracking) {
             Log.d("TAG", "Stopping tracking location");
-            isTracking = false;
-            stopTrackingButton.setEnabled(false);
-            startTrackingButton.setEnabled(true);
             stopTimer();
             handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
             previousLocation = null;
             totalDistance = 0.0;
             totalCalories = 0;
             points.clear();
+
+            isTracking = false;
+            stopTrackingButton.setEnabled(false);
+            startTrackingButton.setEnabled(true);
         }
     }
 
