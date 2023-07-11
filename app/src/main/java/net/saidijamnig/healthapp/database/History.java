@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
  */
 @Entity
 public class History {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true) // automatically generate uid
     public int uid;
 
     @ColumnInfo(name = "activity_date")
