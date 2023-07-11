@@ -49,6 +49,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
+    private static final String TAG = "GPS-Main";
+    private static final String DB_TAG = "GPS-DB";
+
     private double totalDistance = 0.0;
     private GoogleMap mMap;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
@@ -93,7 +96,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         handler = new Handler(Looper.getMainLooper());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-//        requestActivityPermission(); // TODO
 
         initializeDatabase();
 
@@ -134,7 +136,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         mMap.clear();
 
         if (!isTracking) {
-            Log.d("TAG", "Starting tracking location");
+            Log.i(TAG, "Starting tracking location");
             isTracking = true;
             stopTrackingButton.setEnabled(true);
             startTrackingButton.setEnabled(false);
@@ -144,7 +146,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void startTimer() {
-        Log.d("TAG", "Starting timer!");
+        Log.i(TAG, "Starting timer!");
         timer = new CountDownTimer(Integer.MAX_VALUE, 1000) {
             @Override
             public void onTick(long l) {
@@ -184,9 +186,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                                 // Visualization of distance path
                                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                                 String debugValues = "Accuracy = " + location.getAccuracy() + " Speed = " + location.getSpeed() + " Other stuff = " + location.getVerticalAccuracyMeters();
-                                Log.d("TAG", debugValues);
+                                Log.d(TAG, debugValues);
                                 Snackbar.make(requireView(), debugValues, Snackbar.LENGTH_SHORT).show();
-//                                Toast.makeText(requireContext(), debugValues, Toast.LENGTH_SHORT).show();
 
                                 points.add(currentLatLng);
                                 mapFragment.getMapAsync(mMap -> {
@@ -231,7 +232,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         if (isTracking) {
             saveTrackToDatabase();
 
-            Log.d("TAG", "Stopping tracking location");
+            Log.i(TAG, "Stopping tracking location");
             stopTimer();
             handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
             previousLocation = null;
@@ -246,7 +247,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void saveTrackToDatabase() {
-        Log.d("TAG", "Saving track to database!");
+        Log.i(DB_TAG, "Saving track to database!");
         History newHistoryEntry = new History();
         newHistoryEntry.activityCalories = String.valueOf(totalCalories);
         newHistoryEntry.durationStatus = "0";
@@ -262,10 +263,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private void printDebugTracksToConsole() {
         Thread thread = new Thread(() -> {
             List<History> histories = historyDao.getWholeHistoryEntries();
-            Log.d("TAG", "All saved history tracks:");
+            Log.i(DB_TAG, "All saved history tracks:");
             for (History history : histories) {
                 String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s", history.uid, history.activityDistance, history.durationStatus, history.activityCalories, history.activityDate);
-                Log.d("TAG", formattedString);
+                Log.i(DB_TAG, formattedString);
             }
         });
         thread.start();
@@ -304,7 +305,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                 double latitude = lastKnownLocation.getLatitude();
                 double longitude = lastKnownLocation.getLongitude();
 
-                Log.d("TAG", "Latitude = " + latitude + " longitude = " + longitude);
+                Log.d(TAG, "Latitude = " + latitude + " longitude = " + longitude);
 
                 LatLng currentLocation = new LatLng(latitude, longitude);
 
