@@ -22,9 +22,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
-import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -38,9 +37,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.snackbar.Snackbar;
 
+import net.saidijamnig.healthapp.database.AppDatabase;
+import net.saidijamnig.healthapp.database.History;
+import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,7 +73,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Location previousLocation;
     private FusedLocationProviderClient fusedLocationClient;
     private List<LatLng> points = new ArrayList<>();
-
+    private AppDatabase db;
+    private HistoryDao historyDao;
+    private Button printTracksButton; // TODO only for debug
 
     public GpsFragment() {
         // Required empty public constructor
@@ -89,6 +95,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 //        requestActivityPermission(); // TODO
 
+        initializeDatabase();
+
         durationTV = binding.gpsTextviewDurationStatus;
         distanceTV = binding.gpsTextviewDistance;
         caloriesTV = binding.gpsTextviewCalories;
@@ -97,6 +105,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         stopTrackingButton = binding.buttonGpsStop;
         stopTrackingButton.setEnabled(false);
         stopTrackingButton.setOnClickListener(view1 -> stopTracking());
+        printTracksButton = binding.buttonGpsDebug;
+        printTracksButton.setOnClickListener(view1 -> printDebugTracksToConsole());
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -104,6 +114,11 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void initializeDatabase() {
+        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history").build();
+        historyDao = db.historyDao();
     }
 
     private void requestActivityPermission() {
@@ -162,7 +177,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                                 totalDistance += distance;
                                 previousLocation = location;
 
-                                String formattedTotalDistance = String.format(Locale.getDefault(), "%.2f", totalDistance);
+                                String formattedTotalDistance = formatDistance();
                                 String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
                                 distanceTV.setText(formattedDistance);
 
@@ -196,6 +211,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         handler.postDelayed(this::trackLocation, postInterval);
     }
 
+    /**
+     * Formats the distance to only two digits after comma
+     *
+     * @return formatted String
+     */
+    private String formatDistance() {
+        return String.format(Locale.getDefault(), "%.2f", totalDistance);
+    }
+
     /*
     Möglichkeiten um Distanzproblem zu lösen:
      * Accelerometer checken
@@ -205,6 +229,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void stopTracking() {
         if (isTracking) {
+            saveTrackToDatabase();
+
             Log.d("TAG", "Stopping tracking location");
             stopTimer();
             handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
@@ -217,6 +243,39 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             stopTrackingButton.setEnabled(false);
             startTrackingButton.setEnabled(true);
         }
+    }
+
+    private void saveTrackToDatabase() {
+        Log.d("TAG", "Saving track to database!");
+        History newHistoryEntry = new History();
+        newHistoryEntry.activityCalories = String.valueOf(totalCalories);
+        newHistoryEntry.durationStatus = "0";
+        newHistoryEntry.activityDistance = formatDistance();
+        newHistoryEntry.activityDate = generateCurrentDate();
+
+        Thread thread = new Thread(() -> {
+            historyDao.insertNewHistoryEntry(newHistoryEntry);
+        });
+        thread.start();
+    }
+
+    private void printDebugTracksToConsole() {
+        Thread thread = new Thread(() -> {
+            List<History> histories = historyDao.getWholeHistoryEntries();
+            Log.d("TAG", "All saved history tracks:");
+            for (History history : histories) {
+                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s", history.uid, history.activityDistance, history.durationStatus, history.activityCalories, history.activityDate);
+                Log.d("TAG", formattedString);
+            }
+        });
+        thread.start();
+    }
+
+    private String generateCurrentDate() {
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        return dateFormat.format(currentDate);
     }
 
     private void stopTimer() {
