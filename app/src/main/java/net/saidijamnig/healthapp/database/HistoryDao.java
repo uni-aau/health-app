@@ -18,11 +18,11 @@ public interface HistoryDao {
     List<History> getWholeHistoryEntries();
 
     @Insert
-    void insertNewHistoryEntry();
+    void insertNewHistoryEntry(History historyEntry);
 
     @Delete
     void dropHistoryEntryById(int uid);
 
-    @Delete
-    void dropWholeHistoryTable();
+    @Query("DELETE FROM history")
+    void deleteAll();
 }
