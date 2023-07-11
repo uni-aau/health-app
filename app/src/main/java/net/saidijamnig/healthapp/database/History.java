@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-// Defines schema for the GPS Activity History
+/**
+ * Defines schema for the GPS Activity History
+ */
 @Entity
 public class History {
     @PrimaryKey

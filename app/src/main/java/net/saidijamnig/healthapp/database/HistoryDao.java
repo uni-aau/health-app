@@ -8,7 +8,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
-/* Provides methods that rest of the app uses to interact
+/**
+ * Provides methods that rest of the app uses to interact
  * with data in the History Table
  */
 @Dao
