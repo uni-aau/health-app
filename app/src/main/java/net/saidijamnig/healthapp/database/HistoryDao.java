@@ -20,8 +20,8 @@ public interface HistoryDao {
     @Insert
     void insertNewHistoryEntry(History historyEntry);
 
-    @Delete
-    void dropHistoryEntryById(int uid);
+//    @Delete
+//    void dropHistoryEntryById(int uid);
 
     @Query("DELETE FROM history")
     void deleteAll();
