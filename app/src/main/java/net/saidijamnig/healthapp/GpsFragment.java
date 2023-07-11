@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -46,6 +48,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private double totalDistance = 0.0;
     private GoogleMap mMap;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private static final int PERMISSION_REQUEST_ACTIVITY_RECOGNITION = 1;
     private int totalCalories = 0;
     private int seconds = 0;
     private int minutes = 0;
@@ -84,6 +87,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         handler = new Handler(Looper.getMainLooper());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+//        requestActivityPermission(); // TODO
 
         durationTV = binding.gpsTextviewDurationStatus;
         distanceTV = binding.gpsTextviewDistance;
@@ -100,6 +104,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void requestActivityPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_REQUEST_ACTIVITY_RECOGNITION);
     }
 
     private void startTracking() {
