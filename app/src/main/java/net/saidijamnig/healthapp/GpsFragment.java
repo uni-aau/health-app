@@ -231,7 +231,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private void stopTracking() {
         if (isTracking) {
             saveTrackToDatabase();
-
             Log.i(TAG, "Stopping tracking location");
             stopTimer();
             handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
@@ -254,9 +253,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         newHistoryEntry.activityDistance = formatDistance();
         newHistoryEntry.activityDate = generateCurrentDate();
 
-        Thread thread = new Thread(() -> {
-            historyDao.insertNewHistoryEntry(newHistoryEntry);
-        });
+        Thread thread = new Thread(() -> historyDao.insertNewHistoryEntry(newHistoryEntry));
         thread.start();
     }
 
