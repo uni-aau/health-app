@@ -71,7 +71,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager locationManager;
     private boolean foundLocation = false;
     private CountDownTimer timer;
-    private int elapsedTime = 0;
+    private int elapsedDurationTimeInMilliSeconds = 0;
     private Handler handler;
     private Location previousLocation;
     private FusedLocationProviderClient fusedLocationClient;
@@ -150,11 +150,11 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         timer = new CountDownTimer(Integer.MAX_VALUE, 1000) {
             @Override
             public void onTick(long l) {
-                elapsedTime += 1000;
+                elapsedDurationTimeInMilliSeconds += 1000;
 
-                hours = (elapsedTime / (1000 * 60 * 60)) % 24;
-                minutes = (elapsedTime / (1000 * 60)) % 60;
-                seconds = (elapsedTime / 1000) % 60;
+                hours = (elapsedDurationTimeInMilliSeconds / (1000 * 60 * 60)) % 24;
+                minutes = (elapsedDurationTimeInMilliSeconds / (1000 * 60)) % 60;
+                seconds = (elapsedDurationTimeInMilliSeconds / 1000) % 60;
 
                 setDurationValue();
             }
@@ -249,7 +249,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         Log.i(DB_TAG, "Saving track to database!");
         History newHistoryEntry = new History();
         newHistoryEntry.activityCalories = String.valueOf(totalCalories);
-        newHistoryEntry.durationStatus = "0";
+        newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
         newHistoryEntry.activityDate = generateCurrentDate();
 
@@ -262,7 +262,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             List<History> histories = historyDao.getWholeHistoryEntries();
             Log.i(DB_TAG, "All saved history tracks:");
             for (History history : histories) {
-                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s", history.uid, history.activityDistance, history.durationStatus, history.activityCalories, history.activityDate);
+                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s", history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate);
                 Log.i(DB_TAG, formattedString);
             }
         });
@@ -277,7 +277,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void stopTimer() {
-        elapsedTime = 0;
+        elapsedDurationTimeInMilliSeconds = 0;
         hours = 0;
         minutes = 0;
         seconds = 0;
