@@ -23,15 +23,10 @@ public class HistoryFragment extends Fragment {
 
     private HistoryDao historyDao;
     private FragmentHistoryBinding binding;
-    public static ArrayList<History> historyElements = new ArrayList<>();
+    private ArrayList<History> historyElements = new ArrayList<>();
 
     public HistoryFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -43,11 +38,6 @@ public class HistoryFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     private void initializeDatabase() {
