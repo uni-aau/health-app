@@ -17,6 +17,8 @@ import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentHistoryBinding;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class HistoryFragment extends Fragment {
 
@@ -48,6 +50,7 @@ public class HistoryFragment extends Fragment {
     private void getDataFromDatabase() {
         Thread thread = new Thread(() -> {
             historyElements = (ArrayList<History>) historyDao.getWholeHistoryEntries();
+            Collections.reverse(historyElements);
             requireActivity().runOnUiThread(this::sendDataToRecyclerView); // wait to finish before executing sendData method
         });
         thread.start();
