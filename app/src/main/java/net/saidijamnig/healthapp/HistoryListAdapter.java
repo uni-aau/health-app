@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.saidijamnig.healthapp.database.History;
+
 import java.util.ArrayList;
 
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.CustomViewHolder> {
-    private final ArrayList<HistoryListElement> list;
+    private final ArrayList<History> list;
     private final Context context;
 
-    public HistoryListAdapter(ArrayList<HistoryListElement> list, Context context) {
+    public HistoryListAdapter(ArrayList<History> list, Context context) {
         this.list = list;
         this.context = context;
     }
