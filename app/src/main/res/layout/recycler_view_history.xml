@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rec_view_framelayout">
@@ -12,60 +11,60 @@
             android:id="@+id/rec_view_constraint_layout">
 
         <TextView
-                android:text="Dauer: %s : %s : %s"
+                android:text="@string/text_history_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView4"
-                app:layout_constraintStart_toEndOf="@+id/textView3"
+                android:id="@+id/recview_textview_duration"
+                app:layout_constraintStart_toEndOf="@+id/recview_textview_distance"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/recview_textview_type"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp" />
 
         <TextView
-                android:text="%s"
+                android:text="@string/text_history_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
-                android:id="@+id/textView"
+                android:id="@+id/recview_textview_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/textView2"
+                app:layout_constraintEnd_toStartOf="@+id/recview_textview_type"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 android:layout_marginStart="16dp" />
 
         <TextView
-                android:text="%s"
+                android:text="@string/text_history_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
-                android:id="@+id/textView2"
-                app:layout_constraintStart_toEndOf="@+id/textView"
+                android:id="@+id/recview_textview_type"
+                app:layout_constraintStart_toEndOf="@+id/recview_textview_date"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="16dp" />
 
         <TextView
-                android:text="Distanz: %s m"
+                android:text="@string/text_history_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
-                android:id="@+id/textView3"
+                android:id="@+id/recview_textview_distance"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/textView4"
+                app:layout_constraintEnd_toStartOf="@+id/recview_textview_duration"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/recview_textview_date"
                 android:layout_marginTop="10dp" />
 
         <ImageView
                 android:layout_width="409dp"
                 android:layout_height="232dp"
                 app:srcCompat="@drawable/logo"
-                android:id="@+id/imageView"
+                android:id="@+id/recview_image_track"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

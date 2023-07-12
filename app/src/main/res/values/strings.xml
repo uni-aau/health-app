@@ -10,4 +10,8 @@
     <string name="text_gps_calories">%s\nCalories (kcal)</string>
     <string name="text_duration">Dauer</string>
     <string name="text_gps_duration_status">%s : %s : %s</string>
+    <string name="text_history_distance">Distanz: %s m</string>
+    <string name="text_history_type">Typ: %s</string>
+    <string name="text_history_date">%s</string>
+    <string name="text_history_duration">Dauer: %s : %s : %s</string>
 </resources>
