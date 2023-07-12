@@ -10,14 +10,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
+import net.saidijamnig.healthapp.database.AppDatabase;
+import net.saidijamnig.healthapp.database.History;
+import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentHistoryBinding;
 
 import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
+
+    private HistoryDao historyDao;
     private FragmentHistoryBinding binding;
-    public static ArrayList<HistoryListElement> historyElements = new ArrayList<>();
+    public static ArrayList<History> historyElements = new ArrayList<>();
+
     public HistoryFragment() {
         // Required empty public constructor
     }
@@ -30,15 +37,31 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentHistoryBinding.inflate(inflater, container, false);
+        initializeDatabase();
+        getDataFromDatabase();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        sendDataToRecyclerView();
-
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void initializeDatabase() {
+        AppDatabase db;
+        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history").build();
+        historyDao = db.historyDao();
+    }
+
+    private void getDataFromDatabase() {
+        Thread thread = new Thread(() -> {
+            historyElements = (ArrayList<History>) historyDao.getWholeHistoryEntries();
+            requireActivity().runOnUiThread(this::sendDataToRecyclerView); // wait to finish before executing sendData method
+        });
+        thread.start();
     }
 
     private void sendDataToRecyclerView() {
