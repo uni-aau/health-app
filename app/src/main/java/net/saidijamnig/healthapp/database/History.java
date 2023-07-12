@@ -16,7 +16,7 @@ public class History {
     public String activityDate;
 
     @ColumnInfo(name = "duration_status")
-    public String durationStatus;
+    public String durationInMilliSeconds;
 
     @ColumnInfo(name = "activity_distance")
     public String activityDistance;
