@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -42,6 +43,9 @@ import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +83,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private AppDatabase db;
     private HistoryDao historyDao;
     private Button printTracksButton; // TODO only for debug
+    private String imageTrackAbsolutePath;
+    private String imageName;
 
     public GpsFragment() {
         // Required empty public constructor
@@ -119,7 +125,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initializeDatabase() {
-        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history").build();
+        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
+                .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
+                .build();
         historyDao = db.historyDao();
     }
 
@@ -230,19 +238,54 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void stopTracking() {
         if (isTracking) {
-            saveTrackToDatabase();
             Log.i(TAG, "Stopping tracking location");
+            saveMapScreenshot();
+            saveTrackToDatabase();
             stopTimer();
             handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
-            previousLocation = null;
-            totalDistance = 0.0;
-            totalCalories = 0;
-            points.clear();
+            resetTrackingVariables();
 
-            isTracking = false;
             stopTrackingButton.setEnabled(false);
             startTrackingButton.setEnabled(true);
         }
+    }
+
+    private void saveMapScreenshot() {
+        GoogleMap.SnapshotReadyCallback callback = snapshot -> {
+            try {
+                imageName = formatImageTrackName();
+                File directory = requireActivity().getApplicationContext().getFilesDir();
+                File file = new File(directory, imageName);
+                imageTrackAbsolutePath = file.getAbsolutePath();
+                FileOutputStream outputStream = new FileOutputStream(file);
+                snapshot.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+
+                Log.i(TAG, "Successfully saved file to internal storage with path " + imageTrackAbsolutePath + " and name " + imageName);
+            } catch (IOException e) {
+                Log.e(TAG, "Error saving image: " + e);
+            }
+        };
+
+        mMap.snapshot(callback);
+    }
+
+    private String formatImageTrackName() {
+        String unformattedTrackName = "activity_track_%s";
+        return String.format(unformattedTrackName, generateCurrentDate(true));
+    }
+
+    // TODO
+    private float calculateZoomLevel(List<LatLng> line) {
+        return 0.0F;
+    }
+
+    private void resetTrackingVariables() {
+        previousLocation = null;
+        totalDistance = 0.0;
+        totalCalories = 0;
+        points.clear();
+
+        isTracking = false;
     }
 
     private void saveTrackToDatabase() {
@@ -251,7 +294,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         newHistoryEntry.activityCalories = String.valueOf(totalCalories);
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
-        newHistoryEntry.activityDate = generateCurrentDate();
+        newHistoryEntry.activityDate = generateCurrentDate(false);
+        newHistoryEntry.imageTrackName = imageName;
+        newHistoryEntry.fullImageTrackPath = imageTrackAbsolutePath;
 
         Thread thread = new Thread(() -> historyDao.insertNewHistoryEntry(newHistoryEntry));
         thread.start();
@@ -262,17 +307,22 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             List<History> histories = historyDao.getWholeHistoryEntries();
             Log.i(DB_TAG, "All saved history tracks:");
             for (History history : histories) {
-                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s", history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate);
+                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s / ImageName = %s / ImagePath = %s",
+                        history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
                 Log.i(DB_TAG, formattedString);
             }
         });
         thread.start();
     }
 
-    private String generateCurrentDate() {
+    private String generateCurrentDate(boolean isImageTrackName) {
         Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String formattedDate;
 
+        if (!isImageTrackName) formattedDate = "dd-MM-yyyy HH:mm:ss";
+        else formattedDate = "ddMMyyyy_HHmmss";
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(formattedDate);
         return dateFormat.format(currentDate);
     }
 
