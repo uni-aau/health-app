@@ -1,6 +1,8 @@
 package net.saidijamnig.healthapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.databinding.RecyclerViewHistoryBinding;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -54,6 +57,18 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         String unformattedDistanceString = context.getString(R.string.text_history_distance);
         String formattedDistanceString = String.format(unformattedDistanceString, history.activityDistance);
         distanceTv.setText(formattedDistanceString);
+
+        activityTrack.setContentDescription(Integer.toString(history.uid));
+
+        String fileName = "link.png";
+        File internalDir = context.getApplicationContext().getFilesDir();
+        File file = new File(internalDir, fileName);
+        if (file.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            activityTrack.setImageBitmap(bitmap);
+        } else {
+            System.out.println("Error - File not found");
+        }
 
         // TODO Bildsetzung
     }
