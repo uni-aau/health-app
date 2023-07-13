@@ -34,8 +34,9 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
+
         initializeDatabase();
-        getDataFromDatabase();
+        processDataFromDatabase();
 
         // Inflate the layout for this fragment
         return binding.getRoot();
@@ -47,7 +48,7 @@ public class HistoryFragment extends Fragment {
         historyDao = db.historyDao();
     }
 
-    private void getDataFromDatabase() {
+    private void processDataFromDatabase() {
         Thread thread = new Thread(() -> {
             historyElements = (ArrayList<History>) historyDao.getWholeHistoryEntries();
             Collections.reverse(historyElements);
@@ -55,6 +56,13 @@ public class HistoryFragment extends Fragment {
         });
         thread.start();
     }
+
+    // TODO
+/*    public void setActivityEntryAmount(int size) {
+        String activityTitleEntryAmount = getResources().getQuantityString(R.plurals.text_history_activity_title, size, size);
+        binding.textviewHistoryTitle.setText(activityTitleEntryAmount);
+    }*/
+
 
     private void sendDataToRecyclerView() {
         HistoryListAdapter viewAdapter = new HistoryListAdapter(historyElements, requireContext());
