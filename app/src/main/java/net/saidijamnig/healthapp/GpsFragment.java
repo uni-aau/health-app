@@ -78,9 +78,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private List<LatLng> points = new ArrayList<>();
     private AppDatabase db;
     private HistoryDao historyDao;
-    private Button printTracksButton; // TODO only for debug
+    private Button printTracksButton; // only for debug
     private String imageTrackAbsolutePath;
     private String imageName;
+    private Date currentDate;
 
     public GpsFragment() {
         // Required empty public constructor
@@ -126,7 +127,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Initializes Room Database with History Table
      */
     private void initializeDatabase() {
-        if(db != null) db.close();
+        if (db != null) db.close();
         db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
                 .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
                 .build();
@@ -245,6 +246,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private void stopTracking() {
         if (isTracking) {
             Log.i(TAG, "Stopping tracking location");
+            generateCurrentDate();
             saveMapScreenshot();
             saveTrackToDatabase();
             stopTimer();
@@ -289,11 +291,12 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     /**
      * Generates image name of the saved track
+     *
      * @return formatted image name
      */
     private String formatImageTrackName() {
         String unformattedTrackName = Config.TRACK_NAME_FORMAT;
-        return String.format(unformattedTrackName, generateCurrentDate(true));
+        return String.format(unformattedTrackName, formatCurrentDate(true));
     }
 
     // TODO
@@ -322,8 +325,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         newHistoryEntry.activityCalories = String.valueOf(totalCalories);
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
-        newHistoryEntry.activityDate = generateCurrentDate(false);
-        newHistoryEntry.imageTrackName = imageName;
+        newHistoryEntry.activityDate = formatCurrentDate(false);
+        newHistoryEntry.imageTrackName = formatImageTrackName();
         newHistoryEntry.fullImageTrackPath = imageTrackAbsolutePath;
 
         Thread thread = new Thread(() -> historyDao.insertNewHistoryEntry(newHistoryEntry));
@@ -344,13 +347,17 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         thread.start();
     }
 
+    private void generateCurrentDate() {
+        currentDate = new Date();
+    }
+
     /**
-     * Generates the currentDate with a specific format
+     * Formats the currentDate with a specific format
+     *
      * @param isImageTrackName - Determines if it should be generated for an image track name
      * @return formatted date
      */
-    private String generateCurrentDate(boolean isImageTrackName) {
-        Date currentDate = new Date();
+    private String formatCurrentDate(boolean isImageTrackName) {
         String formattedDate;
 
         if (!isImageTrackName) formattedDate = Config.TIME_FORMAT_GENERAL;
