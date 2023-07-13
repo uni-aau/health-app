@@ -2,7 +2,6 @@ package net.saidijamnig.healthapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -385,31 +384,45 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        LocationManager locationManager;
+        mMap = googleMap;
+        mMap.setMyLocationEnabled(true);
         if (checkRequiredPermissions()) {
-            mMap = googleMap;
-            mMap.setMyLocationEnabled(true);
-
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (lastKnownLocation != null) {
-                double latitude = lastKnownLocation.getLatitude();
-                double longitude = lastKnownLocation.getLongitude();
-
-                Log.d(TAG, "Latitude = " + latitude + " longitude = " + longitude);
-                LatLng currentLocation = new LatLng(latitude, longitude);
-
-                mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(Config.DEFAULT_MARKER_COLOR)));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Config.GENERAL_CAMERA_ZOOM));
-                foundLocation = true;
-            } else {
-                foundLocation = false;
-            }
+            fetchLocationAndUpdateMap();
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
             Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
             PermissionHandler.requestGpsPermissions(requireActivity());
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void fetchLocationAndUpdateMap() {
+        LocationManager locationManager;
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (lastKnownLocation != null) {
+            updateMapWithLocation(lastKnownLocation);
+        } else {
+            // Requests new location when location was found
+            foundLocation = false;
+            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, location -> {
+                Log.i(TAG, "Found a new location! " + location);
+                updateMapWithLocation(location);
+            }, null);
+        }
+    }
+
+    private void updateMapWithLocation(Location lastKnownLocation) {
+        foundLocation = true;
+        double latitude = lastKnownLocation.getLatitude();
+        double longitude = lastKnownLocation.getLongitude();
+
+        Log.d(TAG, "Latitude = " + latitude + " longitude = " + longitude);
+        LatLng currentLocation = new LatLng(latitude, longitude);
+
+        mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(Config.DEFAULT_MARKER_COLOR)));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Config.GENERAL_CAMERA_ZOOM));
+//        foundLocation = true;
     }
 
     private boolean checkRequiredPermissions() {
