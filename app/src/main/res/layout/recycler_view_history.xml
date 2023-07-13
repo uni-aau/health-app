@@ -63,11 +63,11 @@
         <ImageView
                 android:layout_width="409dp"
                 android:layout_height="232dp"
-                app:srcCompat="@drawable/logo"
                 android:id="@+id/recview_image_track"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="1.0" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:srcCompat="@drawable/no_image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
