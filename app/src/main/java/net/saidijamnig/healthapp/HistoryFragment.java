@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import net.saidijamnig.healthapp.adapter.HistoryListAdapter;
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentHistoryBinding;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class HistoryFragment extends Fragment {
