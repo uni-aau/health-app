@@ -89,7 +89,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
             Log.i(TAG, "Successfully set image!");
         } else {
             Log.e(TAG, "File with name " + fileName + " does not exist. Using fallback image!");
-            activityTrack.setImageResource(Config.fallBackImagePath);
+            activityTrack.setImageResource(Config.FALLBACK_IMAGE_PATH);
         }
     }
 
