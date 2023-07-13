@@ -23,4 +23,11 @@ public class History {
 
     @ColumnInfo(name = "activity_calories")
     public String activityCalories;
+
+    @ColumnInfo(name = "image_track_name")
+    public String imageTrackName;
+
+    // Used for debug
+    @ColumnInfo(name = "image_track_full_path")
+    public String fullImageTrackPath;
 }
