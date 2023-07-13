@@ -429,11 +429,13 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return PermissionHandler.checkForRequiredPermissions(requireContext());
     }
 
+    // TODO does not work
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
             if (PermissionHandler.checkForRequiredPermissions(requireContext())) {
+                Log.d(TAG, "Fetching new location (permission granted)");
                 fetchLocationAndUpdateMap();
             } else {
                 // Handle the case when the permissions are not granted.
