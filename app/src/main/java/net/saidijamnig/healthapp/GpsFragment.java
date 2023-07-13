@@ -42,6 +42,7 @@ import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
+import net.saidijamnig.healthapp.handler.PermissionHandler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,7 +59,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private double totalDistance = 0.0;
     private GoogleMap mMap;
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final int PERMISSION_REQUEST_ACTIVITY_RECOGNITION = 1;
     private int totalCalories = 0;
     private int seconds = 0;
@@ -178,7 +178,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private void trackLocation() {
-        if (getRequiredPermissions()) {
+        if (checkRequiredPermissions()) {
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(location -> {
                         if (location != null) {
@@ -216,6 +216,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                     .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to get current location", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(requireContext(), "Some permissions are missing!", Toast.LENGTH_SHORT).show();
+            PermissionHandler.requestGpsPermissions(requireActivity());
         }
 
         long postInterval = 3000L;
@@ -356,11 +357,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    @SuppressLint("MissingPermission") // TODO
-    // Todo check mit toast, ob gps location existiert
+    @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        if (getRequiredPermissions()) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        if (checkRequiredPermissions()) {
             mMap = googleMap;
             mMap.setMyLocationEnabled(true);
 
@@ -384,15 +384,12 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
             Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+            PermissionHandler.requestGpsPermissions(requireActivity());
         }
     }
 
-    // Todo extract everything regarding permission to permission handler and rework it
-    private boolean getRequiredPermissions() {
-        // Check location permissions
-        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    private boolean checkRequiredPermissions() {
+        return PermissionHandler.checkForRequiredPermissions(requireContext());
     }
 
     private void initializeStartValues() {
