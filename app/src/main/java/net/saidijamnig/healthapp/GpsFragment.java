@@ -1,11 +1,8 @@
 package net.saidijamnig.healthapp;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -21,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
@@ -71,8 +67,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private TextView caloriesTV;
     private Button startTrackingButton;
     private Button stopTrackingButton;
-    private FragmentGpsBinding binding;
-    private LocationManager locationManager;
+
+
     private boolean foundLocation = false;
     private CountDownTimer timer;
     private int elapsedDurationTimeInMilliSeconds = 0;
@@ -98,6 +94,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FragmentGpsBinding binding;
         binding = FragmentGpsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
@@ -125,6 +122,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+    /**
+     * Initializes Room Database with History Table
+     */
     private void initializeDatabase() {
         if(db != null) db.close();
         db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
@@ -133,15 +133,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         historyDao = db.historyDao();
     }
 
-    private void requestActivityPermission() {
-        requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_REQUEST_ACTIVITY_RECOGNITION);
-    }
-
+    /**
+     * Starts new track
+     * Resets old tracking views and clears map
+     */
     private void startTracking() {
         if (!foundLocation) {
             Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
             return;
         }
+
         initializeStartValues();
         mMap.clear();
 
@@ -155,6 +156,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    /**
+     * Starts the tracking timer
+     */
     private void startTimer() {
         Log.i(TAG, "Starting timer!");
         timer = new CountDownTimer(Integer.MAX_VALUE, 1000) {
@@ -200,15 +204,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                                 Snackbar.make(requireView(), debugValues, Snackbar.LENGTH_SHORT).show();
 
                                 points.add(currentLatLng);
-                                mapFragment.getMapAsync(mMap -> {
-                                    mMap.clear();
-                                    mMap.addPolyline(new PolylineOptions()
-                                            .width(10f)
-                                            .color(Color.BLUE)
+                                mapFragment.getMapAsync(map -> {
+                                    map.clear();
+                                    map.addPolyline(new PolylineOptions()
+                                            .width(Config.MAP_LINE_WIDTH)
+                                            .color(Config.MAP_LINE_COLOR)
                                             .addAll(points)
                                     );
-                                    float currentSelectedZoom = mMap.getCameraPosition().zoom;
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, currentSelectedZoom));
+                                    float currentSelectedZoom = map.getCameraPosition().zoom;
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, currentSelectedZoom));
                                 });
                             }
                         }
@@ -219,8 +223,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             PermissionHandler.requestGpsPermissions(requireActivity());
         }
 
-        long postInterval = 3000L;
-        handler.postDelayed(this::trackLocation, postInterval);
+        handler.postDelayed(this::trackLocation, Config.MAP_UPDATE_INTERVAL);
     }
 
     /**
@@ -263,7 +266,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                 File file = new File(directory, imageName);
                 imageTrackAbsolutePath = file.getAbsolutePath();
                 outputStream = new FileOutputStream(file);
-                snapshot.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+                snapshot.compress(Config.COMPRESS_FORMAT, Config.COMPRESS_QUALITY, outputStream);
                 System.out.println(imageName + " 2");
 
                 Log.i(TAG, "Successfully saved file to internal storage with path " + imageTrackAbsolutePath + " and name " + imageName);
@@ -284,8 +287,12 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         mMap.snapshot(callback);
     }
 
+    /**
+     * Generates image name of the saved track
+     * @return formatted image name
+     */
     private String formatImageTrackName() {
-        String unformattedTrackName = "activity_track_%s";
+        String unformattedTrackName = Config.TRACK_NAME_FORMAT;
         return String.format(unformattedTrackName, generateCurrentDate(true));
     }
 
@@ -305,14 +312,17 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         isTracking = false;
     }
 
+    /**
+     * Saves a new track to the room database
+     */
     private void saveTrackToDatabase() {
         Log.i(DB_TAG, "Saving track to database!");
         History newHistoryEntry = new History();
+
         newHistoryEntry.activityCalories = String.valueOf(totalCalories);
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
         newHistoryEntry.activityDate = generateCurrentDate(false);
-        System.out.println(imageName);
         newHistoryEntry.imageTrackName = imageName;
         newHistoryEntry.fullImageTrackPath = imageTrackAbsolutePath;
 
@@ -329,22 +339,30 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                         history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
                 Log.i(DB_TAG, formattedString);
             }
-            historyDao.deleteAll();
+//            historyDao.deleteAll();
         });
         thread.start();
     }
 
+    /**
+     * Generates the currentDate with a specific format
+     * @param isImageTrackName - Determines if it should be generated for an image track name
+     * @return formatted date
+     */
     private String generateCurrentDate(boolean isImageTrackName) {
         Date currentDate = new Date();
         String formattedDate;
 
-        if (!isImageTrackName) formattedDate = "dd-MM-yyyy HH:mm:ss";
-        else formattedDate = "ddMMyyyy_HHmmss";
+        if (!isImageTrackName) formattedDate = Config.TIME_FORMAT_GENERAL;
+        else formattedDate = Config.TIME_FORMAT_TRACK_NAME;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(formattedDate);
         return dateFormat.format(currentDate);
     }
 
+    /**
+     * Cancels the existing countdown timer
+     */
     private void stopTimer() {
         elapsedDurationTimeInMilliSeconds = 0;
         hours = 0;
@@ -360,6 +378,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        LocationManager locationManager;
         if (checkRequiredPermissions()) {
             mMap = googleMap;
             mMap.setMyLocationEnabled(true);
@@ -371,12 +390,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                 double longitude = lastKnownLocation.getLongitude();
 
                 Log.d(TAG, "Latitude = " + latitude + " longitude = " + longitude);
-
                 LatLng currentLocation = new LatLng(latitude, longitude);
 
-                mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+                mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(Config.DEFAULT_MARKER_COLOR)));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Config.GENERAL_CAMERA_ZOOM));
                 foundLocation = true;
             } else {
                 foundLocation = false;
@@ -392,6 +409,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return PermissionHandler.checkForRequiredPermissions(requireContext());
     }
 
+    /**
+     * Sets the start values for the GPS textviews (e.g. duration)
+     */
     private void initializeStartValues() {
         setDurationValue();
 
@@ -408,7 +428,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private String formatTime(int value) {
-        return String.format(Locale.getDefault(), "%02d", value); // two digits and the leading is a zero if necessary
+        return String.format(Locale.getDefault(), Config.DURATION_FORMAT, value); // two digits and the leading is a zero if necessary
     }
 
     /*
