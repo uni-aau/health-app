@@ -1,8 +1,9 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.databinding.RecyclerViewHistoryBinding;
 
@@ -21,6 +23,7 @@ import java.util.Locale;
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.CustomViewHolder> {
     private final ArrayList<History> list;
     private final Context context;
+    private static final String TAG = "HA-main";
 
     public HistoryListAdapter(ArrayList<History> list, Context context) {
         this.list = list;
@@ -60,17 +63,19 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
         activityTrack.setContentDescription(Integer.toString(history.uid));
 
-        String fileName = "link.png";
+        String fileName = history.imageTrackName;
+        String fileNameNotNull = (fileName != null) ? fileName : "file";
+
         File internalDir = context.getApplicationContext().getFilesDir();
-        File file = new File(internalDir, fileName);
+        File file = new File(internalDir, fileNameNotNull);
         if (file.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             activityTrack.setImageBitmap(bitmap);
+            Log.i(TAG, "Successfully set image!");
         } else {
-            System.out.println("Error - File not found");
+            Log.e(TAG, "File with name " + fileName + " does not exist. Using fallback image!");
+            activityTrack.setImageResource(R.drawable.no_image);
         }
-
-        // TODO Bildsetzung
     }
 
     private String formatDuration(int durationInMilliSeconds) {
