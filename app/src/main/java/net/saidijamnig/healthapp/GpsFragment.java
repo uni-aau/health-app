@@ -429,6 +429,19 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return PermissionHandler.checkForRequiredPermissions(requireContext());
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
+            if (PermissionHandler.checkForRequiredPermissions(requireContext())) {
+                fetchLocationAndUpdateMap();
+            } else {
+                // Handle the case when the permissions are not granted.
+                Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     /**
      * Sets the start values for the GPS textviews (e.g. duration)
      */
