@@ -93,6 +93,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        MapsInitializer.initialize(requireContext(), MapsInitializer.Renderer.LATEST, renderer -> Log.d(TAG, "onMapsSdkInitialized!"));
     }
 
     @Override
@@ -125,6 +126,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initializeDatabase() {
+        if(db != null) db.close();
         db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
                 .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
                 .build();
@@ -251,18 +253,30 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void saveMapScreenshot() {
+        Log.i(TAG, "Trying to make a screenshot");
         GoogleMap.SnapshotReadyCallback callback = snapshot -> {
+            FileOutputStream outputStream = null;
             try {
                 imageName = formatImageTrackName();
                 File directory = requireActivity().getApplicationContext().getFilesDir();
                 File file = new File(directory, imageName);
                 imageTrackAbsolutePath = file.getAbsolutePath();
-                FileOutputStream outputStream = new FileOutputStream(file);
+                outputStream = new FileOutputStream(file);
                 snapshot.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+                System.out.println(imageName + " 2");
 
                 Log.i(TAG, "Successfully saved file to internal storage with path " + imageTrackAbsolutePath + " and name " + imageName);
             } catch (IOException e) {
                 Log.e(TAG, "Error saving image: " + e);
+            } finally {
+                if (outputStream != null) {
+                    try {
+                        Log.i(TAG, "Outputstream successfully closed!");
+                        outputStream.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error closing Fileoutputstream: " + e);
+                    }
+                }
             }
         };
 
@@ -284,6 +298,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         totalDistance = 0.0;
         totalCalories = 0;
         points.clear();
+        imageTrackAbsolutePath = null;
+        imageName = null;
 
         isTracking = false;
     }
@@ -295,6 +311,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
         newHistoryEntry.activityDate = generateCurrentDate(false);
+        System.out.println(imageName);
         newHistoryEntry.imageTrackName = imageName;
         newHistoryEntry.fullImageTrackPath = imageTrackAbsolutePath;
 
@@ -311,6 +328,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                         history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
                 Log.i(DB_TAG, formattedString);
             }
+            historyDao.deleteAll();
         });
         thread.start();
     }
