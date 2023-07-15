@@ -1,13 +1,15 @@
 package net.saidijamnig.healthapp;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +20,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +40,7 @@ import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 import net.saidijamnig.healthapp.handler.PermissionHandler;
+import net.saidijamnig.healthapp.services.LocationTrackingService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,6 +52,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
+    public static final String ACTION_LOCATION_UPDATE = "ACTION_LOCATION_UPDATE";
+    public static final String ACTION_DURATION_UPDATE = "ACTION_DURATION_UDPATE";
+    public static final String ACTION_TRACKING_STOPPED = "ACTION_TRACKING_STOPPED";
+
+    private boolean isServiceBound = false;
+
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
 
@@ -98,8 +107,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         binding = FragmentGpsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        handler = new Handler(Looper.getMainLooper());
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+//        handler = new Handler(Looper.getMainLooper());
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_DURATION_UPDATE));
 
         initializeDatabase();
 
@@ -120,6 +131,55 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(locationUpdateReceiver);
+    }
+
+    private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() != null) {
+                if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) {
+                    totalDistance = intent.getIntExtra("distance", 0);
+                    LatLng latLng = intent.getParcelableExtra("latlng");
+                    handleLocationUpdates(latLng);
+                } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) {
+                    // Handle tracking started event
+                    elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
+                    Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
+                    setDurationValue();
+//                    handleTrackingStarted();
+                } else if (intent.getAction().equals(ACTION_TRACKING_STOPPED)) {
+                    // Handle tracking stopped event
+//                    handleTrackingStopped();
+                }
+            }
+        }
+    };
+
+    private void handleLocationUpdates(LatLng latLng) {
+        Log.d("DEBUG", "LatLng = " + latLng + " distance = " + totalDistance);
+
+        String formattedTotalDistance = formatDistance();
+        String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
+        distanceTV.setText(formattedDistance);
+
+        points.add(latLng);
+        mapFragment.getMapAsync(map -> {
+            map.clear();
+            map.addPolyline(new PolylineOptions()
+                    .width(Config.MAP_LINE_WIDTH)
+                    .color(Config.MAP_LINE_COLOR)
+                    .addAll(points)
+            );
+            float currentSelectedZoom = map.getCameraPosition().zoom;
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, currentSelectedZoom));
+        });
     }
 
     /**
@@ -147,12 +207,17 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         mMap.clear();
 
         if (!isTracking) {
+            Intent locationService = new Intent(requireContext(), LocationTrackingService.class);
+            requireActivity().startService(locationService);
+//            requireActivity().bindService(locationService, serviceConnection)
+            // TODO SERVICE
+
             Log.i(TAG, "Starting tracking location");
             isTracking = true;
             stopTrackingButton.setEnabled(true);
             startTrackingButton.setEnabled(false);
-            startTimer();
-            trackLocation();
+//            startTimer();
+//            trackLocation();
         }
     }
 
@@ -244,12 +309,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void stopTracking() {
         if (isTracking) {
+            Intent locationService = new Intent(requireContext(), LocationTrackingService.class);
+            requireActivity().stopService(locationService);
+
+            // TODO SERVICE
             Log.i(TAG, "Stopping tracking location");
-            generateCurrentDate();
-            saveMapScreenshot();
-            saveTrackToDatabase();
-            stopTimer();
-            handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
+//            generateCurrentDate();
+//            saveMapScreenshot();
+//            saveTrackToDatabase();
+//            stopTimer();
+//            handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
             resetTrackingVariables();
 
             stopTrackingButton.setEnabled(false);
@@ -457,6 +526,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setDurationValue() {
+        hours = (elapsedDurationTimeInMilliSeconds / (1000 * 60 * 60)) % 24;
+        minutes = (elapsedDurationTimeInMilliSeconds / (1000 * 60)) % 60;
+        seconds = (elapsedDurationTimeInMilliSeconds / 1000) % 60;
+
         String durationStatus = getString(R.string.text_gps_duration_status);
         String formattedDurationStatus = String.format(durationStatus, formatTime(hours), formatTime(minutes), formatTime(seconds));
         durationTV.setText(formattedDurationStatus);
