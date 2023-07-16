@@ -16,6 +16,9 @@
     <string name="text_history_duration">Dauer: %s : %s : %s</string>
     <string name="text_history_activity_title_noplural">Activity History</string>
 
+    <string name="text_button_no">No</string>
+    <string name="text_button_yes">Yes</string>
+
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>
         <item quantity="other">Activity History (%d entries)</item>

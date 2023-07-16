@@ -10,4 +10,6 @@
 
     <color name="focused_color">#FF03DAC5</color>
     <color name="selected_color">#404948</color>
+    <color name="whiteSpecial">#FFFFFF</color>
+    <color name="blackSpecial">#000000</color>
 </resources>
