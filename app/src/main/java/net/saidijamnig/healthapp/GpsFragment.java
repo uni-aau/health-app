@@ -56,14 +56,11 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     public static final String ACTION_DURATION_UPDATE = "ACTION_DURATION_UDPATE";
     public static final String ACTION_TRACKING_STOPPED = "ACTION_TRACKING_STOPPED";
 
-    private boolean isServiceBound = false;
-
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
 
     private double totalDistance = 0.0;
     private GoogleMap mMap;
-    private static final int PERMISSION_REQUEST_ACTIVITY_RECOGNITION = 1;
     private int totalCalories = 0;
     private int seconds = 0;
     private int minutes = 0;
@@ -83,7 +80,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Handler handler;
     private Location previousLocation;
     private FusedLocationProviderClient fusedLocationClient;
-    private List<LatLng> points = new ArrayList<>();
+    private static List<LatLng> points = new ArrayList<>();
     private AppDatabase db;
     private HistoryDao historyDao;
     private Button printTracksButton; // only for debug
@@ -93,12 +90,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     public GpsFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        MapsInitializer.initialize(requireContext(), MapsInitializer.Renderer.LATEST, renderer -> Log.d(TAG, "onMapsSdkInitialized!"));
     }
 
     @Override
