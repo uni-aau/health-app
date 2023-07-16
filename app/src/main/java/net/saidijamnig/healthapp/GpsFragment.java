@@ -338,7 +338,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         if (!isImageTrackName) formattedDate = Config.TIME_FORMAT_GENERAL;
         else formattedDate = Config.TIME_FORMAT_TRACK_NAME;
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(formattedDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(formattedDate, Locale.getDefault());
         return dateFormat.format(currentDate);
     }
 
