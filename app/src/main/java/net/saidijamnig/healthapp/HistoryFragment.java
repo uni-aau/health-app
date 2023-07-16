@@ -1,6 +1,7 @@
 package net.saidijamnig.healthapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,10 @@ import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentHistoryBinding;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -25,6 +30,7 @@ public class HistoryFragment extends Fragment {
     private HistoryDao historyDao;
     private FragmentHistoryBinding binding;
     private ArrayList<History> historyElements = new ArrayList<>();
+    HistoryListAdapter viewAdapter;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -52,7 +58,10 @@ public class HistoryFragment extends Fragment {
         Thread thread = new Thread(() -> {
             historyElements = (ArrayList<History>) historyDao.getWholeHistoryEntries();
             Collections.reverse(historyElements);
-            requireActivity().runOnUiThread(this::sendDataToRecyclerView); // wait to finish before executing sendData method
+            requireActivity().runOnUiThread(() -> { // wait to finish before executing sendData method
+                sendDataToRecyclerView();
+                createLongPressListener();
+            });
         });
         thread.start();
     }
@@ -65,17 +74,47 @@ public class HistoryFragment extends Fragment {
 
 
     private void sendDataToRecyclerView() {
-        HistoryListAdapter viewAdapter = new HistoryListAdapter(historyElements, requireContext());
-        viewAdapter.setOnItemLongClickListener((view, position) -> {
-            // TODO
-            System.out.println("Works");
-        });
-
+        viewAdapter = new HistoryListAdapter(historyElements, requireContext());
 
         RecyclerView.LayoutManager viewManager = new LinearLayoutManager(requireContext());
 
         RecyclerView recyclerView = binding.historyRecyclerView;
         recyclerView.setLayoutManager(viewManager);
         recyclerView.setAdapter(viewAdapter);
+    }
+
+    private void createLongPressListener() {
+        viewAdapter.setOnItemLongClickListener((view, position) -> {
+            openDeleteRequestPopUp();
+            History historyElement = historyElements.get(position);
+            int uid = historyElement.uid;
+
+            String directory = requireActivity().getApplicationContext().getFilesDir().getAbsolutePath();
+            String imageName = historyElement.imageTrackName;
+            Path imagePath = Paths.get(directory, imageName);
+
+            try {
+                Files.deleteIfExists(imagePath);
+                Log.i("TAG", "Successfully deleted image " + imageName);
+            } catch (IOException e) {
+                Log.e("TAG", "Error deleting image file " + imageName + ": " + e);
+            } finally {
+                historyElements.remove(position);
+                viewAdapter.notifyItemRemoved(position);
+                deleteHistoryEntry(uid);
+            }
+        });
+    }
+
+    private void openDeleteRequestPopUp() {
+
+    }
+
+    private void deleteHistoryEntry(int uid) {
+        Thread thread = new Thread(() -> {
+            historyDao.deleteHistoryEntryById(uid);
+        });
+        thread.start();
+        Log.i("TAG", "Successfully deleted history entry " + uid);
     }
 }
