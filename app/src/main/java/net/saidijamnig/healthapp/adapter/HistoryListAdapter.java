@@ -128,9 +128,8 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         return String.format(unformattedDurationString, formatTime(hours), formatTime(minutes), formatTime(seconds));
     }
 
-    // TODO auslagern in timeformatter klasse (auch gps)
     private String formatTime(int value) {
-        return String.format(Locale.getDefault(), "%02d", value); // two digits and the leading is a zero if necessary
+        return String.format(Locale.getDefault(), Config.DURATION_FORMAT, value); // two digits and the leading is a zero if necessary
     }
 
     @Override
