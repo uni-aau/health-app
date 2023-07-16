@@ -66,6 +66,12 @@ public class HistoryFragment extends Fragment {
 
     private void sendDataToRecyclerView() {
         HistoryListAdapter viewAdapter = new HistoryListAdapter(historyElements, requireContext());
+        viewAdapter.setOnItemLongClickListener((view, position) -> {
+            // TODO
+            System.out.println("Works");
+        });
+
+
         RecyclerView.LayoutManager viewManager = new LinearLayoutManager(requireContext());
 
         RecyclerView recyclerView = binding.historyRecyclerView;
