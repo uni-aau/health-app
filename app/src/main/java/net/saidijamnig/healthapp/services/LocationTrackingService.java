@@ -2,8 +2,6 @@ package net.saidijamnig.healthapp.services;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.CountDownTimer;
@@ -21,24 +19,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.snackbar.Snackbar;
 
 import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.GpsFragment;
-import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.HistoryDao;
-import net.saidijamnig.healthapp.handler.PermissionHandler;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class LocationTrackingService extends Service {
     private static final String TAG = "GPS-Main";
@@ -147,38 +139,15 @@ public class LocationTrackingService extends Service {
                             totalDistance += distance;
                             previousLocation = location;
 
-//                            String formattedTotalDistance = formatDistance();
-//                            String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
-//                            distanceTV.setText(formattedDistance);
-
                             // Visualization of distance path
                             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                            String debugValues = "Accuracy = " + location.getAccuracy() + " Speed = " + location.getSpeed() + " Other stuff = " + location.getVerticalAccuracyMeters();
-//                            Log.d(TAG, debugValues);
-//                            Snackbar.make(this, debugValues, Snackbar.LENGTH_SHORT).show();
 
                             sendLocationBroadcast(currentLatLng);
-
-/*                            points.add(currentLatLng);
-                            mapFragment.getMapAsync(map -> {
-                                map.clear();
-                                map.addPolyline(new PolylineOptions()
-                                        .width(Config.MAP_LINE_WIDTH)
-                                        .color(Config.MAP_LINE_COLOR)
-                                        .addAll(points)
-                                );
-                                float currentSelectedZoom = map.getCameraPosition().zoom;
-                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, currentSelectedZoom));
-                            });*/
                         }
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to get current location", Toast.LENGTH_SHORT).show());
-        handler.postDelayed(this::trackLocation,Config.MAP_UPDATE_INTERVAL);
-    }
-
-    private String formatDistance() {
-        return String.format(Locale.getDefault(), "%.2f", totalDistance);
+        handler.postDelayed(this::trackLocation, Config.MAP_UPDATE_INTERVAL);
     }
 
     private void sendLocationBroadcast(LatLng currentLatLng) {
@@ -189,17 +158,15 @@ public class LocationTrackingService extends Service {
     }
 
 
-
-
     private void stopTracking() {
-            Log.i(TAG, "Stopping tracking location");
+        Log.i(TAG, "Stopping tracking location");
 //            generateCurrentDate();
 //            saveMapScreenshot();
 //            saveTrackToDatabase();
         isActive = false;
-            stopTimer();
-            handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
-            resetTrackingVariables();
+        stopTimer();
+        handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
+        resetTrackingVariables();
     }
 
     private void stopTimer() {
@@ -233,4 +200,4 @@ public class LocationTrackingService extends Service {
         stopTracking();
 
     }
-    }
+}
