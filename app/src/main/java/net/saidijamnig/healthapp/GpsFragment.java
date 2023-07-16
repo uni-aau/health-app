@@ -111,6 +111,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 //        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_DURATION_UPDATE));
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_LOCATION_UPDATE));
 
         initializeDatabase();
 
@@ -154,7 +155,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() != null) {
                 if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) {
-                    totalDistance = intent.getIntExtra("distance", 0);
+                    Log.d("DEBUG", "Works");
+                    totalDistance = intent.getDoubleExtra("distance", 0.0);
                     LatLng latLng = intent.getParcelableExtra("latlng");
                     handleLocationUpdates(latLng);
                 } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) {
@@ -162,9 +164,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                     elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
                     Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
                     setDurationValue();
-//                    handleTrackingStarted();
                 } else if (intent.getAction().equals(ACTION_TRACKING_STOPPED)) {
-                    // Handle tracking stopped event
 //                    handleTrackingStopped();
                 }
             }
