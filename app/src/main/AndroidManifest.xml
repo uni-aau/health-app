@@ -3,6 +3,8 @@
         xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
 
     <application
             android:usesCleartextTraffic="false"
@@ -16,9 +18,14 @@
             android:theme="@style/Theme.HealthApp"
             tools:targetApi="31">
 
+        <service
+                android:name=".services.LocationTrackingService"
+                android:enabled="true"
+                android:exported="false" />
+
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
-                android:value="" />
+                android:value="${GOOGLE_API_KEY}" />
 
         <activity
                 android:name=".MainActivity"
