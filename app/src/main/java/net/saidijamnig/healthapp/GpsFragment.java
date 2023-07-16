@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,7 +29,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.snackbar.Snackbar;
 
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
@@ -75,11 +70,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
 
     private boolean foundLocation = false;
-    private CountDownTimer timer;
     private int elapsedDurationTimeInMilliSeconds = 0;
-    private Handler handler;
-    private Location previousLocation;
-    private FusedLocationProviderClient fusedLocationClient;
     private static List<LatLng> points = new ArrayList<>();
     private AppDatabase db;
     private HistoryDao historyDao;
@@ -97,9 +88,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         FragmentGpsBinding binding;
         binding = FragmentGpsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-
-//        handler = new Handler(Looper.getMainLooper());
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_DURATION_UPDATE));
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_LOCATION_UPDATE));
@@ -119,7 +107,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if(!LocationTrackingService.isActive) {
+        if (!LocationTrackingService.isActive) {
             stopTrackingButton.setEnabled(false);
             startTrackingButton.setEnabled(true);
             initializeStartValues();
@@ -142,21 +130,21 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
 
+        // TODO more frequent location updates
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() != null) {
                 if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) {
+                    // Handles location updates
                     Log.d("DEBUG", "Works");
                     totalDistance = intent.getDoubleExtra("distance", 0.0);
                     LatLng latLng = intent.getParcelableExtra("latlng");
                     handleLocationUpdates(latLng);
                 } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) {
-                    // Handle tracking started event
+                    // Handles duration updates
                     elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
                     Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
                     setDurationValue();
-                } else if (intent.getAction().equals(ACTION_TRACKING_STOPPED)) {
-//                    handleTrackingStopped();
                 }
             }
         }
@@ -207,88 +195,14 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         mMap.clear();
 
         if (!isTracking) {
+            Log.i(TAG, "Starting tracking location");
             Intent locationService = new Intent(requireContext(), LocationTrackingService.class);
             requireActivity().startService(locationService);
-//            requireActivity().bindService(locationService, serviceConnection)
-            // TODO SERVICE
 
-            Log.i(TAG, "Starting tracking location");
             isTracking = true;
             stopTrackingButton.setEnabled(true);
             startTrackingButton.setEnabled(false);
-//            startTimer();
-//            trackLocation();
         }
-    }
-
-    /**
-     * Starts the tracking timer
-     */
-    private void startTimer() {
-        Log.i(TAG, "Starting timer!");
-        timer = new CountDownTimer(Integer.MAX_VALUE, 1000) {
-            @Override
-            public void onTick(long l) {
-                elapsedDurationTimeInMilliSeconds += 1000;
-
-                hours = (elapsedDurationTimeInMilliSeconds / (1000 * 60 * 60)) % 24;
-                minutes = (elapsedDurationTimeInMilliSeconds / (1000 * 60)) % 60;
-                seconds = (elapsedDurationTimeInMilliSeconds / 1000) % 60;
-
-                setDurationValue();
-            }
-
-            @Override
-            public void onFinish() {
-                // Not used since it will be disabled by stopTrackingButton
-            }
-        }.start();
-    }
-
-    @SuppressLint("MissingPermission")
-    private void trackLocation() {
-        if (checkRequiredPermissions()) {
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            if (previousLocation == null) {
-                                previousLocation = location;
-                            } else {
-                                double distance = previousLocation.distanceTo(location);
-                                totalDistance += distance;
-                                previousLocation = location;
-
-                                String formattedTotalDistance = formatDistance();
-                                String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
-                                distanceTV.setText(formattedDistance);
-
-                                // Visualization of distance path
-                                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                String debugValues = "Accuracy = " + location.getAccuracy() + " Speed = " + location.getSpeed() + " Other stuff = " + location.getVerticalAccuracyMeters();
-                                Log.d(TAG, debugValues);
-                                Snackbar.make(requireView(), debugValues, Snackbar.LENGTH_SHORT).show();
-
-                                points.add(currentLatLng);
-                                mapFragment.getMapAsync(map -> {
-                                    map.clear();
-                                    map.addPolyline(new PolylineOptions()
-                                            .width(Config.MAP_LINE_WIDTH)
-                                            .color(Config.MAP_LINE_COLOR)
-                                            .addAll(points)
-                                    );
-                                    float currentSelectedZoom = map.getCameraPosition().zoom;
-                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, currentSelectedZoom));
-                                });
-                            }
-                        }
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to get current location", Toast.LENGTH_SHORT).show());
-        } else {
-            Toast.makeText(requireContext(), "Some permissions are missing!", Toast.LENGTH_SHORT).show();
-            PermissionHandler.requestGpsPermissions(requireActivity());
-        }
-
-        handler.postDelayed(this::trackLocation, Config.MAP_UPDATE_INTERVAL);
     }
 
     /**
@@ -300,25 +214,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return String.format(Locale.getDefault(), "%.2f", totalDistance);
     }
 
-    /*
-    Möglichkeiten um Distanzproblem zu lösen:
-     * Accelerometer checken
-     * Accuracy < 15-10 nur nehmen und alles andere melden
-     *  Activity STILL - https://medium.com/@saishaddai/how-to-recognize-when-the-user-is-not-moving-in-android-be6dba7a90bb
-     */
-
     private void stopTracking() {
         if (isTracking) {
+            Log.i(TAG, "Stopping tracking location");
             Intent locationService = new Intent(requireContext(), LocationTrackingService.class);
             requireActivity().stopService(locationService);
 
-            // TODO SERVICE
-            Log.i(TAG, "Stopping tracking location");
-//            generateCurrentDate();
-//            saveMapScreenshot();
-//            saveTrackToDatabase();
-//            stopTimer();
-//            handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
+            generateCurrentDate();
+            saveMapScreenshot();
+            saveTrackToDatabase();
             resetTrackingVariables();
 
             stopTrackingButton.setEnabled(false);
@@ -373,7 +277,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void resetTrackingVariables() {
-        previousLocation = null;
+        elapsedDurationTimeInMilliSeconds = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
         totalDistance = 0.0;
         totalCalories = 0;
         points.clear();
@@ -435,21 +342,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return dateFormat.format(currentDate);
     }
 
-    /**
-     * Cancels the existing countdown timer
-     */
-    private void stopTimer() {
-        elapsedDurationTimeInMilliSeconds = 0;
-        hours = 0;
-        minutes = 0;
-        seconds = 0;
-
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -491,7 +383,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(Config.DEFAULT_MARKER_COLOR)));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Config.GENERAL_CAMERA_ZOOM));
-//        foundLocation = true;
     }
 
     private boolean checkRequiredPermissions() {
@@ -541,6 +432,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     /*
      * Tracking muss noch mit zB bewegung abgestimmt werden
-     * Fetchen der Location, wenn keine gefunden
+     * Möglichkeiten um Distanzproblem zu lösen:
+     * Accelerometer checken
+     * Accuracy < 15-10 nur nehmen und alles andere melden
+     *  Activity STILL - https://medium.com/@saishaddai/how-to-recognize-when-the-user-is-not-moving-in-android-be6dba7a90bb
+     * Textviews updaten wenn neu gefetched + map fix bei neu fetchen (zoom)
      */
 }
