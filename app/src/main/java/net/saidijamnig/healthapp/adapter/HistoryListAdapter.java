@@ -5,12 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.saidijamnig.healthapp.Config;
@@ -33,6 +37,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     private ImageView activityTrack;
     private History history;
     private OnItemLongClickListener longClickListener;
+    private int selectedPosition = RecyclerView.NO_POSITION; // Initialize with an invalid position
 
     public HistoryListAdapter(ArrayList<History> list, Context context) {
         this.list = list;
@@ -57,6 +62,16 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull HistoryListAdapter.CustomViewHolder holder, int position) {
+        // Sets the animation for selected item
+        if (selectedPosition == holder.getAdapterPosition()) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.selection_animation);
+            holder.itemView.startAnimation(animation);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_color));
+        } else {
+            holder.itemView.clearAnimation();
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+        }
+
         history = list.get(position);
 
         durationTv = holder.binding.recviewTextviewDuration;
@@ -135,11 +150,16 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         longClickListener.onItemLongClick(binding.getRoot(), position);
-                        binding.getRoot().setSelected(true);
+
+                        int previousPosition = selectedPosition;
+                        selectedPosition = position;
+
+                        // Notifies the adapter of the item changes to trigger the animation and color change
+                        notifyItemChanged(previousPosition);
+                        notifyItemChanged(selectedPosition);
                         return true;
                     }
                 }
-                binding.getRoot().setSelected(false);
                 return false;
             });
         }
