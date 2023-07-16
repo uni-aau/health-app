@@ -120,14 +120,23 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         startTrackingButton = binding.buttonGpsStart;
         startTrackingButton.setOnClickListener(view1 -> startTracking());
         stopTrackingButton = binding.buttonGpsStop;
-        stopTrackingButton.setEnabled(false);
         stopTrackingButton.setOnClickListener(view1 -> stopTracking());
         printTracksButton = binding.buttonGpsDebug;
         printTracksButton.setOnClickListener(view1 -> printDebugTracksToConsole());
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        initializeStartValues();
+
+        if(!LocationTrackingService.isActive) {
+            stopTrackingButton.setEnabled(false);
+            startTrackingButton.setEnabled(true);
+            initializeStartValues();
+            isTracking = false;
+        } else {
+            startTrackingButton.setEnabled(false);
+            stopTrackingButton.setEnabled(true);
+            isTracking = true;
+        }
 
         // Inflate the layout for this fragment
         return view;

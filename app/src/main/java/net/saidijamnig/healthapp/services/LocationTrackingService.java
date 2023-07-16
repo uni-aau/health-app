@@ -43,6 +43,7 @@ import java.util.Locale;
 public class LocationTrackingService extends Service {
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
+    public static boolean isActive = false;
 
     private static final String CHANNEL_ID = "gps_tracking_channel";
     private static final int NOTIFICATION_ID = 1;
@@ -105,6 +106,7 @@ public class LocationTrackingService extends Service {
 
     private void startTracking() {
         Log.i(TAG, "Starting tracking location");
+        isActive = true;
         startTimer();
         trackLocation();
     }
@@ -194,6 +196,7 @@ public class LocationTrackingService extends Service {
 //            generateCurrentDate();
 //            saveMapScreenshot();
 //            saveTrackToDatabase();
+        isActive = false;
             stopTimer();
             handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
             resetTrackingVariables();
