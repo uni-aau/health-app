@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:id="@+id/deleteEntryPopupConstraint">
@@ -21,7 +19,7 @@
                 android:id="@+id/textView_delete_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Do you really want to delete entry %s?"
+                android:text="@string/text_popup_delete_question"
                 android:textColor="@color/blackSpecial"
                 android:textSize="20sp"
                 android:paddingTop="28dp"
@@ -62,7 +60,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-            android:contentDescription="Logo"
+            android:contentDescription="@string/text_logo_description"
             android:id="@+id/logo"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -14,10 +14,12 @@
     <string name="text_history_type">Typ: %s</string>
     <string name="text_history_date">%s</string>
     <string name="text_history_duration">Dauer: %s : %s : %s</string>
-    <string name="text_history_activity_title_noplural">Activity History</string>
+    <string name="text_history_activity_title_noplural">Activity History (Hold to delete entry)</string>
 
     <string name="text_button_no">No</string>
     <string name="text_button_yes">Yes</string>
+    <string name="text_popup_delete_question">Do you really want to delete entry id %s?</string>
+    <string name="text_logo_description">Logo</string>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>

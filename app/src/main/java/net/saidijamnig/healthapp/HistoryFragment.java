@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -97,8 +98,12 @@ public class HistoryFragment extends Fragment {
     private void openDeleteRequestPopUp() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(requireContext());
         EntryDeletePopupBinding popupBinding = EntryDeletePopupBinding.inflate(LayoutInflater.from(requireContext()));
+        TextView entryDeleteText = popupBinding.textViewDeleteEntry;
         alertDialogBuilder.setView(popupBinding.getRoot());
         alertDialogBuilder.setCancelable(false);
+
+        String formattedEntryDeleteString = getResources().getString(R.string.text_popup_delete_question, String.valueOf(historyElements.get(position).uid));
+        entryDeleteText.setText(formattedEntryDeleteString);
 
         AlertDialog alertDialog = alertDialogBuilder.create();
 
