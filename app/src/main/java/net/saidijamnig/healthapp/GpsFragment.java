@@ -429,13 +429,4 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private String formatTime(int value) {
         return String.format(Locale.getDefault(), Config.DURATION_FORMAT, value); // two digits and the leading is a zero if necessary
     }
-
-    /*
-     * Tracking muss noch mit zB bewegung abgestimmt werden
-     * Möglichkeiten um Distanzproblem zu lösen:
-     * Accelerometer checken
-     * Accuracy < 15-10 nur nehmen und alles andere melden
-     *  Activity STILL - https://medium.com/@saishaddai/how-to-recognize-when-the-user-is-not-moving-in-android-be6dba7a90bb
-     * Textviews updaten wenn neu gefetched + map fix bei neu fetchen (zoom)
-     */
 }
