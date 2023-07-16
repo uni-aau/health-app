@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,10 +32,19 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     private TextView distanceTv;
     private ImageView activityTrack;
     private History history;
+    private OnItemLongClickListener longClickListener;
 
     public HistoryListAdapter(ArrayList<History> list, Context context) {
         this.list = list;
         this.context = context;
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(View view, int position);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
 
@@ -119,6 +129,19 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         public CustomViewHolder(RecyclerViewHistoryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            binding.getRoot().setOnLongClickListener(view -> {
+                if (longClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        longClickListener.onItemLongClick(binding.getRoot(), position);
+                        binding.getRoot().setSelected(true);
+                        return true;
+                    }
+                }
+                binding.getRoot().setSelected(false);
+                return false;
+            });
         }
     }
 }
