@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id "org.sonarqube" version "4.2.1.3168"
-    id 'com.google.secrets_gradle_plugin' version '0.4'
+    //id 'com.google.secrets_gradle_plugin' version '0.4'
 }
 
 sonarqube {
