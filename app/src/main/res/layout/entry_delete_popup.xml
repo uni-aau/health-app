@@ -62,8 +62,8 @@
     <ImageView
             android:contentDescription="@string/text_logo_description"
             android:id="@+id/logo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/logo"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
