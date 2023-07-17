@@ -5,12 +5,12 @@
     <string name="compass_wheel" translatable="false">Kompassbild</string>
     <string name="compass_pointer" translatable="false">Kompassbild</string>
 
-    <string name="orientation">Orientierung:</string>
-    <string name="gps_orientation">Ausrichtung (GPS):</string>
-    <string name="altitude">Höhe (m):</string>
-    <string name="latitude">Breitengrad (GPS):</string>
-    <string name="longitude">Längengrad (GPS):</string>
-    <string name="brightness">Helligkeit (lux):</string>
+    <string name="orientation">Orientation:</string>
+    <string name="gps_orientation">GPS Orientation:</string>
+    <string name="altitude">Altitude (m):</string>
+    <string name="latitude">Latitude (GPS):</string>
+    <string name="longitude">Longitude (GPS):</string>
+    <string name="brightness">Brightness (lux):</string>
 
     <string name="sotw_north">N</string>
     <string name="sotw_east">E</string>
