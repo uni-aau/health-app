@@ -20,8 +20,7 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomNavigationView.setSelectedItemId(DEFAULT_SELECTED_ITEM_ID); // start position
         setContentView(binding.getRoot());
 
-        replaceFragment(new GpsFragment());
-
+        startGeneralFragment();
         switchFragments();
     }
 
@@ -38,10 +37,19 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.history) {
                 replaceFragment(new HistoryFragment());
             }
-
-
             return true;
         });
+    }
+
+    private void startGeneralFragment(){
+        if(getIntent().getAction() != null && getIntent().getAction().equals("OPEN_FRAGMENT")) {
+            String fragmentName = getIntent().getStringExtra("gpsFragmentOpen");
+            if (fragmentName != null && fragmentName.equals("gpsTracking")) {
+                replaceFragment(new GpsFragment());
+            }
+        }  else {
+            replaceFragment(new GpsFragment()); // Main page - Can be changed
+        }
     }
 
     private void replaceFragment(Fragment fragment) {
