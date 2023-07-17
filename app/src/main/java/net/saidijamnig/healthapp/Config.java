@@ -31,6 +31,3 @@ public class Config {
 
 
 }
-
-
-// DATE DAVOR ERSTELLEN

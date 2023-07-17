@@ -67,8 +67,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private TextView caloriesTV;
     private Button startTrackingButton;
     private Button stopTrackingButton;
-
-
     private boolean foundLocation = false;
     private int elapsedDurationTimeInMilliSeconds = 0;
     private static List<LatLng> points = new ArrayList<>();
@@ -107,15 +105,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if (!LocationTrackingService.isActive) {
+        if (LocationTrackingService.isActive) {
+            startTrackingButton.setEnabled(false);
+            stopTrackingButton.setEnabled(true);
+            isTracking = true;
+        } else {
             stopTrackingButton.setEnabled(false);
             startTrackingButton.setEnabled(true);
             initializeStartValues();
             isTracking = false;
-        } else {
-            startTrackingButton.setEnabled(false);
-            stopTrackingButton.setEnabled(true);
-            isTracking = true;
         }
 
         // Inflate the layout for this fragment
