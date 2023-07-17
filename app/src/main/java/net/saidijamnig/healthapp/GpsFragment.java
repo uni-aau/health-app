@@ -137,20 +137,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
-
-        // TODO more frequent location updates
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() != null) {
-                if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) {
-                    // Handles location updates
-                    Log.d("DEBUG", "Works");
+                if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) { // Handles location updates
                     totalDistance = intent.getDoubleExtra("distance", 0.0);
                     LatLng latLng = intent.getParcelableExtra("latlng");
+
                     points.add(latLng);
                     handleLocationUpdates(false);
-                } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) {
-                    // Handles duration updates
+                } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) { // Handles duration updates
                     elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
                     Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
                     setDurationValue();
@@ -159,13 +155,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
+    /**
+     * Receives a location and processes it
+     * Sets track textViews and updates Google Map
+     * @param isInitializationProcess is needed to determine the proper zoom of the GoogleMap
+     */
     private void handleLocationUpdates( boolean isInitializationProcess) {
-        LatLng latLng = points.get(points.size() - 1);
-        Log.d("DEBUG", "LatLng = " + latLng + " distance = " + totalDistance);
+        setGpsTrackTextViews();
 
-        String formattedTotalDistance = formatDistance();
-        String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
-        distanceTV.setText(formattedDistance);
+        LatLng latLng = points.get(points.size() - 1);
+        Log.d(TAG, "LatLng = " + latLng + " distance = " + totalDistance);
 
         mapFragment.getMapAsync(map -> {
             map.clear();
@@ -191,7 +190,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     /**
-     * Starts new track
+     * Starts new track with some checks if a location exists and whether a track already runs
      * Resets old tracking views and clears map
      */
     private void startTracking() {
@@ -414,11 +413,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     /**
-     * Sets the start values for the GPS textviews (e.g. duration)
+     * Sets the start values for the GPS TextViews
+     * Formats duration (to hours, minutes & seconds)
      */
     private void initializeStartValues() {
         setDurationValue();
+        setGpsTrackTextViews();
+    }
 
+    private void setGpsTrackTextViews() {
         String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
         caloriesTV.setText(formattedCalories);
         String formattedDistance = String.format(getString(R.string.text_gps_distance), formatDistance());
