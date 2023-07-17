@@ -2,7 +2,9 @@ package net.saidijamnig.healthapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +19,13 @@ public class HealthFragment extends Fragment {
     private TextView stepsTextView, pulseTextView, waterTextView, foodTextView;
     private Button pulseButton, waterPlusButton, waterMinusButton, foodInputButton;
 
-    // Variablen zur Speicherung der Werte
     private int stepsCount = 0;
     private int pulseRate = 0;
     private int waterCount = 0;
     private int foodCalories = 0;
+
+    private SharedPreferences sharedPreferences;
+
     public HealthFragment() {
         // Required empty public constructor
     }
@@ -29,11 +33,12 @@ public class HealthFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        loadSavedData();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_health, container, false);
 
         // Verknüpfung der Views mit den XML-Elementen
@@ -49,42 +54,63 @@ public class HealthFragment extends Fragment {
 
         // Klick-Listener für die Buttons
         pulseButton.setOnClickListener(v -> measurePulse());
-
         waterPlusButton.setOnClickListener(v -> incrementWaterCount());
-
         waterMinusButton.setOnClickListener(v -> decrementWaterCount());
-
         foodInputButton.setOnClickListener(v -> openFoodInput());
 
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveData();
+    }
+
+    private void loadSavedData() {
+        stepsCount = sharedPreferences.getInt("stepsCount", 0);
+        pulseRate = sharedPreferences.getInt("pulseRate", 0);
+        waterCount = sharedPreferences.getInt("waterCount", 0);
+        foodCalories = sharedPreferences.getInt("foodCalories", 0);
+        updateUI();
+    }
+
+    private void saveData() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("stepsCount", stepsCount);
+        editor.putInt("pulseRate", pulseRate);
+        editor.putInt("waterCount", waterCount);
+        editor.putInt("foodCalories", foodCalories);
+        editor.apply();
+    }
+
+    private void updateUI() {
+        stepsTextView.setText("Steps: " + stepsCount);
+        pulseTextView.setText("Pulse: " + pulseRate + " bpm");
+        waterTextView.setText("Water: " + waterCount + " glasses");
+        foodTextView.setText("Food: " + foodCalories + " kcal");
+    }
+
     private void countSteps() {
         stepsCount++;
-
-        stepsTextView.setText("Steps: " + stepsCount);
+        updateUI();
     }
 
     private void measurePulse() {
         pulseRate = (int) (Math.random() * 100) + 50;
-
-        pulseTextView.setText("Pulse: " + pulseRate + " bpm");
+        updateUI();
     }
 
     private void incrementWaterCount() {
         waterCount++;
-        updateWaterCount();
+        updateUI();
     }
 
     private void decrementWaterCount() {
         if (waterCount > 0) {
             waterCount--;
-            updateWaterCount();
+            updateUI();
         }
-    }
-
-    private void updateWaterCount() {
-        waterTextView.setText("Water: " + waterCount + " glasses");
     }
 
     private void openFoodInput() {
@@ -101,7 +127,7 @@ public class HealthFragment extends Fragment {
                 String calories = input.getText().toString();
                 if (!calories.isEmpty()) {
                     foodCalories = Integer.parseInt(calories);
-                    updateFoodCalories();
+                    updateUI();
                 }
             }
         });
@@ -112,12 +138,6 @@ public class HealthFragment extends Fragment {
                 dialog.cancel();
             }
         });
-
         builder.show();
-    }
-
-    private void updateFoodCalories() {
-        foodTextView.setText("Food: " + foodCalories + " kcal");
-
     }
 }
