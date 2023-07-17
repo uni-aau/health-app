@@ -45,14 +45,13 @@ public class LocationTrackingService extends Service {
     private static final int NOTIFICATION_ID = 1;
 
 
-    private double totalDistance = 0.0;
+    public static double totalDistance = 0.0;
     private int totalCalories = 0;
     private CountDownTimer timer;
-    private int elapsedDurationTimeInMilliSeconds = 0;
+    public static int elapsedDurationTimeInMilliSeconds = 0;
     private Handler handler;
     private Location previousLocation;
     private FusedLocationProviderClient fusedLocationClient;
-    private List<LatLng> points = new ArrayList<>();
     private LocalBroadcastManager broadcastManager;
 
     @Nullable
@@ -217,7 +216,6 @@ public class LocationTrackingService extends Service {
         previousLocation = null;
         totalDistance = 0.0;
         totalCalories = 0;
-        points.clear();
     }
 
 
