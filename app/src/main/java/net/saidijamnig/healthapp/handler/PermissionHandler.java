@@ -24,4 +24,8 @@ public class PermissionHandler {
         ActivityCompat.requestPermissions(activityCompat, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
     }
 
+    public static boolean checkForNotificationPermission(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE) == PackageManager.PERMISSION_GRANTED;
+    }
+
 }
