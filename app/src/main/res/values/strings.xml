@@ -20,6 +20,8 @@
     <string name="text_button_yes">Yes</string>
     <string name="text_popup_delete_question">Do you really want to delete entry id %s?</string>
     <string name="text_logo_description">Logo</string>
+    <string name="gps_service_notification_title">GPS Tracking Running!</string>
+    <string name="gps_service_notification_description">A gps track is running in background!</string>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>

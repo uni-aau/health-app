@@ -82,6 +82,9 @@ public class LocationTrackingService extends Service {
         }
     }
 
+    /**
+     * Sets the notification channel
+     */
     private void createNotificationChannel() {
         CharSequence channelName = "GPS";
         String channelDescription = "Service running in background";
@@ -94,6 +97,11 @@ public class LocationTrackingService extends Service {
         notificationManager.createNotificationChannel(channel);
     }
 
+    /**
+     * Implements notification that will be shown if a GPS track is running
+     * Has a title, text, icon, cannot be deleted and opens GPSFragment when beeing clicked
+     * @return Notification with config
+     */
     private Notification buildNotification() {
         Context context = getApplicationContext();
         Bitmap largeIconBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
@@ -103,16 +111,15 @@ public class LocationTrackingService extends Service {
         intent.setAction("OPEN_FRAGMENT");
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("GPS Tracking Running!")
-                .setContentText("A gps track is running in background!") // 46
+                .setContentTitle(getString(R.string.gps_service_notification_title))
+                .setContentText(getString(R.string.gps_service_notification_description)) // 46 letters on S10
                 .setSmallIcon(R.drawable.logo)
                 .setLargeIcon(largeIconBitmap)
-                .setColor(Color.BLUE)// TODO
-                .setOngoing(true)
+                .setColor(Config.GPS_NOTIFICATION_COLOR)
+                .setOngoing(Config.GPS_NOTIFICATION_IS_ONGOING)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT); // TODO
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return builder.build();
     }
 
@@ -131,7 +138,7 @@ public class LocationTrackingService extends Service {
     }
 
     /**
-     * Starts the tracking timer
+     * Starts the tracking timer and increases variable each second 1000ms
      */
     private void startTimer() {
         Log.i(TAG, "Starting timer!");

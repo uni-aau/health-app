@@ -25,6 +25,11 @@ public class Config {
 
     public static final long MAP_UPDATE_INTERVAL = 3000L;
 
+
+    public static final int GPS_NOTIFICATION_COLOR = Color.BLUE;
+    public static final boolean GPS_NOTIFICATION_IS_ONGOING = true;
+
+
 }
 
 
