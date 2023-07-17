@@ -49,7 +49,6 @@ import java.util.Locale;
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
     public static final String ACTION_LOCATION_UPDATE = "ACTION_LOCATION_UPDATE";
     public static final String ACTION_DURATION_UPDATE = "ACTION_DURATION_UDPATE";
-    public static final String ACTION_TRACKING_STOPPED = "ACTION_TRACKING_STOPPED";
 
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
@@ -354,8 +353,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
         if (checkRequiredPermissions()) {
+            mMap.setMyLocationEnabled(true);
             fetchLocationAndUpdateMap();
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
