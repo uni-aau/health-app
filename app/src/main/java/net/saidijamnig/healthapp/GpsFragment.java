@@ -109,6 +109,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             startTrackingButton.setEnabled(false);
             stopTrackingButton.setEnabled(true);
             isTracking = true;
+
+            initializeCurrentTrackingValues();
         } else {
             stopTrackingButton.setEnabled(false);
             startTrackingButton.setEnabled(true);
@@ -126,6 +128,14 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(locationUpdateReceiver);
     }
 
+    private void initializeCurrentTrackingValues() {
+        totalDistance = LocationTrackingService.totalDistance;
+        elapsedDurationTimeInMilliSeconds = LocationTrackingService.elapsedDurationTimeInMilliSeconds;
+
+        initializeStartValues();
+        handleLocationUpdates(true);
+    }
+
     private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
 
         // TODO more frequent location updates
@@ -137,7 +147,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                     Log.d("DEBUG", "Works");
                     totalDistance = intent.getDoubleExtra("distance", 0.0);
                     LatLng latLng = intent.getParcelableExtra("latlng");
-                    handleLocationUpdates(latLng);
+                    points.add(latLng);
+                    handleLocationUpdates(false);
                 } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) {
                     // Handles duration updates
                     elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
@@ -148,14 +159,14 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         }
     };
 
-    private void handleLocationUpdates(LatLng latLng) {
+    private void handleLocationUpdates( boolean isInitializationProcess) {
+        LatLng latLng = points.get(points.size() - 1);
         Log.d("DEBUG", "LatLng = " + latLng + " distance = " + totalDistance);
 
         String formattedTotalDistance = formatDistance();
         String formattedDistance = String.format(getString(R.string.text_gps_distance), formattedTotalDistance);
         distanceTV.setText(formattedDistance);
 
-        points.add(latLng);
         mapFragment.getMapAsync(map -> {
             map.clear();
             map.addPolyline(new PolylineOptions()
@@ -163,7 +174,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                     .color(Config.MAP_LINE_COLOR)
                     .addAll(points)
             );
-            float currentSelectedZoom = map.getCameraPosition().zoom;
+            float currentSelectedZoom = isInitializationProcess ? Config.GENERAL_CAMERA_ZOOM : map.getCameraPosition().zoom;
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, currentSelectedZoom));
         });
     }
@@ -209,7 +220,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * @return formatted String
      */
     private String formatDistance() {
-        return String.format(Locale.getDefault(), "%.2f", totalDistance);
+        return String.format(Locale.getDefault(), Config.DISTANCE_FORMAT, totalDistance);
     }
 
     private void stopTracking() {
@@ -410,7 +421,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
         String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
         caloriesTV.setText(formattedCalories);
-        String formattedDistance = String.format(getString(R.string.text_gps_distance), String.valueOf(totalDistance));
+        String formattedDistance = String.format(getString(R.string.text_gps_distance), formatDistance());
         distanceTV.setText(formattedDistance);
     }
 

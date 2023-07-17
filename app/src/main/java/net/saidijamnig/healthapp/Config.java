@@ -12,7 +12,8 @@ public class Config {
 
     public static final int FALLBACK_IMAGE_PATH = R.drawable.no_image;
     public static final String TRACK_NAME_FORMAT = "activity_track_%s";
-    public static final String DURATION_FORMAT = "%02d";
+    public static final String DURATION_FORMAT = "%02d"; // Int
+    public static final String DISTANCE_FORMAT = "%.02f"; // Double
     public static final float GENERAL_CAMERA_ZOOM = 15f;
     public static final float DEFAULT_MARKER_COLOR = BitmapDescriptorFactory.HUE_RED;
     public static final String TIME_FORMAT_TRACK_NAME = "ddMMyyyy_HHmmss";
