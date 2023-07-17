@@ -26,4 +26,6 @@
     <string name="history">History</string>
     <string name="compass">Compass</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="use_the_compass_to_track_your_orientation">Use the compass to track your orientation.</string>
+    <string name="the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge">The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge</string>
 </resources>

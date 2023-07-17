@@ -3,7 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".CompassActivity">
+        tools:context=".CompassFragment">
 
     <TextView
             android:id="@+id/titleTextView"
@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="Compass"
+            android:text="@string/compass"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
             android:layout_below="@id/titleTextView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="Use the compass to track your orientation."
+            android:text="@string/use_the_compass_to_track_your_orientation"
             android:textSize="16sp" />
 
     <ImageView
@@ -57,7 +57,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="376dp"
             android:layout_marginEnd="18dp"
-            android:text="The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge"
+            android:text="@string/the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge"
             android:textSize="14sp" />
 
     <TextView
