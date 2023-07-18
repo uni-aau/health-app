@@ -193,6 +193,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Resets old tracking views and clears map
      */
     private void startTracking() {
+        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if(!isGpsEnabled || !isNetworkEnabled) {
+            Toast.makeText(getActivity(), "Error, please enable your GPS and/or Internet Connection and try again!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (!foundLocation) {
             Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
             return;
