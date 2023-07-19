@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.CustomViewHolder> {
+    private static final String TAG = "HA-main";
     private final ArrayList<History> list;
     private final Context context;
-    private static final String TAG = "HA-main";
     private TextView durationTv;
     private TextView typeTv;
     private TextView dateTv;
@@ -40,14 +40,9 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         this.context = context;
     }
 
-    public interface OnItemLongClickListener {
-        void onItemLongClick(View view, int position);
-    }
-
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         this.longClickListener = listener;
     }
-
 
     @NonNull
     @Override
@@ -131,6 +126,10 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(View view, int position);
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {

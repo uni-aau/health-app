@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -34,21 +33,15 @@ import net.saidijamnig.healthapp.MainActivity;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.handler.PermissionHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LocationTrackingService extends Service {
     private static final String TAG = "GPS-Main";
-    public static boolean isActive = false;
-
     private static final String CHANNEL_ID = "gps_tracking_channel";
     private static final int NOTIFICATION_ID = 1;
-
-
+    public static boolean isActive = false;
     public static double totalDistance = 0.0;
+    public static int elapsedDurationTimeInMilliSeconds = 0;
     private int totalCalories = 0;
     private CountDownTimer timer;
-    public static int elapsedDurationTimeInMilliSeconds = 0;
     private Handler handler;
     private Location previousLocation;
     private FusedLocationProviderClient fusedLocationClient;
@@ -99,6 +92,7 @@ public class LocationTrackingService extends Service {
     /**
      * Implements notification that will be shown if a GPS track is running
      * Has a title, text, icon, cannot be deleted and opens GPSFragment when beeing clicked
+     *
      * @return Notification with config
      */
     private Notification buildNotification() {

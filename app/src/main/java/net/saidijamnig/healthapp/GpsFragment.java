@@ -53,7 +53,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
-
+    private static List<LatLng> points = new ArrayList<>();
     private double totalDistance = 0.0;
     private GoogleMap mMap;
     private int totalCalories = 0;
@@ -69,13 +69,29 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Button stopTrackingButton;
     private boolean foundLocation = false;
     private int elapsedDurationTimeInMilliSeconds = 0;
-    private static List<LatLng> points = new ArrayList<>();
     private AppDatabase db;
     private HistoryDao historyDao;
-    private Button printTracksButton; // only for debug
     private String imageTrackAbsolutePath;
     private String imageName;
     private Date currentDate;
+    private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() != null) {
+                if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) { // Handles location updates
+                    totalDistance = intent.getDoubleExtra("distance", 0.0);
+                    LatLng latLng = intent.getParcelableExtra("latlng");
+
+                    points.add(latLng);
+                    handleLocationUpdates(false);
+                } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) { // Handles duration updates
+                    elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
+                    Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
+                    setDurationValue();
+                }
+            }
+        }
+    };
 
     public GpsFragment() {
         // Required empty public constructor
@@ -99,7 +115,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         startTrackingButton.setOnClickListener(view1 -> startTracking());
         stopTrackingButton = binding.buttonGpsStop;
         stopTrackingButton.setOnClickListener(view1 -> stopTracking());
-        printTracksButton = binding.buttonGpsDebug;
+        Button printTracksButton = binding.buttonGpsDebug;
         printTracksButton.setOnClickListener(view1 -> printDebugTracksToConsole());
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -136,31 +152,13 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         handleLocationUpdates(true);
     }
 
-    private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null) {
-                if (intent.getAction().equals(ACTION_LOCATION_UPDATE)) { // Handles location updates
-                    totalDistance = intent.getDoubleExtra("distance", 0.0);
-                    LatLng latLng = intent.getParcelableExtra("latlng");
-
-                    points.add(latLng);
-                    handleLocationUpdates(false);
-                } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) { // Handles duration updates
-                    elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
-                    Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
-                    setDurationValue();
-                }
-            }
-        }
-    };
-
     /**
      * Receives a location and processes it
      * Sets track textViews and updates Google Map
+     *
      * @param isInitializationProcess is needed to determine the proper zoom of the GoogleMap
      */
-    private void handleLocationUpdates( boolean isInitializationProcess) {
+    private void handleLocationUpdates(boolean isInitializationProcess) {
         setGpsTrackTextViews();
 
         LatLng latLng = points.get(points.size() - 1);
@@ -198,7 +196,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        if(!isGpsEnabled || !isNetworkEnabled) {
+        if (!isGpsEnabled || !isNetworkEnabled) {
             Toast.makeText(getActivity(), "Error, please enable your GPS and/or Internet Connection and try again!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -249,7 +247,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void saveMapScreenshot() {
         Log.i(TAG, "Trying to make a screenshot");
-        if(!points.isEmpty()) {
+        if (!points.isEmpty()) {
             calculateZoomLevel();
         }
 
@@ -350,7 +348,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                         history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
                 Log.i(DB_TAG, formattedString);
             }
-//            historyDao.deleteAll();
         });
         thread.start();
     }

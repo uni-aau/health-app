@@ -81,7 +81,7 @@
             android:layout_marginTop="48dp" />
 
     <Button
-            android:text="Start"
+            android:text="@string/text_button_start_tracking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_gps_start"
@@ -92,7 +92,7 @@
             android:layout_marginBottom="14dp" />
 
     <Button
-            android:text="Stop"
+            android:text="@string/text_button_stop_tracking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_gps_stop"
@@ -103,7 +103,7 @@
             android:layout_marginBottom="14dp" />
 
     <Button
-            android:text="Print Tracks"
+            android:text="@string/text_button_print_tracks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_gps_debug"

@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startGeneralFragment(){
-        if(getIntent().getAction() != null && getIntent().getAction().equals("OPEN_FRAGMENT")) {
+    private void startGeneralFragment() {
+        if (getIntent().getAction() != null && getIntent().getAction().equals("OPEN_FRAGMENT")) {
             String fragmentName = getIntent().getStringExtra("gpsFragmentOpen");
             if (fragmentName != null && fragmentName.equals("gpsTracking")) {
                 replaceFragment(new GpsFragment());
             }
-        }  else {
+        } else {
             replaceFragment(new GpsFragment()); // Main page - Can be changed
         }
     }

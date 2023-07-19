@@ -22,6 +22,10 @@
     <string name="text_logo_description">Logo</string>
     <string name="gps_service_notification_title">GPS Tracking Running!</string>
     <string name="gps_service_notification_description">A gps track is running in background!</string>
+    <string name="text_button_print_tracks">Print Tracks</string>
+    <string name="text_button_stop_tracking">Stop</string>
+    <string name="text_button_start_tracking">Start</string>
+    <string name="text_description_map">Map Screenshot</string>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>

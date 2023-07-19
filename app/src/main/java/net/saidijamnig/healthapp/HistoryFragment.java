@@ -31,10 +31,10 @@ import java.util.Collections;
 
 public class HistoryFragment extends Fragment {
 
+    HistoryListAdapter viewAdapter;
     private HistoryDao historyDao;
     private FragmentHistoryBinding binding;
     private ArrayList<History> historyElements = new ArrayList<>();
-    HistoryListAdapter viewAdapter;
     private int position;
 
     public HistoryFragment() {
@@ -144,9 +144,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void deleteHistoryEntryFromDatabase(int uid) {
-        Thread thread = new Thread(() -> {
-            historyDao.deleteHistoryEntryById(uid);
-        });
+        Thread thread = new Thread(() -> historyDao.deleteHistoryEntryById(uid));
         thread.start();
         Log.i("TAG", "Successfully deleted history entry " + uid);
     }
