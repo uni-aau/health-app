@@ -27,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -248,6 +249,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void saveMapScreenshot() {
         Log.i(TAG, "Trying to make a screenshot");
+        if(!points.isEmpty()) {
+            calculateZoomLevel();
+        }
+
         GoogleMap.SnapshotReadyCallback callback = snapshot -> {
             FileOutputStream outputStream = null;
             try {
@@ -257,7 +262,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                 imageTrackAbsolutePath = file.getAbsolutePath();
                 outputStream = new FileOutputStream(file);
                 snapshot.compress(Config.COMPRESS_FORMAT, Config.COMPRESS_QUALITY, outputStream);
-                System.out.println(imageName + " 2");
 
                 Log.i(TAG, "Successfully saved file to internal storage with path " + imageTrackAbsolutePath + " and name " + imageName);
             } catch (IOException e) {
@@ -287,9 +291,22 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return String.format(unformattedTrackName, formatCurrentDate(true));
     }
 
-    // TODO
-    private float calculateZoomLevel(List<LatLng> line) {
-        return 0.0F;
+    private void calculateZoomLevel() {
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (LatLng point : points) {
+            boundsBuilder.include(point);
+        }
+
+        LatLngBounds bounds = boundsBuilder.build();
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(googleMap -> {
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels;
+                int padding = (int) (height * 0.05f);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+            });
+        }
     }
 
     private void resetTrackingVariables() {
