@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ import net.saidijamnig.healthapp.services.LocationTrackingService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +54,7 @@ import java.util.Locale;
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
     public static final String ACTION_LOCATION_UPDATE = "ACTION_LOCATION_UPDATE";
     public static final String ACTION_DURATION_UPDATE = "ACTION_DURATION_UDPATE";
+    FragmentGpsBinding binding;
 
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
@@ -73,6 +78,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private HistoryDao historyDao;
     private String imageTrackAbsolutePath;
     private String imageName;
+    private Spinner spinner;
     private Date currentDate;
     private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -99,7 +105,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentGpsBinding binding;
         binding = FragmentGpsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
@@ -107,20 +112,59 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_LOCATION_UPDATE));
 
         initializeDatabase();
-
-        durationTV = binding.gpsTextviewDurationStatus;
-        distanceTV = binding.gpsTextviewDistance;
-        caloriesTV = binding.gpsTextviewCalories;
-        startTrackingButton = binding.buttonGpsStart;
-        startTrackingButton.setOnClickListener(view1 -> startTracking());
-        stopTrackingButton = binding.buttonGpsStop;
-        stopTrackingButton.setOnClickListener(view1 -> stopTracking());
-        Button printTracksButton = binding.buttonGpsDebug;
-        printTracksButton.setOnClickListener(view1 -> printDebugTracksToConsole());
+        initializeGuiElements();
+        initializeSpinner();
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        initializeTrackingProcess();
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    private void initializeGuiElements() {
+        durationTV = binding.gpsTextviewDurationStatus;
+        distanceTV = binding.gpsTextviewDistance;
+        caloriesTV = binding.gpsTextviewDistance; // TODO
+        startTrackingButton = binding.buttonGpsStart;
+        spinner = binding.gpsSpinnerType;
+        stopTrackingButton = binding.buttonGpsStop;
+
+        startTrackingButton.setOnClickListener(view1 -> startTracking());
+        stopTrackingButton.setOnClickListener(view1 -> stopTracking());
+
+        binding.gpsLogo.setImageResource(R.drawable.logo);
+    }
+
+    private void initializeSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.spinner_values,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String selectedItem = adapterView.getItemAtPosition(position).toString();
+
+                // Do something with the selected item
+                Toast.makeText(requireContext(), "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void initializeTrackingProcess() {
         if (LocationTrackingService.isActive) {
             startTrackingButton.setEnabled(false);
             stopTrackingButton.setEnabled(true);
@@ -133,9 +177,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             initializeStartValues();
             isTracking = false;
         }
-
-        // Inflate the layout for this fragment
-        return view;
     }
 
     @Override

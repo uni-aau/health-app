@@ -5,7 +5,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".GpsFragment"
-        android:id="@+id/gps_constraintLayout">
+        android:id="@+id/gps_constraintLayout"
+        tools:layout_editor_absoluteY="-1dp"
+        tools:layout_editor_absoluteX="0dp">
 
     <ImageView
             android:layout_width="60dp"
@@ -16,8 +18,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            android:background="#FF0000" />
+            app:layout_constraintHorizontal_bias="0.5" />
 
     <TextView
             android:text="@string/text_gps_distance"
@@ -28,17 +29,14 @@
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/gps_textview_calories"
+            app:layout_constraintEnd_toStartOf="@+id/gps_spinner_type"
             app:layout_constraintTop_toBottomOf="@+id/gps_textview_duration"
             android:layout_marginTop="20dp" />
 
-    <TextView
-            android:text="@string/text_gps_calories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/gps_textview_calories"
-            android:textSize="12sp"
-            android:gravity="center"
+    <Spinner
+            android:layout_width="111dp"
+            android:layout_height="32dp"
+            android:id="@+id/gps_spinner_type"
             app:layout_constraintStart_toEndOf="@+id/gps_textview_distance"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
@@ -77,7 +75,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gps_textview_calories"
+            app:layout_constraintTop_toBottomOf="@+id/gps_spinner_type"
             android:layout_marginTop="48dp" />
 
     <Button
@@ -85,31 +83,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_gps_start"
-            app:layout_constraintStart_toEndOf="@+id/button_gps_debug"
+            app:layout_constraintStart_toEndOf="@+id/button_gps_stop"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="14dp" />
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="25dp" />
 
     <Button
             android:text="@string/text_button_stop_tracking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_gps_stop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/button_gps_debug"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="14dp" />
-
-    <Button
-            android:text="@string/text_button_print_tracks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_gps_debug"
-            app:layout_constraintStart_toEndOf="@+id/button_gps_stop"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/button_gps_start"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="14dp" />
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            android:layout_marginStart="25dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
