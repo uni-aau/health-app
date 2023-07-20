@@ -21,6 +21,7 @@ import net.saidijamnig.healthapp.handler.TextFormatHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.CustomViewHolder> {
@@ -36,8 +37,8 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     private OnItemLongClickListener longClickListener;
     private int selectedPosition = RecyclerView.NO_POSITION; // Initialize with an invalid position
 
-    public HistoryListAdapter(ArrayList<History> list, Context context) {
-        this.list = list;
+    public HistoryListAdapter(List<History> list, Context context) {
+        this.list = (ArrayList<History>) list;
         this.context = context;
     }
 
