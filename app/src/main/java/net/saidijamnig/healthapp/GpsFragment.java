@@ -60,15 +60,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private static List<LatLng> points = new ArrayList<>();
     private double totalDistance = 0.0;
     private GoogleMap mMap;
-    private int totalCalories = 0;
-    private int seconds = 0;
-    private int minutes = 0;
-    private int hours = 0;
     private boolean isTracking = false;
     private SupportMapFragment mapFragment;
     private TextView durationTV;
     private TextView distanceTV;
-    private TextView caloriesTV;
     private Button startTrackingButton;
     private Button stopTrackingButton;
     private boolean foundLocation = false;
@@ -125,7 +120,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private void initializeGuiElements() {
         durationTV = binding.gpsTextviewDurationStatus;
         distanceTV = binding.gpsTextviewDistance;
-        caloriesTV = binding.gpsTextviewDistance; // TODO
         startTrackingButton = binding.buttonGpsStart;
         spinner = binding.gpsSpinnerType;
         stopTrackingButton = binding.buttonGpsStop;
@@ -348,11 +342,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void resetTrackingVariables() {
         elapsedDurationTimeInMilliSeconds = 0;
-        hours = 0;
-        minutes = 0;
-        seconds = 0;
         totalDistance = 0.0;
-        totalCalories = 0;
         points.clear();
         imageTrackAbsolutePath = null;
         imageName = null;
@@ -450,8 +440,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setGpsTrackTextViews() {
-        String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
-        caloriesTV.setText(formattedCalories);
         String formattedDistance = String.format(getString(R.string.text_gps_distance), formatDistance());
         distanceTV.setText(formattedDistance);
     }
