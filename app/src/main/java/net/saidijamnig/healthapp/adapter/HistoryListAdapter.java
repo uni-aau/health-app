@@ -22,7 +22,6 @@ import net.saidijamnig.healthapp.handler.TextFormatHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.CustomViewHolder> {
     private static final String TAG = "HA-main";

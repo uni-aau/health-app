@@ -23,9 +23,8 @@ public class Config {
     public static final boolean GPS_NOTIFICATION_IS_ONGOING = true;
 
     public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
+
     private Config() {
         // No instantiation
     }
-
-
 }

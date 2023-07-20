@@ -23,7 +23,7 @@ public class DatabaseHandler {
     }
 
     public static synchronized void closeHistoryDatabase() {
-        if(historyDb != null) {
+        if (historyDb != null) {
             historyDb.close();
         }
     }

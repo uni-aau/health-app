@@ -1,7 +1,6 @@
 package net.saidijamnig.healthapp;
 
 import android.app.AlertDialog;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import net.saidijamnig.healthapp.adapter.HistoryListAdapter;
 import net.saidijamnig.healthapp.database.AppDatabase;
@@ -48,7 +46,7 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
 
-        binding.historyRecyclerView.setPadding(0,0,0, Config.NAVBAR_HEIGHT);
+        binding.historyRecyclerView.setPadding(0, 0, 0, Config.NAVBAR_HEIGHT);
 
         initializeDatabase();
         processDataFromDatabase();

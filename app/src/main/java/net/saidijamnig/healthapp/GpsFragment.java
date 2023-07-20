@@ -53,11 +53,10 @@ import java.util.Locale;
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
     public static final String ACTION_LOCATION_UPDATE = "ACTION_LOCATION_UPDATE";
     public static final String ACTION_DURATION_UPDATE = "ACTION_DURATION_UDPATE";
-    FragmentGpsBinding binding;
-
     private static final String TAG = "GPS-Main";
     private static final String DB_TAG = "GPS-DB";
     private static List<LatLng> points = new ArrayList<>();
+    FragmentGpsBinding binding;
     private double totalDistance = 0.0;
     private GoogleMap mMap;
     private boolean isTracking = false;
