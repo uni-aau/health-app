@@ -39,6 +39,7 @@ import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
 import net.saidijamnig.healthapp.handler.DatabaseHandler;
 import net.saidijamnig.healthapp.handler.PermissionHandler;
+import net.saidijamnig.healthapp.handler.TextFormatHandler;
 import net.saidijamnig.healthapp.services.LocationTrackingService;
 
 import java.io.File;
@@ -254,15 +255,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    /**
-     * Formats the distance to only two digits after comma
-     *
-     * @return formatted String
-     */
-    private String formatDistance() {
-        return String.format(Locale.getDefault(), Config.DISTANCE_FORMAT, totalDistance);
-    }
-
     private void stopTracking() {
         if (isTracking) {
             Log.i(TAG, "Stopping tracking location");
@@ -289,7 +281,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void saveMapScreenshot() {
-
         GoogleMap.SnapshotReadyCallback callback = snapshot -> {
             FileOutputStream outputStream = null;
             try {
@@ -412,12 +403,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return dateFormat.format(currentDate);
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         if (checkRequiredPermissions()) {
-            mMap.setMyLocationEnabled(true);
             fetchLocationAndUpdateMap();
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
@@ -428,6 +417,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private void fetchLocationAndUpdateMap() {
+        mMap.setMyLocationEnabled(true);
         LocationManager locationManager;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -483,6 +473,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         setGpsTrackTextViews();
     }
 
+    /**
+     * Formats the distance to only two digits after comma
+     *
+     * @return formatted String
+     */
+    private String formatDistance() {
+        return String.format(Locale.getDefault(), Config.DISTANCE_FORMAT, totalDistance);
+    }
+
     private void setGpsTrackTextViews() {
         String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
         caloriesTV.setText(formattedCalories);
@@ -491,16 +490,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setDurationValue() {
-        hours = (elapsedDurationTimeInMilliSeconds / (1000 * 60 * 60)) % 24;
-        minutes = (elapsedDurationTimeInMilliSeconds / (1000 * 60)) % 60;
-        seconds = (elapsedDurationTimeInMilliSeconds / 1000) % 60;
-
-        String durationStatus = getString(R.string.text_gps_duration_status);
-        String formattedDurationStatus = String.format(durationStatus, formatTime(hours), formatTime(minutes), formatTime(seconds));
+        String unformattedDurationStatus = getString(R.string.text_gps_duration_status);
+        String formattedDurationStatus = TextFormatHandler.getFormattedDurationTime(elapsedDurationTimeInMilliSeconds, unformattedDurationStatus);
         durationTV.setText(formattedDurationStatus);
-    }
-
-    private String formatTime(int value) {
-        return String.format(Locale.getDefault(), Config.DURATION_FORMAT, value); // two digits and the leading is a zero if necessary
     }
 }
