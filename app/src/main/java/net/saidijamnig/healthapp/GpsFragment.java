@@ -70,11 +70,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private int elapsedDurationTimeInMilliSeconds = 0;
     private HistoryDao historyDao;
     private String imageTrackAbsolutePath;
-    private String imageName;
     private Spinner spinner;
     private String selectedActivityType;
     private Date currentDate;
-    private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() != null) {
@@ -220,7 +219,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Resets old tracking views and clears map
      */
     private void startTracking() {
-        if(!checkForTrackingRequirements()) return;
+        if (!checkForTrackingRequirements()) return;
         initializeStartValues();
         mMap.clear();
 
@@ -283,27 +282,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void saveMapScreenshot() {
         GoogleMap.SnapshotReadyCallback callback = snapshot -> {
-            FileOutputStream outputStream = null;
-            try {
-                imageName = formatImageTrackName();
-                File directory = requireActivity().getApplicationContext().getFilesDir();
-                File file = new File(directory, imageName);
-                imageTrackAbsolutePath = file.getAbsolutePath();
-                outputStream = new FileOutputStream(file);
-                snapshot.compress(Config.COMPRESS_FORMAT, Config.COMPRESS_QUALITY, outputStream);
+            String imageName = formatImageTrackName();
+            File directory = requireActivity().getApplicationContext().getFilesDir();
+            File file = new File(directory, imageName);
+            String imageTrackAbsolutePath = file.getAbsolutePath();
 
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                snapshot.compress(Config.COMPRESS_FORMAT, Config.COMPRESS_QUALITY, outputStream);
                 Log.i(TAG, "Successfully saved file to internal storage with path " + imageTrackAbsolutePath + " and name " + imageName);
             } catch (IOException e) {
                 Log.e(TAG, "Error saving image: " + e);
-            } finally {
-                if (outputStream != null) {
-                    try {
-                        Log.i(TAG, "Outputstream successfully closed!");
-                        outputStream.close();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error closing Fileoutputstream: " + e);
-                    }
-                }
             }
         };
 
@@ -345,7 +333,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         totalDistance = 0.0;
         points.clear();
         imageTrackAbsolutePath = null;
-        imageName = null;
 
         isTracking = false;
     }
@@ -360,7 +347,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         newHistoryEntry.activityType = String.valueOf(selectedActivityType);
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
-        newHistoryEntry.activityDate = TextFormatHandler.formatCurrentDate(false,  currentDate);
+        newHistoryEntry.activityDate = TextFormatHandler.formatCurrentDate(false, currentDate);
         newHistoryEntry.imageTrackName = formatImageTrackName();
         newHistoryEntry.fullImageTrackPath = imageTrackAbsolutePath;
 
