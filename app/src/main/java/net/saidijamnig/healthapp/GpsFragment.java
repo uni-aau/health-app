@@ -93,7 +93,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                     handleLocationUpdates(false);
                 } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) { // Handles duration updates
                     elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
-                    Log.d(TAG, String.valueOf(elapsedDurationTimeInMilliSeconds));
                     setDurationValue();
                 }
             }

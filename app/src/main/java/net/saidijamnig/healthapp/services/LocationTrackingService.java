@@ -118,7 +118,6 @@ public class LocationTrackingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("Test", "Start command");
         startTracking();
         return super.onStartCommand(intent, flags, startId);
     }
