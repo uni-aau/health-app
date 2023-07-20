@@ -21,6 +21,7 @@ import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.EntryDeletePopupBinding;
 import net.saidijamnig.healthapp.databinding.FragmentHistoryBinding;
+import net.saidijamnig.healthapp.handler.DatabaseHandler;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,12 +54,8 @@ public class HistoryFragment extends Fragment {
         return binding.getRoot();
     }
 
-    // TODO AUSLAGERN
     private void initializeDatabase() {
-        AppDatabase db;
-        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
-                .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
-                .build();
+        AppDatabase db = DatabaseHandler.getInitializedHistoryDatabase(requireContext());
         historyDao = db.historyDao();
     }
 
