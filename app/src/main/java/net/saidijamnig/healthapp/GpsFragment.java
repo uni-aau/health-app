@@ -45,7 +45,6 @@ import net.saidijamnig.healthapp.services.LocationTrackingService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +91,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                     handleLocationUpdates(false);
                 } else if (intent.getAction().equals(ACTION_DURATION_UPDATE)) { // Handles duration updates
                     elapsedDurationTimeInMilliSeconds = intent.getIntExtra("time", 0);
-                    setDurationValue();
+                    setFormattedDurationValue();
                 }
             }
         }
@@ -227,20 +226,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Resets old tracking views and clears map
      */
     private void startTracking() {
-        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (!isGpsEnabled || !isNetworkEnabled) {
-            Toast.makeText(getActivity(), "Error, please enable your GPS and/or Internet Connection and try again!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!foundLocation) {
-            Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        if(!checkForTrackingRequirements()) return;
         initializeStartValues();
         mMap.clear();
 
@@ -253,6 +239,23 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             stopTrackingButton.setEnabled(true);
             startTrackingButton.setEnabled(false);
         }
+    }
+
+    private boolean checkForTrackingRequirements() {
+        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!isGpsEnabled || !isNetworkEnabled) {
+            Toast.makeText(getActivity(), "Error, please enable your GPS and/or Internet Connection and try again!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!foundLocation) {
+            Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void stopTracking() {
@@ -269,6 +272,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             stopTrackingButton.setEnabled(false);
             startTrackingButton.setEnabled(true);
         }
+    }
+
+    private void generateCurrentDate() {
+        currentDate = new Date();
     }
 
     private void processMapScreenshot() {
@@ -316,7 +323,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      */
     private String formatImageTrackName() {
         String unformattedTrackName = Config.TRACK_NAME_FORMAT;
-        return String.format(unformattedTrackName, formatCurrentDate(true));
+        String formattedDate = TextFormatHandler.formatCurrentDate(true, currentDate);
+        return String.format(unformattedTrackName, formattedDate);
     }
 
     private void calculateZoomLevel(OnZoomCalculatedListener listener) {
@@ -362,45 +370,12 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         newHistoryEntry.activityType = String.valueOf(selectedActivityType);
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
-        newHistoryEntry.activityDate = formatCurrentDate(false);
+        newHistoryEntry.activityDate = TextFormatHandler.formatCurrentDate(false,  currentDate);
         newHistoryEntry.imageTrackName = formatImageTrackName();
         newHistoryEntry.fullImageTrackPath = imageTrackAbsolutePath;
 
         Thread thread = new Thread(() -> historyDao.insertNewHistoryEntry(newHistoryEntry));
         thread.start();
-    }
-
-    private void printDebugTracksToConsole() {
-        Thread thread = new Thread(() -> {
-            List<History> histories = historyDao.getWholeHistoryEntries();
-            Log.i(DB_TAG, "All saved history tracks:");
-            for (History history : histories) {
-                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Activity = %s / Date = %s / ImageName = %s / ImagePath = %s",
-                        history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityType, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
-                Log.i(DB_TAG, formattedString);
-            }
-        });
-        thread.start();
-    }
-
-    private void generateCurrentDate() {
-        currentDate = new Date();
-    }
-
-    /**
-     * Formats the currentDate with a specific format
-     *
-     * @param isImageTrackName - Determines if it should be generated for an image track name
-     * @return formatted date
-     */
-    private String formatCurrentDate(boolean isImageTrackName) {
-        String formattedDate;
-
-        if (!isImageTrackName) formattedDate = Config.TIME_FORMAT_GENERAL;
-        else formattedDate = Config.TIME_FORMAT_TRACK_NAME;
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat(formattedDate, Locale.getDefault());
-        return dateFormat.format(currentDate);
     }
 
     @Override
@@ -453,13 +428,14 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.println("Requestcode" + requestCode);
         if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
             if (PermissionHandler.checkForRequiredPermissions(requireContext())) {
                 Log.d(TAG, "Fetching new location (permission granted)");
                 fetchLocationAndUpdateMap();
             } else {
                 // Handle the case when the permissions are not granted.
-                Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "You need to grant permission to access location!2", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -469,8 +445,15 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Formats duration (to hours, minutes & seconds)
      */
     private void initializeStartValues() {
-        setDurationValue();
+        setFormattedDurationValue();
         setGpsTrackTextViews();
+    }
+
+    private void setGpsTrackTextViews() {
+        String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
+        caloriesTV.setText(formattedCalories);
+        String formattedDistance = String.format(getString(R.string.text_gps_distance), formatDistance());
+        distanceTV.setText(formattedDistance);
     }
 
     /**
@@ -482,14 +465,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return String.format(Locale.getDefault(), Config.DISTANCE_FORMAT, totalDistance);
     }
 
-    private void setGpsTrackTextViews() {
-        String formattedCalories = String.format(getString(R.string.text_gps_calories), String.valueOf(totalCalories));
-        caloriesTV.setText(formattedCalories);
-        String formattedDistance = String.format(getString(R.string.text_gps_distance), formatDistance());
-        distanceTV.setText(formattedDistance);
-    }
-
-    private void setDurationValue() {
+    private void setFormattedDurationValue() {
         String unformattedDurationStatus = getString(R.string.text_gps_duration_status);
         String formattedDurationStatus = TextFormatHandler.getFormattedDurationTime(elapsedDurationTimeInMilliSeconds, unformattedDurationStatus);
         durationTV.setText(formattedDurationStatus);
