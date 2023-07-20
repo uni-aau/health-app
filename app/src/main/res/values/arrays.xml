@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinner_values">
-        <item>Value 1</item>
-        <item>Value 2</item>
-        <item>Value 3</item>
+        <item>Walking</item>
+        <item>Running</item>
+        <item>Bicycling</item>
         <!-- Add more items as needed -->
     </string-array>
 </resources>

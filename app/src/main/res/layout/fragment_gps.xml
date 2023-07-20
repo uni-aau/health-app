@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/gps_textview_distance"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -34,14 +34,14 @@
             android:layout_marginTop="20dp" />
 
     <Spinner
-            android:layout_width="111dp"
+            android:layout_width="130dp"
             android:layout_height="32dp"
             android:id="@+id/gps_spinner_type"
             app:layout_constraintStart_toEndOf="@+id/gps_textview_distance"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gps_textview_duration"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="25dp" />
 
     <TextView
             android:text="@string/text_duration"
@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="25dp"
-            android:layout_marginEnd="25dp" />
+            android:layout_marginEnd="35dp" />
 
     <Button
             android:text="@string/text_button_stop_tracking"
@@ -101,6 +101,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/button_gps_start"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            android:layout_marginStart="25dp" />
+            android:layout_marginStart="35dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
