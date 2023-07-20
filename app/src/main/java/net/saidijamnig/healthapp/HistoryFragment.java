@@ -53,9 +53,12 @@ public class HistoryFragment extends Fragment {
         return binding.getRoot();
     }
 
+    // TODO AUSLAGERN
     private void initializeDatabase() {
         AppDatabase db;
-        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history").build();
+        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
+                .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
+                .build();
         historyDao = db.historyDao();
     }
 

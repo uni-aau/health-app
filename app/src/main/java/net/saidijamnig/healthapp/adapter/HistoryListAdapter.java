@@ -82,7 +82,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         dateTv.setText(history.activityDate);
 
         String unformattedTypeString = context.getString(R.string.text_history_type);
-        String formattedTypeString = String.format(unformattedTypeString, "-/-"); // TODO
+        String formattedTypeString = String.format(unformattedTypeString, history.activityType);
         typeTv.setText(formattedTypeString);
 
         String unformattedDistanceString = context.getString(R.string.text_history_distance);
