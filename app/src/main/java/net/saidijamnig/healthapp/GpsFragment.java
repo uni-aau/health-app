@@ -79,6 +79,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private String imageTrackAbsolutePath;
     private String imageName;
     private Spinner spinner;
+    private String selectedActivityType;
     private Date currentDate;
     private BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -150,15 +151,13 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                String selectedItem = adapterView.getItemAtPosition(position).toString();
-
-                // Do something with the selected item
-                Toast.makeText(requireContext(), "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
+                selectedActivityType = adapterView.getItemAtPosition(position).toString();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                // Get first item when no item was selected
+                selectedActivityType = adapterView.getItemAtPosition(1).toString();
             }
         });
 
@@ -369,7 +368,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         Log.i(DB_TAG, "Saving track to database!");
         History newHistoryEntry = new History();
 
-        newHistoryEntry.activityCalories = String.valueOf(totalCalories);
+        newHistoryEntry.activityType = String.valueOf(selectedActivityType);
         newHistoryEntry.durationInMilliSeconds = String.valueOf(elapsedDurationTimeInMilliSeconds);
         newHistoryEntry.activityDistance = formatDistance();
         newHistoryEntry.activityDate = formatCurrentDate(false);
@@ -385,8 +384,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             List<History> histories = historyDao.getWholeHistoryEntries();
             Log.i(DB_TAG, "All saved history tracks:");
             for (History history : histories) {
-                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Calories = %s / Date = %s / ImageName = %s / ImagePath = %s",
-                        history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityCalories, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
+                String formattedString = String.format(Locale.getDefault(), "[ID %d] Distance = %s / Duration = %s / Activity = %s / Date = %s / ImageName = %s / ImagePath = %s",
+                        history.uid, history.activityDistance, history.durationInMilliSeconds, history.activityType, history.activityDate, history.imageTrackName, history.fullImageTrackPath);
                 Log.i(DB_TAG, formattedString);
             }
         });
