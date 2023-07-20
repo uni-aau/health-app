@@ -17,6 +17,7 @@ import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.databinding.RecyclerViewHistoryBinding;
+import net.saidijamnig.healthapp.handler.TextFormatHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,16 +54,6 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull HistoryListAdapter.CustomViewHolder holder, int position) {
-        // Sets the animation for selected item
-        /*if (selectedPosition == holder.getAdapterPosition()) {
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.selection_animation);
-            holder.itemView.startAnimation(animation);
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_color));
-        } else {
-            holder.itemView.clearAnimation();
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
-        }*/
-
         history = list.get(position);
 
         durationTv = holder.binding.recviewTextviewDuration;
@@ -110,17 +101,8 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     }
 
     private String formatDuration(int durationInMilliSeconds) {
-        int hours = (durationInMilliSeconds / (1000 * 60 * 60)) % 24;
-        int minutes = (durationInMilliSeconds / (1000 * 60)) % 60;
-        int seconds = (durationInMilliSeconds / 1000) % 60;
-
-
         String unformattedDurationString = context.getString(R.string.text_history_duration);
-        return String.format(unformattedDurationString, formatTime(hours), formatTime(minutes), formatTime(seconds));
-    }
-
-    private String formatTime(int value) {
-        return String.format(Locale.getDefault(), Config.DURATION_FORMAT, value); // two digits and the leading is a zero if necessary
+        return TextFormatHandler.getFormattedDurationTime(durationInMilliSeconds, unformattedDurationString);
     }
 
     @Override
