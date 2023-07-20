@@ -33,13 +33,12 @@ public class HealthFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        loadSavedData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_health, container, false);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         // Verknüpfung der Views mit den XML-Elementen
         stepsTextView = view.findViewById(R.id.stepsTextView);
@@ -57,6 +56,8 @@ public class HealthFragment extends Fragment {
         waterPlusButton.setOnClickListener(v -> incrementWaterCount());
         waterMinusButton.setOnClickListener(v -> decrementWaterCount());
         foodInputButton.setOnClickListener(v -> openFoodInput());
+
+        loadSavedData();
 
         return view;
     }
