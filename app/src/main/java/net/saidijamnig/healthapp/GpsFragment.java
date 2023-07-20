@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
@@ -112,6 +113,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_LOCATION_UPDATE));
 
         initializeDatabase();
+        checkForRequiredPermission();
         initializeGuiElements();
         initializeSpinner();
 
@@ -388,6 +390,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         thread.start();
     }
 
+    private void checkForRequiredPermission() {
+        if(!PermissionHandler.checkForRequiredPermissions(requireContext())) {
+            PermissionHandler.requestGpsPermissions(requireActivity());
+        }
+
+        if(!PermissionHandler.checkForegroundPermission(requireContext())) {
+            PermissionHandler.requestForegroundPermission(requireActivity());
+        }
+    }
+
     private void generateCurrentDate() {
         currentDate = new Date();
     }
@@ -408,12 +420,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return dateFormat.format(currentDate);
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         if (checkRequiredPermissions()) {
-            mMap.setMyLocationEnabled(true);
             fetchLocationAndUpdateMap();
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
@@ -424,6 +434,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private void fetchLocationAndUpdateMap() {
+        mMap.setMyLocationEnabled(true);
+
         LocationManager locationManager;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -456,19 +468,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     // TODO does not work
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
-            if (PermissionHandler.checkForRequiredPermissions(requireContext())) {
-                Log.d(TAG, "Fetching new location (permission granted)");
-                fetchLocationAndUpdateMap();
-            } else {
-                // Handle the case when the permissions are not granted.
-                Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     /**
      * Sets the start values for the GPS TextViews

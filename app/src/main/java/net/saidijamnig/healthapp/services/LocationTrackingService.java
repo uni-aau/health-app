@@ -65,7 +65,7 @@ public class LocationTrackingService extends Service {
     }
 
     private void initializeGpsNotification() {
-        if (PermissionHandler.checkForNotificationPermission(this)) {
+        if (PermissionHandler.checkForegroundPermission(this)) {
             createNotificationChannel();
             Notification notification = buildNotification();
             startForeground(NOTIFICATION_ID, notification);
