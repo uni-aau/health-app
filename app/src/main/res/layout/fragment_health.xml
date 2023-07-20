@@ -88,12 +88,12 @@
             android:id="@+id/pulseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#175c0a"
             android:text="@string/messen"
-            android:textColor="@android:color/white"
-            android:layout_gravity="bottom|end" />
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
@@ -122,22 +122,22 @@
             android:id="@+id/waterMinusButton"
             android:layout_width="56dp"
             android:layout_height="56dp"
+            android:layout_gravity="bottom|start"
             android:layout_marginStart="120dp"
             android:backgroundTint="#175c0a"
             android:text="@string/minus"
-            android:textColor="@android:color/white"
-            android:layout_gravity="bottom|start" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/waterPlusButton"
             android:layout_width="56dp"
             android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#175c0a"
             android:text="@string/plus"
-            android:textColor="@android:color/white"
-            android:layout_gravity="bottom|end" />
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 

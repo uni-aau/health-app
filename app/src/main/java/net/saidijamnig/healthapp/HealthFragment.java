@@ -1,7 +1,8 @@
 package net.saidijamnig.healthapp;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,11 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import androidx.fragment.app.Fragment;
 
-public class HealthFragment extends Fragment {
+public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView, pulseTextView, waterTextView, foodTextView;
-    private Button pulseButton, waterPlusButton, waterMinusButton, foodInputButton;
 
     private int stepsCount = 0;
     private int pulseRate = 0;
@@ -25,9 +30,9 @@ public class HealthFragment extends Fragment {
     private int foodCalories = 0;
 
     private SharedPreferences sharedPreferences;
+    private SensorManager sensorManager;
 
     public HealthFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -46,10 +51,10 @@ public class HealthFragment extends Fragment {
         waterTextView = view.findViewById(R.id.waterTextView);
         foodTextView = view.findViewById(R.id.foodTextView);
 
-        pulseButton = view.findViewById(R.id.pulseButton);
-        waterPlusButton = view.findViewById(R.id.waterPlusButton);
-        waterMinusButton = view.findViewById(R.id.waterMinusButton);
-        foodInputButton = view.findViewById(R.id.foodInputButton);
+        Button pulseButton = view.findViewById(R.id.pulseButton);
+        Button waterPlusButton = view.findViewById(R.id.waterPlusButton);
+        Button waterMinusButton = view.findViewById(R.id.waterMinusButton);
+        Button foodInputButton = view.findViewById(R.id.foodInputButton);
 
         // Klick-Listener für die Buttons
         pulseButton.setOnClickListener(v -> measurePulse());
@@ -57,15 +62,37 @@ public class HealthFragment extends Fragment {
         waterMinusButton.setOnClickListener(v -> decrementWaterCount());
         foodInputButton.setOnClickListener(v -> openFoodInput());
 
+        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
+        Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+
+        if (stepSensor != null) {
+            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        } else {
+            return null;
+        }
         loadSavedData();
 
         return view;
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Unregistriere den Schritt-Erkennungssensor, um Ressourcen freizugeben
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         saveData();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            countSteps();
+        }
     }
 
     private void loadSavedData() {
@@ -85,6 +112,7 @@ public class HealthFragment extends Fragment {
         editor.apply();
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateUI() {
         stepsTextView.setText("Steps: " + stepsCount);
         pulseTextView.setText("Pulse: " + pulseRate + " bpm");
@@ -122,23 +150,18 @@ public class HealthFragment extends Fragment {
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String calories = input.getText().toString();
-                if (!calories.isEmpty()) {
-                    foodCalories = Integer.parseInt(calories);
-                    updateUI();
-                }
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String calories = input.getText().toString();
+            if (!calories.isEmpty()) {
+                foodCalories = Integer.parseInt(calories);
+                updateUI();
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 }
