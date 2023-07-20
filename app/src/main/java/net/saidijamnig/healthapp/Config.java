@@ -21,6 +21,8 @@ public class Config {
     public static final long MAP_UPDATE_INTERVAL = 3000L;
     public static final int GPS_NOTIFICATION_COLOR = Color.BLUE;
     public static final boolean GPS_NOTIFICATION_IS_ONGOING = true;
+
+    public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
     private Config() {
         // No instantiation
     }

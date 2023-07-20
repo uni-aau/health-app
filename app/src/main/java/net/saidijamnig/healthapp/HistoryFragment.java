@@ -1,6 +1,7 @@
 package net.saidijamnig.healthapp;
 
 import android.app.AlertDialog;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +48,8 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
 
+        binding.historyRecyclerView.setPadding(0,0,0, Config.NAVBAR_HEIGHT);
+
         initializeDatabase();
         processDataFromDatabase();
 
@@ -70,12 +73,6 @@ public class HistoryFragment extends Fragment {
         });
         thread.start();
     }
-
-    // TODO
-/*    public void setActivityEntryAmount(int size) {
-        String activityTitleEntryAmount = getResources().getQuantityString(R.plurals.text_history_activity_title, size, size);
-        binding.textviewHistoryTitle.setText(activityTitleEntryAmount);
-    }*/
 
 
     private void sendDataToRecyclerView() {
@@ -148,4 +145,5 @@ public class HistoryFragment extends Fragment {
         thread.start();
         Log.i("TAG", "Successfully deleted history entry " + uid);
     }
+
 }
