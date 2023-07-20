@@ -21,7 +21,7 @@
             android:gravity="center" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="679dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

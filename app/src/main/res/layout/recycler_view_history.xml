@@ -62,7 +62,7 @@
                 android:layout_marginTop="10dp" />
 
         <ImageView
-                android:layout_width="409dp"
+                android:layout_width="match_parent"
                 android:layout_height="232dp"
                 android:id="@+id/recview_image_track"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +70,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:srcCompat="@drawable/no_image"
-                android:contentDescription="@string/text_description_map" />
+                android:contentDescription="@string/text_description_map"
+                android:foregroundGravity="center" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
