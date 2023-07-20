@@ -22,7 +22,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.room.Room;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,7 +44,6 @@ import net.saidijamnig.healthapp.services.LocationTrackingService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -272,7 +270,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             requireActivity().stopService(locationService);
 
             generateCurrentDate();
-            saveMapScreenshot();
+            processMapScreenshot();
             saveTrackToDatabase();
             resetTrackingVariables();
 
@@ -281,11 +279,16 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void saveMapScreenshot() {
+    private void processMapScreenshot() {
         Log.i(TAG, "Trying to make a screenshot");
         if (!points.isEmpty()) {
-            calculateZoomLevel();
+            calculateZoomLevel(this::saveMapScreenshot);
+        } else {
+            saveMapScreenshot();
         }
+    }
+
+    private void saveMapScreenshot() {
 
         GoogleMap.SnapshotReadyCallback callback = snapshot -> {
             FileOutputStream outputStream = null;
@@ -325,7 +328,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return String.format(unformattedTrackName, formatCurrentDate(true));
     }
 
-    private void calculateZoomLevel() {
+    private void calculateZoomLevel(OnZoomCalculatedListener listener) {
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
         for (LatLng point : points) {
             boundsBuilder.include(point);
@@ -339,6 +342,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
                 int padding = (int) (height * 0.05f);
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+                listener.onZoomCalculated();
             });
         }
     }
