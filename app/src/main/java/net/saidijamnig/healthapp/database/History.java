@@ -21,8 +21,8 @@ public class History {
     @ColumnInfo(name = "activity_distance")
     public String activityDistance;
 
-    @ColumnInfo(name = "activity_calories")
-    public String activityCalories;
+    @ColumnInfo(name = "activity_type")
+    public String activityType;
 
     @ColumnInfo(name = "image_track_name")
     public String imageTrackName;
