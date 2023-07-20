@@ -38,6 +38,7 @@ import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
+import net.saidijamnig.healthapp.handler.DatabaseHandler;
 import net.saidijamnig.healthapp.handler.PermissionHandler;
 import net.saidijamnig.healthapp.services.LocationTrackingService;
 
@@ -74,7 +75,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Button stopTrackingButton;
     private boolean foundLocation = false;
     private int elapsedDurationTimeInMilliSeconds = 0;
-    private AppDatabase db;
     private HistoryDao historyDao;
     private String imageTrackAbsolutePath;
     private String imageName;
@@ -220,10 +220,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Initializes Room Database with History Table
      */
     private void initializeDatabase() {
-        if (db != null) db.close();
-        db = Room.databaseBuilder(requireContext(), AppDatabase.class, "history")
-                .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
-                .build();
+        AppDatabase db = DatabaseHandler.getInitializedHistoryDatabase(requireContext());
         historyDao = db.historyDao();
     }
 
