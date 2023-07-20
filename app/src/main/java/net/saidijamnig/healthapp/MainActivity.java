@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import net.saidijamnig.healthapp.databinding.ActivityMainBinding;
+import net.saidijamnig.healthapp.handler.DatabaseHandler;
 
 public class MainActivity extends AppCompatActivity {
     private static final int DEFAULT_SELECTED_ITEM_ID = R.id.gps;
@@ -58,5 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DatabaseHandler.closeHistoryDatabase();
     }
 }
