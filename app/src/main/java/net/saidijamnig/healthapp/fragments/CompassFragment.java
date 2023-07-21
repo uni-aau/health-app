@@ -30,6 +30,8 @@ import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
 import net.saidijamnig.healthapp.util.Compass;
 import net.saidijamnig.healthapp.util.SOTWFormatter;
 
+import java.util.Locale;
+
 public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
     private static final String TAG = "CompassActivity";
     private ImageView compassImage;
@@ -41,6 +43,9 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
+    private Sensor lightSensor;
+    private SensorEventListener lightListener;
+    private LocationListener locationListener;
     private LocationManager locationManager;
 
     private float[] gravity;
@@ -56,6 +61,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private TextView longitudeTextView;
     private TextView brightnessTextView;
     private FragmentCompassBinding binding;
+    private boolean isActive;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -85,9 +91,12 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
         initializeGuiWithNoData();
 
+        isActive = true;
+
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -120,8 +129,37 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     @Override
     public void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
-        locationManager.removeUpdates(this);
+        unregisterEvents();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterEvents();
+    }
+
+    private void unregisterEvents() {
+        compass.stop();
+        isActive = false;
+
+        // Unregister the locationListener when the fragment is stopped
+        if (locationManager != null && locationListener != null) {
+            System.out.println("Unregistering Location Updates");
+            locationManager.removeUpdates(locationListener);
+        }
+
+        // Unregister the lightListener when the fragment is stopped
+        if (lightSensor != null && lightListener != null) {
+            sensorManager.unregisterListener(lightListener);
+            lightListener = null;
+        }
+
+        sensorManager.unregisterListener(this, accelerometer);
+        sensorManager.unregisterListener(this, magnetometer);
+
+        // Release any resources related to the locationListener here (optional)
+        locationListener = null;
+        locationManager = null;
     }
 
     @Override
@@ -132,18 +170,18 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
             return;
         }
+        isActive = true;
 
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0, 0, this);
+        startLocationUpdates();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.d(TAG, "stop compass");
-        compass.stop();
+        unregisterEvents();
     }
 
     private void setupCompass() {
@@ -153,7 +191,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     private void initializeGuiWithNoData() {
-        String noData = requireContext().getString(R.string.waiting_for_data);
+        String noData = getString(R.string.waiting_for_data);
 
         orientationTextView.setText(getString(R.string.orientation, noData));
         gpsOrientationTextView.setText(getString(R.string.gps_orientation, noData));
@@ -196,23 +234,27 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
     public void onLocationChanged(Location location) {
-        double latitude = location.getLatitude();
+        System.out.println("?");
+   /*     double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         double altitude = location.getAltitude();
 
-        orientationTextView.setText("Orientation: " + String.format("%.2f", azimuth) + "°");
-        gpsOrientationTextView.setText("GPS Orientation: " + getDirection(azimuth));
-        altitudeTextView.setText("Altitude: " + String.format("%.2f", altitude) + "m");
-        latitudeTextView.setText("Latitude: " + String.format("%.6f", latitude));
-        longitudeTextView.setText("Longitude: " + String.format("%.6f", longitude));
-
-        // TODO: Get brightness value and update brightnessTextView
+        String orientationSuffix = getString(R.string.orientation_suffix);
+        orientationTextView.setText(getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
+        gpsOrientationTextView.setText(getString(R.string.gps_orientation, getDirection(azimuth)));
+        String altitudeSuffix = getString(R.string.altitude_suffix);
+        altitudeTextView.setText(getString(R.string.altitude_with_suffix, String.format(Locale.getDefault(), "%.2f", altitude), altitudeSuffix));
+        latitudeTextView.setText(getString(R.string.latitude, String.format(Locale.getDefault(), "%.6f", latitude)));
+        longitudeTextView.setText(getString(R.string.longitude, String.format(Locale.getDefault(),"%.6f", longitude)));*/
     }
 
     private void adjustArrow(float azimuth) {
-//        Log.d(TAG, "will set rotation from " + currentAzimuth + " to " + azimuth);
-
         Animation an = new RotateAnimation(-currentAzimuth, -azimuth,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
@@ -230,68 +272,45 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     private Compass.CompassListener getCompassListener() {
-        return new Compass.CompassListener() {
-            @Override
-            public void onNewAzimuth(final float azimuth) {
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adjustArrow(azimuth);
-                        adjustSotwLabel(azimuth);
-                    }
-                });
-            }
-        };
+        return azimuth -> requireActivity().runOnUiThread(() -> {
+            adjustArrow(azimuth);
+            adjustSotwLabel(azimuth);
+        });
     }
 
     private void startLocationUpdates() {
-        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                if (location != null) {
+        if(isActive) {
+            locationListener = location -> {
+                System.out.println("Location: " + location);
+                if (location != null && isActive) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     double altitude = location.getAltitude();
 
-                    String gpsOrientation = String.format("Latitude: %.2f\nLongitude: %.2f", latitude, longitude);
-
-                    gpsOrientationTextView.setText(gpsOrientation);
-                    altitudeTextView.setText(String.valueOf(altitude));
-                    latitudeTextView.setText(String.valueOf(latitude));
-                    longitudeTextView.setText(String.valueOf(longitude));
+                    String orientationSuffix = requireContext().getString(R.string.orientation_suffix);
+                    orientationTextView.setText(requireContext().getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
+                    gpsOrientationTextView.setText(requireContext().getString(R.string.gps_orientation, getDirection(azimuth)));
+                    String altitudeSuffix = requireContext().getString(R.string.altitude_suffix);
+                    altitudeTextView.setText(requireContext().getString(R.string.altitude_with_suffix, String.format(Locale.getDefault(), "%.2f", altitude), altitudeSuffix));
+                    latitudeTextView.setText(requireContext().getString(R.string.latitude, String.format(Locale.getDefault(), "%.6f", latitude)));
+                    longitudeTextView.setText(requireContext().getString(R.string.longitude, String.format(Locale.getDefault(), "%.6f", longitude)));
                 }
-            }
+            };
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-            }
-        };
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
     }
 
     private void checkBrightnessSensor() {
-        SensorManager sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
-        Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
         if (lightSensor != null) {
-            SensorEventListener lightListener = new SensorEventListener() {
+            lightListener = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent event) {
                     float brightness = event.values[0];
-                    brightnessTextView.setText("Brightness: " + brightness);
+                    brightnessTextView.setText(requireContext().getString(R.string.brightness, String.valueOf(brightness)));
                 }
 
                 @Override
@@ -301,7 +320,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
             sensorManager.registerListener(lightListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
-            brightnessTextView.setText("No light sensor available");
+            brightnessTextView.setText(getString(R.string.lightsensor_no_sensor_error));
         }
     }
 
@@ -315,14 +334,5 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         } else {
             return "West";
         }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 }
