@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 
+import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
 import net.saidijamnig.healthapp.util.Compass;
@@ -265,15 +266,15 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private void startLocationUpdates() {
         if(checkForLocationPermission()) {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                Log.d("TAG", "Starting requesting location!");
+                Log.d(TAG, "Starting requesting location!");
                 locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
-                        0,
-                        0,
+                        Config.COMPASS_TRACKING_UPDATE_INTERVAL,
+                        Config.COMPASS_TRACKING_MIN_UPDATE_DISTANCE,
                         this
                 );
             } else {
-                Log.e("TAG", "Error requesting location - Not enabled");
+                Log.e(TAG, "Error requesting location - Not enabled");
                 Toast.makeText(requireContext(), getString(R.string.error_no_location_enabled), Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -292,6 +293,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
                 @Override
                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                    // Not needed
                 }
             };
 
@@ -315,7 +317,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        Log.w("TAG", "Location was changed!");
+        Log.d(TAG, "Location was changed!");
         updateLocationTextViews(location);
     }
 }
