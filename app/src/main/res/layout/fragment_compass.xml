@@ -27,18 +27,18 @@
 
     <ImageView
             android:id="@+id/image_wheel"
-            android:layout_width="320dp"
-            android:layout_height="320dp"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
             android:layout_below="@id/descriptionTextView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="15dp"
             android:contentDescription="@string/compass_wheel"
             android:src="@drawable/wheel_compass" />
 
     <ImageView
             android:id="@+id/image_pointer"
             android:layout_width="20dp"
-            android:layout_height="240dp"
+            android:layout_height="190dp"
             android:layout_below="@id/descriptionTextView"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -55,7 +55,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="18dp"
-            android:layout_marginTop="376dp"
+            android:layout_marginTop="320dp"
             android:layout_marginEnd="18dp"
             android:text="@string/the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge"
             android:textSize="14sp" />
@@ -64,7 +64,10 @@
             android:id="@+id/sotw_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/image_wheel" />
+            android:layout_below="@id/image_wheel"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="25dp" />
 
     <TextView
             android:id="@+id/gpsOrientationTextView"
