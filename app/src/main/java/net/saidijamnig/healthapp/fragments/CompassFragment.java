@@ -1,6 +1,7 @@
 package net.saidijamnig.healthapp.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -11,6 +12,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +22,19 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.model.LatLng;
+
+import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
 import net.saidijamnig.healthapp.util.Compass;
@@ -32,7 +42,7 @@ import net.saidijamnig.healthapp.util.SOTWFormatter;
 
 import java.util.Locale;
 
-public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
+public class CompassFragment extends Fragment implements SensorEventListener {
     private static final String TAG = "CompassActivity";
     private ImageView compassImage;
 
@@ -61,7 +71,8 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private TextView longitudeTextView;
     private TextView brightnessTextView;
     private FragmentCompassBinding binding;
-    private boolean isActive;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Handler handler;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -91,13 +102,13 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
         initializeGuiWithNoData();
 
-        isActive = true;
-
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
+        handler = new Handler(Looper.getMainLooper());
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
         checkForLocationPermission();
@@ -140,13 +151,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     private void unregisterEvents() {
         compass.stop();
-        isActive = false;
-
-        // Unregister the locationListener when the fragment is stopped
-        if (locationManager != null && locationListener != null) {
-            System.out.println("Unregistering Location Updates");
-            locationManager.removeUpdates(locationListener);
-        }
+        handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
 
         // Unregister the lightListener when the fragment is stopped
         if (lightSensor != null && lightListener != null) {
@@ -170,10 +175,10 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
             return;
         }
-        isActive = true;
 
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+
         startLocationUpdates();
     }
 
@@ -238,12 +243,12 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        System.out.println("?");
-   /*     double latitude = location.getLatitude();
+
+    public void updateLocationTextViews(Location location) {
+        double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         double altitude = location.getAltitude();
+        System.out.println("Lat/Long/Alt" + latitude + " / " + longitude + " / " + altitude);
 
         String orientationSuffix = getString(R.string.orientation_suffix);
         orientationTextView.setText(getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
@@ -251,7 +256,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         String altitudeSuffix = getString(R.string.altitude_suffix);
         altitudeTextView.setText(getString(R.string.altitude_with_suffix, String.format(Locale.getDefault(), "%.2f", altitude), altitudeSuffix));
         latitudeTextView.setText(getString(R.string.latitude, String.format(Locale.getDefault(), "%.6f", latitude)));
-        longitudeTextView.setText(getString(R.string.longitude, String.format(Locale.getDefault(),"%.6f", longitude)));*/
+        longitudeTextView.setText(getString(R.string.longitude, String.format(Locale.getDefault(),"%.6f", longitude)));
     }
 
     private void adjustArrow(float azimuth) {
@@ -278,30 +283,16 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         });
     }
 
+    @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        if(isActive) {
-            locationListener = location -> {
-                System.out.println("Location: " + location);
-                if (location != null && isActive) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    double altitude = location.getAltitude();
-
-                    String orientationSuffix = requireContext().getString(R.string.orientation_suffix);
-                    orientationTextView.setText(requireContext().getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
-                    gpsOrientationTextView.setText(requireContext().getString(R.string.gps_orientation, getDirection(azimuth)));
-                    String altitudeSuffix = requireContext().getString(R.string.altitude_suffix);
-                    altitudeTextView.setText(requireContext().getString(R.string.altitude_with_suffix, String.format(Locale.getDefault(), "%.2f", altitude), altitudeSuffix));
-                    latitudeTextView.setText(requireContext().getString(R.string.latitude, String.format(Locale.getDefault(), "%.6f", latitude)));
-                    longitudeTextView.setText(requireContext().getString(R.string.longitude, String.format(Locale.getDefault(), "%.6f", longitude)));
-                }
-            };
-
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            }
-        }
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        updateLocationTextViews(location);
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to get current location", Toast.LENGTH_SHORT).show());
+        handler.postDelayed(this::startLocationUpdates, 1000);
     }
 
     private void checkBrightnessSensor() {
