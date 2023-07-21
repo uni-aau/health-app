@@ -303,6 +303,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         }
     }
 
+    // TODO use sowt formatter
     private String getDirection(float azimuth) {
         if (azimuth >= 315 || azimuth < 45) {
             return "North";
