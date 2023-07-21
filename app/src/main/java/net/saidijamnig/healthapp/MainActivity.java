@@ -9,7 +9,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import net.saidijamnig.healthapp.databinding.ActivityMainBinding;
-import net.saidijamnig.healthapp.handler.DatabaseHandler;
+import net.saidijamnig.healthapp.fragments.CompassFragment;
+import net.saidijamnig.healthapp.fragments.GpsFragment;
+import net.saidijamnig.healthapp.fragments.HistoryFragment;
+import net.saidijamnig.healthapp.util.DatabaseHandler;
 
 import java.util.Random;
 

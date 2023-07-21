@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -33,13 +33,16 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import net.saidijamnig.healthapp.Config;
+import net.saidijamnig.healthapp.util.OnZoomCalculatedListener;
+import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
-import net.saidijamnig.healthapp.handler.DatabaseHandler;
-import net.saidijamnig.healthapp.handler.PermissionHandler;
-import net.saidijamnig.healthapp.handler.TextFormatHandler;
+import net.saidijamnig.healthapp.util.DatabaseHandler;
+import net.saidijamnig.healthapp.util.PermissionHandler;
+import net.saidijamnig.healthapp.util.TextFormatHandler;
 import net.saidijamnig.healthapp.services.LocationTrackingService;
 
 import java.io.File;

@@ -1,6 +1,8 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.util;
 
 import android.content.Context;
+
+import net.saidijamnig.healthapp.R;
 
 public class SOTWFormatter {
     private static final int[] sides = {0, 45, 90, 135, 180, 225, 270, 315, 360};

@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp.handler;
+package net.saidijamnig.healthapp.util;
 
 import net.saidijamnig.healthapp.Config;
 

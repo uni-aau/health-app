@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,6 +24,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import net.saidijamnig.healthapp.Compass;
+import net.saidijamnig.healthapp.R;
+import net.saidijamnig.healthapp.util.SOTWFormatter;
 
 public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
     private static final String TAG = "CompassActivity";

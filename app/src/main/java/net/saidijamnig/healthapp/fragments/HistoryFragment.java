@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.fragments;
 
 import android.app.AlertDialog;
 import android.graphics.drawable.ColorDrawable;
@@ -14,13 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.saidijamnig.healthapp.Config;
+import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.adapter.HistoryListAdapter;
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.EntryDeletePopupBinding;
 import net.saidijamnig.healthapp.databinding.FragmentHistoryBinding;
-import net.saidijamnig.healthapp.handler.DatabaseHandler;
+import net.saidijamnig.healthapp.util.DatabaseHandler;
 
 import java.io.IOException;
 import java.nio.file.Files;
