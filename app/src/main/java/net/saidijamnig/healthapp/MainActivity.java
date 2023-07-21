@@ -12,7 +12,7 @@ import net.saidijamnig.healthapp.databinding.ActivityMainBinding;
 import net.saidijamnig.healthapp.fragments.CompassFragment;
 import net.saidijamnig.healthapp.fragments.GpsFragment;
 import net.saidijamnig.healthapp.fragments.HistoryFragment;
-import net.saidijamnig.healthapp.util.DatabaseHandler;
+import net.saidijamnig.healthapp.database.DatabaseHandler;
 
 import java.util.Random;
 

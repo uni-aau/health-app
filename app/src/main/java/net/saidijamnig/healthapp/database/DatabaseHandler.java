@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp.util;
+package net.saidijamnig.healthapp.database;
 
 import android.content.Context;
 

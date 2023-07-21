@@ -40,7 +40,7 @@ import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
-import net.saidijamnig.healthapp.util.DatabaseHandler;
+import net.saidijamnig.healthapp.database.DatabaseHandler;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 import net.saidijamnig.healthapp.util.TextFormatHandler;
 import net.saidijamnig.healthapp.services.LocationTrackingService;
