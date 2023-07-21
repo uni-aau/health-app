@@ -25,8 +25,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import net.saidijamnig.healthapp.util.Compass;
 import net.saidijamnig.healthapp.R;
+import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
+import net.saidijamnig.healthapp.util.Compass;
 import net.saidijamnig.healthapp.util.SOTWFormatter;
 
 public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
@@ -38,15 +39,23 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private TextView sotwLabel;
 
     private SensorManager sensorManager;
-    private Sensor accelerometer, magnetometer;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
     private LocationManager locationManager;
 
-    private float[] gravity, geomagnetic;
+    private float[] gravity;
+    private float[] geomagnetic;
     private float azimuth;
     private float currentAzimuth;
     private SOTWFormatter sotwFormatter;
 
-    private TextView orientationTextView, gpsOrientationTextView, altitudeTextView, latitudeTextView, longitudeTextView, brightnessTextView;
+    private TextView orientationTextView;
+    private TextView gpsOrientationTextView;
+    private TextView altitudeTextView;
+    private TextView latitudeTextView;
+    private TextView longitudeTextView;
+    private TextView brightnessTextView;
+    private FragmentCompassBinding binding;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -58,20 +67,21 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_compass, container, false);
+        binding = FragmentCompassBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         sotwFormatter = new SOTWFormatter(requireContext());
-        compassImage = view.findViewById(R.id.image_wheel);
-        arrowView = view.findViewById(R.id.image_wheel);
-        sotwLabel = view.findViewById(R.id.sotw_label);
+        compassImage = binding.imageWheel;
+        arrowView = binding.imageWheel;
+        sotwLabel = binding.sotwLabel;
         setupCompass();
 
-        orientationTextView = view.findViewById(R.id.orientationTextView);
-        gpsOrientationTextView = view.findViewById(R.id.gpsOrientationTextView);
-        altitudeTextView = view.findViewById(R.id.altitudeTextView);
-        latitudeTextView = view.findViewById(R.id.latitudeTextView);
-        longitudeTextView = view.findViewById(R.id.longitudeTextView);
-        brightnessTextView = view.findViewById(R.id.brightnessTextView);
+        orientationTextView = binding.orientationTextView;
+        gpsOrientationTextView = binding.gpsOrientationTextView;
+        altitudeTextView = binding.altitudeTextView;
+        latitudeTextView = binding.latitudeTextView;
+        longitudeTextView = binding.longitudeTextView;
+        brightnessTextView = binding.brightnessTextView;
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -79,7 +89,14 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        // Check location permissions
+        checkForLocationPermission();
+        checkBrightnessSensor();
+
+        return view;
+    }
+
+    private void checkForLocationPermission() {
+        // Check location permission
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -89,9 +106,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         } else {
             startLocationUpdates();
         }
-        checkBrightnessSensor();
-
-        return view;
     }
 
     @Override
