@@ -25,7 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import net.saidijamnig.healthapp.Compass;
+import net.saidijamnig.healthapp.util.Compass;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.util.SOTWFormatter;
 

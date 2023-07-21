@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.util;
 
 import android.content.Context;
 import android.hardware.Sensor;
