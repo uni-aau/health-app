@@ -42,7 +42,7 @@ import net.saidijamnig.healthapp.util.SOTWFormatter;
 
 import java.util.Locale;
 
-public class CompassFragment extends Fragment implements SensorEventListener {
+public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
     private static final String TAG = "CompassActivity";
     private ImageView compassImage;
 
@@ -151,7 +151,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     private void unregisterEvents() {
         compass.stop();
-        handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
+//        handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
+        locationManager.removeUpdates(this);
 
         // Unregister the lightListener when the fragment is stopped
         if (lightSensor != null && lightListener != null) {
@@ -163,8 +164,8 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         sensorManager.unregisterListener(this, magnetometer);
 
         // Release any resources related to the locationListener here (optional)
-        locationListener = null;
-        locationManager = null;
+//        locationListener = null;
+//        locationManager = null;
     }
 
     @Override
@@ -285,14 +286,19 @@ public class CompassFragment extends Fragment implements SensorEventListener {
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        updateLocationTextViews(location);
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to get current location", Toast.LENGTH_SHORT).show());
-        handler.postDelayed(this::startLocationUpdates, 1000);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d("TAG", "Starting requesting location!");
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0,
+                    0,
+                    this
+            );
+        } else {
+            Log.e("TAG", "Error requesting location");
+            // GPS is not enabled, prompt the user to enable it.
+            // You can show a dialog or redirect them to the GPS settings page.
+        }
     }
 
     private void checkBrightnessSensor() {
@@ -325,5 +331,11 @@ public class CompassFragment extends Fragment implements SensorEventListener {
         } else {
             return "West";
         }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        Log.w("TAG", "Location was changed!");
+        updateLocationTextViews(location);
     }
 }
