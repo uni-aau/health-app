@@ -28,4 +28,29 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="use_the_compass_to_track_your_orientation">Use the compass to track your orientation.</string>
     <string name="the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge">The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge</string>
+    <string name="text_gps_distance">%s\nDistance (km)</string>
+    <string name="text_gps_calories">%s\nCalories (kcal)</string>
+    <string name="text_duration">Dauer</string>
+    <string name="text_gps_duration_status">%s : %s : %s</string>
+    <string name="text_history_distance">Distanz: %s m</string>
+    <string name="text_history_type">Typ: %s</string>
+    <string name="text_history_date">%s</string>
+    <string name="text_history_duration">Dauer: %s : %s : %s</string>
+    <string name="text_history_activity_title_noplural">Activity History (Hold to delete entry)</string>
+
+    <string name="text_button_no">No</string>
+    <string name="text_button_yes">Yes</string>
+    <string name="text_popup_delete_question">Do you really want to delete entry id %s?</string>
+    <string name="text_logo_description">Logo</string>
+    <string name="gps_service_notification_title">GPS Tracking Running!</string>
+    <string name="gps_service_notification_description">A gps track is running in background!</string>
+    <string name="text_button_print_tracks">Print Tracks</string>
+    <string name="text_button_stop_tracking">Stop</string>
+    <string name="text_button_start_tracking">Start</string>
+    <string name="text_description_map">Map Screenshot</string>
+
+    <plurals name="text_history_activity_title">
+        <item quantity="one">Activity History (%d entry)</item>
+        <item quantity="other">Activity History (%d entries)</item>
+    </plurals>
 </resources>
