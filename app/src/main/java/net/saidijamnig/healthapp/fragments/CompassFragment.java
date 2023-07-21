@@ -107,8 +107,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
-        handler = new Handler(Looper.getMainLooper());
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
         checkForLocationPermission();
@@ -151,10 +149,9 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     private void unregisterEvents() {
         compass.stop();
-//        handler.removeCallbacksAndMessages(null); // Resets all callbacks (e.g. tracking)
         locationManager.removeUpdates(this);
 
-        // Unregister the lightListener when the fragment is stopped
+        // Unregisters the lightListener when the fragment is stopped
         if (lightSensor != null && lightListener != null) {
             sensorManager.unregisterListener(lightListener);
             lightListener = null;
@@ -162,10 +159,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
         sensorManager.unregisterListener(this, accelerometer);
         sensorManager.unregisterListener(this, magnetometer);
-
-        // Release any resources related to the locationListener here (optional)
-//        locationListener = null;
-//        locationManager = null;
     }
 
     @Override
@@ -241,7 +234,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
+        // Not needed
     }
 
 
@@ -249,7 +242,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         double altitude = location.getAltitude();
-        System.out.println("Lat/Long/Alt" + latitude + " / " + longitude + " / " + altitude);
 
         String orientationSuffix = getString(R.string.orientation_suffix);
         orientationTextView.setText(getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
@@ -290,14 +282,13 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
             Log.d("TAG", "Starting requesting location!");
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    0,
+                    1000,
                     0,
                     this
             );
         } else {
-            Log.e("TAG", "Error requesting location");
-            // GPS is not enabled, prompt the user to enable it.
-            // You can show a dialog or redirect them to the GPS settings page.
+            Log.e("TAG", "Error requesting location - Not enabled");
+            Toast.makeText(requireContext(), getString(R.string.error_no_location_enabled), Toast.LENGTH_SHORT).show();
         }
     }
 
