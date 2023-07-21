@@ -2,15 +2,16 @@
     <string name="app_name">Health App</string>
     <string name="action_settings">Settings</string>
 
-    <string name="compass_wheel" translatable="false">Kompassbild</string>
-    <string name="compass_pointer" translatable="false">Kompassbild</string>
+    <string name="compass_wheel">Compass Picture</string>
+    <string name="compass_pointer">Compass Pointer</string>
 
-    <string name="orientation">Orientation:</string>
-    <string name="gps_orientation">GPS Orientation:</string>
-    <string name="altitude">Altitude (m):</string>
-    <string name="latitude">Latitude (GPS):</string>
-    <string name="longitude">Longitude (GPS):</string>
-    <string name="brightness">Brightness (lux):</string>
+    <string name="orientation">Orientation: %s</string>
+    <string name="gps_orientation">GPS Orientation: %s</string>
+    <string name="altitude">Altitude (m): %s</string>
+    <string name="latitude">Latitude (GPS): %s</string>
+    <string name="longitude">Longitude (GPS): %s</string>
+    <string name="brightness">Brightness (lux): %s</string>
+    <string name="waiting_for_data">Waiting for data…</string>
 
     <string name="sotw_north">N</string>
     <string name="sotw_east">E</string>

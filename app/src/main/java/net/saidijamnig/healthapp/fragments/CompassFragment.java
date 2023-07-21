@@ -83,6 +83,8 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         longitudeTextView = binding.longitudeTextView;
         brightnessTextView = binding.brightnessTextView;
 
+        initializeGuiWithNoData();
+
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -150,6 +152,17 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         compass.setListener(cl);
     }
 
+    private void initializeGuiWithNoData() {
+        String noData = requireContext().getString(R.string.waiting_for_data);
+
+        orientationTextView.setText(getString(R.string.orientation, noData));
+        gpsOrientationTextView.setText(getString(R.string.gps_orientation, noData));
+        altitudeTextView.setText(getString(R.string.altitude, noData));
+        latitudeTextView.setText(getString(R.string.latitude, noData));
+        longitudeTextView.setText(getString(R.string.longitude, noData));
+        brightnessTextView.setText(getString(R.string.brightness, noData));
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -198,7 +211,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     private void adjustArrow(float azimuth) {
-        Log.d(TAG, "will set rotation from " + currentAzimuth + " to " + azimuth);
+//        Log.d(TAG, "will set rotation from " + currentAzimuth + " to " + azimuth);
 
         Animation an = new RotateAnimation(-currentAzimuth, -azimuth,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
