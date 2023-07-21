@@ -13,7 +13,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
-import com.google.android.gms.maps.model.LatLng;
 
-import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
 import net.saidijamnig.healthapp.util.Compass;
@@ -55,7 +50,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private Sensor magnetometer;
     private Sensor lightSensor;
     private SensorEventListener lightListener;
-    private LocationListener locationListener;
     private LocationManager locationManager;
 
     private float[] gravity;
@@ -70,9 +64,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private TextView latitudeTextView;
     private TextView longitudeTextView;
     private TextView brightnessTextView;
-    private FragmentCompassBinding binding;
-    private FusedLocationProviderClient fusedLocationClient;
-    private Handler handler;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -84,6 +75,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FragmentCompassBinding binding;
         binding = FragmentCompassBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
@@ -100,7 +92,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         longitudeTextView = binding.longitudeTextView;
         brightnessTextView = binding.brightnessTextView;
 
-        initializeGuiWithNoData();
+        initializeGuiWithErrorMessage(getString(R.string.waiting_for_data));
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -109,13 +101,13 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        checkForLocationPermission();
+        startLocationUpdates();
         checkBrightnessSensor();
 
         return view;
     }
 
-    private void checkForLocationPermission() {
+    private boolean checkForLocationPermission() {
         // Check location permission
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED ||
@@ -123,9 +115,10 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                         != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_LOCATION_PERMISSION);
-        } else {
-            startLocationUpdates();
+
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -164,16 +157,9 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     @Override
     public void onResume() {
         super.onResume();
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-            return;
-        }
 
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
-
-        startLocationUpdates();
     }
 
     @Override
@@ -189,15 +175,14 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         compass.setListener(cl);
     }
 
-    private void initializeGuiWithNoData() {
-        String noData = getString(R.string.waiting_for_data);
+    private void initializeGuiWithErrorMessage(String errorMessage) {
 
-        orientationTextView.setText(getString(R.string.orientation, noData));
-        gpsOrientationTextView.setText(getString(R.string.gps_orientation, noData));
-        altitudeTextView.setText(getString(R.string.altitude, noData));
-        latitudeTextView.setText(getString(R.string.latitude, noData));
-        longitudeTextView.setText(getString(R.string.longitude, noData));
-        brightnessTextView.setText(getString(R.string.brightness, noData));
+        orientationTextView.setText(getString(R.string.orientation, errorMessage));
+        gpsOrientationTextView.setText(getString(R.string.gps_orientation, errorMessage));
+        altitudeTextView.setText(getString(R.string.altitude, errorMessage));
+        latitudeTextView.setText(getString(R.string.latitude, errorMessage));
+        longitudeTextView.setText(getString(R.string.longitude, errorMessage));
+        brightnessTextView.setText(getString(R.string.brightness, errorMessage));
     }
 
     @Override
@@ -278,17 +263,21 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.d("TAG", "Starting requesting location!");
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    0,
-                    this
-            );
+        if(checkForLocationPermission()) {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Log.d("TAG", "Starting requesting location!");
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        0,
+                        0,
+                        this
+                );
+            } else {
+                Log.e("TAG", "Error requesting location - Not enabled");
+                Toast.makeText(requireContext(), getString(R.string.error_no_location_enabled), Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Log.e("TAG", "Error requesting location - Not enabled");
-            Toast.makeText(requireContext(), getString(R.string.error_no_location_enabled), Toast.LENGTH_SHORT).show();
+            initializeGuiWithErrorMessage(getString(R.string.compass_location_not_granted));
         }
     }
 
