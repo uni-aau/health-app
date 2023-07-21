@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import net.saidijamnig.healthapp.database.DatabaseHandler;
 import net.saidijamnig.healthapp.databinding.ActivityMainBinding;
 import net.saidijamnig.healthapp.fragments.CompassFragment;
 import net.saidijamnig.healthapp.fragments.GpsFragment;
 import net.saidijamnig.healthapp.fragments.HistoryFragment;
-import net.saidijamnig.healthapp.database.DatabaseHandler;
 
 import java.util.Random;
 

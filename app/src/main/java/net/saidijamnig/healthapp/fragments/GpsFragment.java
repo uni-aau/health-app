@@ -34,16 +34,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import net.saidijamnig.healthapp.Config;
-import net.saidijamnig.healthapp.util.OnZoomCalculatedListener;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.AppDatabase;
+import net.saidijamnig.healthapp.database.DatabaseHandler;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.database.HistoryDao;
 import net.saidijamnig.healthapp.databinding.FragmentGpsBinding;
-import net.saidijamnig.healthapp.database.DatabaseHandler;
+import net.saidijamnig.healthapp.services.LocationTrackingService;
+import net.saidijamnig.healthapp.util.OnZoomCalculatedListener;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 import net.saidijamnig.healthapp.util.TextFormatHandler;
-import net.saidijamnig.healthapp.services.LocationTrackingService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,11 +70,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Button stopTrackingButton;
     private boolean foundLocation = false;
     private int elapsedDurationTimeInMilliSeconds = 0;
-    private HistoryDao historyDao;
-    private String imageTrackAbsolutePath;
-    private Spinner spinner;
-    private String selectedActivityType;
-    private Date currentDate;
     private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -92,6 +87,11 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     };
+    private HistoryDao historyDao;
+    private String imageTrackAbsolutePath;
+    private Spinner spinner;
+    private String selectedActivityType;
+    private Date currentDate;
 
     public GpsFragment() {
         // Required empty public constructor

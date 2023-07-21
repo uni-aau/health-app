@@ -12,8 +12,38 @@ public class SOTWFormatter {
         initLocalizedNames(context);
     }
 
+    private static int findClosestIndex(int target) {
+
+        int i = 0, j = sides.length, mid = 0;
+        while (i < j) {
+            mid = (i + j) / 2;
+
+            if (target < sides[mid]) {
+
+                if (mid > 0 && target > sides[mid - 1]) {
+                    return getClosest(mid - 1, mid, target);
+                }
+                j = mid;
+            } else {
+                if (mid < sides.length - 1 && target < sides[mid + 1]) {
+                    return getClosest(mid, mid + 1, target);
+                }
+                i = mid + 1;
+            }
+        }
+
+        return mid;
+    }
+
+    private static int getClosest(int index1, int index2, int target) {
+        if (target - sides[index1] >= sides[index2] - target) {
+            return index2;
+        }
+        return index1;
+    }
+
     public String format(float azimuth) {
-        int iAzimuth = (int)azimuth;
+        int iAzimuth = (int) azimuth;
         int index = findClosestIndex(iAzimuth);
         return iAzimuth + "° " + names[index];
     }
@@ -33,35 +63,5 @@ public class SOTWFormatter {
                     context.getString(R.string.sotw_north)
             };
         }
-    }
-
-    private static int findClosestIndex(int target) {
-
-        int i = 0, j = sides.length, mid = 0;
-        while (i < j) {
-            mid = (i + j) / 2;
-
-            if (target < sides[mid]) {
-
-                if (mid > 0 && target > sides[mid - 1]) {
-                    return getClosest(mid - 1, mid, target);
-                }
-                j = mid;
-            } else {
-                if (mid < sides.length-1 && target < sides[mid + 1]) {
-                    return getClosest(mid, mid + 1, target);
-                }
-                i = mid + 1;
-            }
-        }
-
-        return mid;
-    }
-
-    private static int getClosest(int index1, int index2, int target) {
-        if (target - sides[index1] >= sides[index2] - target) {
-            return index2;
-        }
-        return index1;
     }
 }

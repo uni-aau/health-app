@@ -28,9 +28,9 @@ import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 
 import net.saidijamnig.healthapp.Config;
-import net.saidijamnig.healthapp.fragments.GpsFragment;
 import net.saidijamnig.healthapp.MainActivity;
 import net.saidijamnig.healthapp.R;
+import net.saidijamnig.healthapp.fragments.GpsFragment;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 
 public class LocationTrackingService extends Service {

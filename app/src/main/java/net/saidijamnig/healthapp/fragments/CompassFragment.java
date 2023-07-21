@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-
 import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
@@ -40,33 +37,28 @@ import java.util.Locale;
 
 public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
     private static final String TAG = "CompassActivity";
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
     private ImageView compassImage;
-
     private Compass compass;
     private ImageView arrowView;
     private TextView sotwLabel;
-
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
     private Sensor lightSensor;
     private SensorEventListener lightListener;
     private LocationManager locationManager;
-
     private float[] gravity;
     private float[] geomagnetic;
     private float azimuth;
     private float currentAzimuth;
     private SOTWFormatter sotwFormatter;
-
     private TextView orientationTextView;
     private TextView gpsOrientationTextView;
     private TextView altitudeTextView;
     private TextView latitudeTextView;
     private TextView longitudeTextView;
     private TextView brightnessTextView;
-
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
 
 
     public CompassFragment() {
@@ -235,7 +227,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         String altitudeSuffix = getString(R.string.altitude_suffix);
         altitudeTextView.setText(getString(R.string.altitude_with_suffix, String.format(Locale.getDefault(), "%.2f", altitude), altitudeSuffix));
         latitudeTextView.setText(getString(R.string.latitude, String.format(Locale.getDefault(), "%.6f", latitude)));
-        longitudeTextView.setText(getString(R.string.longitude, String.format(Locale.getDefault(),"%.6f", longitude)));
+        longitudeTextView.setText(getString(R.string.longitude, String.format(Locale.getDefault(), "%.6f", longitude)));
     }
 
     private void adjustArrow(float azimuth) {
@@ -264,7 +256,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        if(checkForLocationPermission()) {
+        if (checkForLocationPermission()) {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 Log.d(TAG, "Starting requesting location!");
                 locationManager.requestLocationUpdates(

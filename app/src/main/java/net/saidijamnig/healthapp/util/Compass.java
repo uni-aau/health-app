@@ -8,25 +8,16 @@ import android.hardware.SensorManager;
 
 public class Compass implements SensorEventListener {
     private static final String TAG = "Compass";
-
-    public interface CompassListener {
-        void onNewAzimuth(float azimuth);
-    }
-
     private CompassListener listener;
-
     private SensorManager sensorManager;
     private Sensor gsensor;
     private Sensor msensor;
-
     private float[] mGravity = new float[3];
     private float[] mGeomagnetic = new float[3];
     private float[] R = new float[9];
     private float[] I = new float[9];
-
     private float azimuth;
     private float azimuthFix;
-
     public Compass(Context context) {
         sensorManager = (SensorManager) context
                 .getSystemService(Context.SENSOR_SERVICE);
@@ -107,5 +98,9 @@ public class Compass implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public interface CompassListener {
+        void onNewAzimuth(float azimuth);
     }
 }
