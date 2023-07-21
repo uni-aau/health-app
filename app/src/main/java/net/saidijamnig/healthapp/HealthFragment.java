@@ -25,12 +25,13 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView, pulseTextView, waterTextView, foodTextView;
 
     private int stepsCount = 0;
-    private int pulseRate = 0;
     private int waterCount = 0;
     private int foodCalories = 0;
 
     private SharedPreferences sharedPreferences;
     private SensorManager sensorManager;
+    private Sensor stepSensor;
+    private Sensor heartRateSensor;
 
     public HealthFragment() {
     }
@@ -63,13 +64,21 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         foodInputButton.setOnClickListener(v -> openFoodInput());
 
         sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
-        Sensor stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
 
         if (stepSensor != null) {
             sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
             return null;
         }
+
+        if (heartRateSensor != null) {
+            sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        } else {
+            return null;
+        }
+
         loadSavedData();
 
         return view;
@@ -79,7 +88,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     public void onDestroyView() {
         super.onDestroyView();
         // Unregistriere den Schritt-Erkennungssensor, um Ressourcen freizugeben
-        sensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this, stepSensor);
+        sensorManager.unregisterListener(this, heartRateSensor);
     }
 
     @Override
@@ -93,11 +103,17 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
             countSteps();
         }
+        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
+            float[] values = event.values;
+            if (values.length > 0) {
+                int pulseRate = (int) values[0];
+                setPulseRate(pulseRate);
+            }
+        }
     }
 
     private void loadSavedData() {
         stepsCount = sharedPreferences.getInt("stepsCount", 0);
-        pulseRate = sharedPreferences.getInt("pulseRate", 0);
         waterCount = sharedPreferences.getInt("waterCount", 0);
         foodCalories = sharedPreferences.getInt("foodCalories", 0);
         updateUI();
@@ -106,7 +122,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private void saveData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("stepsCount", stepsCount);
-        editor.putInt("pulseRate", pulseRate);
         editor.putInt("waterCount", waterCount);
         editor.putInt("foodCalories", foodCalories);
         editor.apply();
@@ -115,7 +130,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     @SuppressLint("SetTextI18n")
     private void updateUI() {
         stepsTextView.setText("Steps: " + stepsCount);
-        pulseTextView.setText("Pulse: " + pulseRate + " bpm");
         waterTextView.setText("Water: " + waterCount + " glasses");
         foodTextView.setText("Food: " + foodCalories + " kcal");
     }
@@ -126,8 +140,22 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
 
     private void measurePulse() {
-        pulseRate = (int) (Math.random() * 100) + 50;
-        updateUI();
+        Sensor heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        if (heartRateSensor != null) {
+            sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Sensor not available");
+            builder.setMessage("Heart rate sensor is not available on this device.");
+            builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+            builder.show();
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void setPulseRate(int pulseRate) {
+        pulseTextView.setText("Pulse: " + pulseRate + " bpm");
     }
 
     private void incrementWaterCount() {
