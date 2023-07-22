@@ -1,11 +1,39 @@
 <resources>
     <string name="app_name">Health App</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="compass_wheel">Compass Picture</string>
+    <string name="compass_pointer">Compass Pointer</string>
+
+    <string name="orientation">Orientation: %s</string>
+    <string name="orientation_with_suffix">Orientation: %s%s</string>
+    <string name="gps_orientation">GPS Orientation: %s</string>
+    <string name="altitude">Altitude (m): %s</string>
+    <string name="altitude_with_suffix">Altitude (m): %s%s</string>
+    <string name="latitude">Latitude (GPS): %s</string>
+    <string name="longitude">Longitude (GPS): %s</string>
+    <string name="brightness">Brightness (lux): %s</string>
+    <string name="waiting_for_data">Waiting for data…</string>
+    <string name="orientation_suffix">°</string>
+    <string name="altitude_suffix">m</string>
+    <string name="compass_location_not_granted">"Permission not granted!"</string>
+
+    <string name="sotw_north">N</string>
+    <string name="sotw_east">E</string>
+    <string name="sotw_south">S</string>
+    <string name="sotw_west">W</string>
+    <string name="sotw_northeast">NE</string>
+    <string name="sotw_northwest">NW</string>
+    <string name="sotw_southeast">SE</string>
+    <string name="sotw_southwest">SW</string>
     <string name="logo">Health App</string>
     <string name="health">Health</string>
     <string name="gps">GPS</string>
     <string name="history">History</string>
     <string name="compass">Compass</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="use_the_compass_to_track_your_orientation">Use the compass to track your orientation.</string>
+    <string name="the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge">The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge</string>
     <string name="text_gps_distance">%s\nDistance (km)</string>
     <string name="text_gps_calories">%s\nCalories (kcal)</string>
     <string name="text_duration">Dauer</string>
@@ -26,6 +54,8 @@
     <string name="text_button_stop_tracking">Stop</string>
     <string name="text_button_start_tracking">Start</string>
     <string name="text_description_map">Map Screenshot</string>
+    <string name="lightsensor_no_sensor_error">No light sensor available</string>
+    <string name="error_no_location_enabled">Please enable your location!</string>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>
