@@ -68,7 +68,7 @@
     <string name="text_pulse_without_suffix">Pulse: %s</string>
     <string name="text_food">Food: %skcal</string>
     <string name="text_no_permission">No perm!</string>
-    <string name="text_wating_for_data">Retrieving data…</string>
+    <string name="text_wating_for_data">Getting data…</string>
     <string name ="steps_count_with_no_suffix">Steps: %s</string>
 
     <plurals name="text_water_glasses">

@@ -93,6 +93,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     @Override
     public void onPause() {
         super.onPause();
+        sensorManager.unregisterListener(this, heartRateSensor);
         saveData();
     }
 
