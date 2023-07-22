@@ -45,7 +45,7 @@
     <string name="text_button_stop_tracking">Stop</string>
     <string name="text_button_start_tracking">Start</string>
     <string name="text_description_map">Map Screenshot</string>
-    <string name="text_steps">Steps\n%s steps</string>
+    <string name="text_steps">Steps: %s steps</string>
     <string name="text_pulse">Pulse: %sbpm</string>
     <string name="text_water_glasses">Water: %s glasses</string>
     <string name="text_food">Food: %skcal</string>

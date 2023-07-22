@@ -21,12 +21,19 @@ import android.hardware.SensorManager;
 
 import androidx.fragment.app.Fragment;
 
+import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
+
 public class HealthFragment extends Fragment implements SensorEventListener {
-    private TextView stepsTextView, pulseTextView, waterTextView, foodTextView;
+    private TextView stepsTextView;
+    private TextView pulseTextView;
+    private TextView waterTextView;
+    private TextView foodTextView;
+    private FragmentHealthBinding binding;
 
     private int stepsCount = 0;
     private int waterCount = 0;
     private int foodCalories = 0;
+    private int pulseRate = 0;
 
     private SharedPreferences sharedPreferences;
     private SensorManager sensorManager;
@@ -43,19 +50,20 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_health, container, false);
+        binding = FragmentHealthBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         // Verknüpfung der Views mit den XML-Elementen
-        stepsTextView = view.findViewById(R.id.stepsTextView);
-        pulseTextView = view.findViewById(R.id.pulseTextView);
-        waterTextView = view.findViewById(R.id.waterTextView);
-        foodTextView = view.findViewById(R.id.foodTextView);
+        stepsTextView = binding.textViewSteps;
+        pulseTextView = binding.textViewPulse;
+        waterTextView = binding.textViewWater;
+        foodTextView = binding.textViewCalories;
 
-        Button pulseButton = view.findViewById(R.id.pulseButton);
-        Button waterPlusButton = view.findViewById(R.id.waterPlusButton);
-        Button waterMinusButton = view.findViewById(R.id.waterMinusButton);
-        Button foodInputButton = view.findViewById(R.id.foodInputButton);
+        Button pulseButton = binding.pulseButton;
+        Button waterPlusButton = binding.waterPlusButton;
+        Button waterMinusButton = binding.waterMinusButton;
+        Button foodInputButton = binding.foodInputButton;
 
         // Klick-Listener für die Buttons
         pulseButton.setOnClickListener(v -> measurePulse());
@@ -87,7 +95,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Unregistriere den Schritt-Erkennungssensor, um Ressourcen freizugeben
+
         sensorManager.unregisterListener(this, stepSensor);
         sensorManager.unregisterListener(this, heartRateSensor);
     }
@@ -106,8 +114,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
             float[] values = event.values;
             if (values.length > 0) {
-                int pulseRate = (int) values[0];
-                setPulseRate(pulseRate);
+                pulseRate = (int) values[0];
+                setPulseRate();
             }
         }
     }
@@ -127,20 +135,24 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         editor.apply();
     }
 
-    @SuppressLint("SetTextI18n")
     private void updateUI() {
-        stepsTextView.setText("Steps: " + stepsCount);
-        waterTextView.setText("Water: " + waterCount + " glasses");
-        foodTextView.setText("Food: " + foodCalories + " kcal");
+        updateStepsCountText();
+        setPulseRate();
+        waterTextView.setText(getString(R.string.text_water_glasses, String.valueOf(waterCount)));
+        foodTextView.setText(getString(R.string.text_food, String.valueOf(foodCalories)));
+    }
+
+    private void updateStepsCountText() {
+        stepsTextView.setText(getString(R.string.text_steps, String.valueOf(stepsCount)));
     }
 
     private void countSteps() {
         stepsCount++;
-        updateUI();
+        updateStepsCountText();
     }
 
     private void measurePulse() {
-        Sensor heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
         if (heartRateSensor != null) {
             sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
@@ -152,10 +164,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         }
     }
 
-
-    @SuppressLint("SetTextI18n")
-    private void setPulseRate(int pulseRate) {
-        pulseTextView.setText("Pulse: " + pulseRate + " bpm");
+    private void setPulseRate() {
+        pulseTextView.setText(getString(R.string.text_pulse, String.valueOf(pulseRate)));
     }
 
     private void incrementWaterCount() {
@@ -191,5 +201,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Not needed
     }
 }
