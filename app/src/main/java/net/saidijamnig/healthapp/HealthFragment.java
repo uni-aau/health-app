@@ -22,15 +22,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
-import net.saidijamnig.healthapp.handler.PermissionHandler;
+import net.saidijamnig.healthapp.util.PermissionHandler;
 
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
     private TextView pulseTextView;
     private TextView waterTextView;
     private TextView foodTextView;
-    private FragmentHealthBinding binding;
-
     private int stepsCount = 0;
     private int waterCount = 0;
     private int foodCalories = 0;
@@ -42,6 +40,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private Sensor heartRateSensor;
 
     public HealthFragment() {
+        // Requires empty constructor
     }
 
     @Override
@@ -51,6 +50,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FragmentHealthBinding binding;
         binding = FragmentHealthBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
