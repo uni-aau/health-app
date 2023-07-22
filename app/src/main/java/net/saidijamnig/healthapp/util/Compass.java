@@ -5,13 +5,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 public class Compass implements SensorEventListener {
     private static final String TAG = "Compass";
     private CompassListener listener;
-    private SensorManager sensorManager;
-    private Sensor gsensor;
-    private Sensor msensor;
+    private final SensorManager sensorManager;
+    private final Sensor gsensor;
+    private final Sensor msensor;
     private float[] mGravity = new float[3];
     private float[] mGeomagnetic = new float[3];
     private float[] R = new float[9];
@@ -61,34 +62,26 @@ public class Compass implements SensorEventListener {
                         * event.values[1];
                 mGravity[2] = alpha * mGravity[2] + (1 - alpha)
                         * event.values[2];
-
-                // mGravity = event.values;
-
-                // Log.e(TAG, Float.toString(mGravity[0]));
             }
 
             if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-                // mGeomagnetic = event.values;
-
                 mGeomagnetic[0] = alpha * mGeomagnetic[0] + (1 - alpha)
                         * event.values[0];
                 mGeomagnetic[1] = alpha * mGeomagnetic[1] + (1 - alpha)
                         * event.values[1];
                 mGeomagnetic[2] = alpha * mGeomagnetic[2] + (1 - alpha)
                         * event.values[2];
-                // Log.e(TAG, Float.toString(event.values[0]));
-
             }
 
             boolean success = SensorManager.getRotationMatrix(R, I, mGravity,
                     mGeomagnetic);
             if (success) {
-                float orientation[] = new float[3];
+                float[] orientation = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                // Log.d(TAG, "azimuth (rad): " + azimuth);
+                 Log.d(TAG, "azimuth (rad): " + azimuth);
                 azimuth = (float) Math.toDegrees(orientation[0]); // orientation
                 azimuth = (azimuth + azimuthFix + 360) % 360;
-                // Log.d(TAG, "azimuth (deg): " + azimuth);
+                 Log.d(TAG, "azimuth (deg): " + azimuth);
                 if (listener != null) {
                     listener.onNewAzimuth(azimuth);
                 }
@@ -98,6 +91,7 @@ public class Compass implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Not needed
     }
 
     public interface CompassListener {
