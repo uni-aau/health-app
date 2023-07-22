@@ -58,7 +58,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initializeDatabase() {
-        AppDatabase db = DatabaseHandler.getInitializedHistoryDatabase(requireContext());
+        AppDatabase db = DatabaseHandler.getInitializeDatabase(requireContext());
         historyDao = db.historyDao();
     }
 

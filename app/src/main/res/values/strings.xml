@@ -62,6 +62,7 @@
     <string name="text_description_map">Map Screenshot</string>
     <string name="lightsensor_no_sensor_error">No light sensor available</string>
     <string name="error_no_location_enabled">Please enable your location!</string>
+    <string name="text_button_measure">Measure</string>
 
     <string name="text_pulse">Pulse: %sbpm</string>
     <string name="text_pulse_without_suffix">Pulse: %s</string>
