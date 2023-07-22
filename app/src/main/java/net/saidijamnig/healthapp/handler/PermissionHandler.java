@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 
 public class PermissionHandler {
     public static final int REQUEST_LOCATION_PERMISSION = 1;
+    public static final int REQUEST_BODY_SENSOR_PERMISSION = 1;
+    public static final int REQUEST_ACTIVITY_RECOGNITION_PERMISSION = 1;
 
     private PermissionHandler() {
         // No instantiation
@@ -26,6 +28,22 @@ public class PermissionHandler {
 
     public static boolean checkForNotificationPermission(Context context) {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean checkForBodySensorPermission(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.BODY_SENSORS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestBodySensorPermission(Activity activityCompat) {
+        ActivityCompat.requestPermissions(activityCompat, new String[]{Manifest.permission.BODY_SENSORS}, REQUEST_BODY_SENSOR_PERMISSION);
+    }
+
+    public static boolean checkForActivityRecognitionPermission(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestActivityRecognitionPermission(Activity activityCompat) {
+        ActivityCompat.requestPermissions(activityCompat, new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, REQUEST_ACTIVITY_RECOGNITION_PERMISSION);
     }
 
 }

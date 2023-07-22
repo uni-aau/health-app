@@ -1,9 +1,12 @@
 package net.saidijamnig.healthapp;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -13,16 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
+import net.saidijamnig.healthapp.handler.PermissionHandler;
 
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
@@ -55,6 +55,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         View view = binding.getRoot();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
+        if(!PermissionHandler.checkForActivityRecognitionPermission(requireContext())) PermissionHandler.requestActivityRecognitionPermission(requireActivity());
+
         // Verknüpfung der Views mit den XML-Elementen
         stepsTextView = binding.textViewSteps;
         pulseTextView = binding.textViewPulse;
@@ -73,22 +75,9 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         foodInputButton.setOnClickListener(v -> openFoodInput());
 
         sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
-        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-
-        if (stepSensor != null) {
-            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        } else {
-            return null;
-        }
-
-        if (heartRateSensor != null) {
-            sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        } else {
-            return null;
-        }
 
         loadSavedData();
+        initializeStepCount();
 
         return view;
     }
@@ -118,6 +107,20 @@ public class HealthFragment extends Fragment implements SensorEventListener {
                 pulseRate = (int) values[0];
                 setPulseRate();
             }
+        }
+    }
+
+    private void initializeStepCount() {
+        if (PermissionHandler.checkForActivityRecognitionPermission(requireContext())) {
+            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            if (stepSensor != null) {
+                sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                stepsTextView.setText(getString(R.string.steps_count_with_no_suffix, "No sensor available!"));
+            }
+        } else {
+            stepsTextView.setText(getString(R.string.steps_count_with_no_suffix, getString(R.string.text_no_permission)));
+            PermissionHandler.requestActivityRecognitionPermission(requireActivity());
         }
     }
 
@@ -163,15 +166,22 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
 
     private void measurePulse() {
-        heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-        if (heartRateSensor != null) {
-            sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (PermissionHandler.checkForBodySensorPermission(requireContext())) {
+            heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+            if (heartRateSensor != null) {
+                pulseTextView.setText(getString(R.string.text_pulse_without_suffix, getString(R.string.text_wating_for_data)));
+                sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Sensor not available");
+                builder.setMessage("Heart rate sensor is not available on this device.");
+                builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+                builder.show();
+            }
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Sensor not available");
-            builder.setMessage("Heart rate sensor is not available on this device.");
-            builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-            builder.show();
+            pulseTextView.setText(getString(R.string.text_pulse_without_suffix, getString(R.string.text_no_permission)));
+            PermissionHandler.requestBodySensorPermission(requireActivity());
         }
     }
 
@@ -204,7 +214,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
             if (!caloriesInput.isEmpty()) {
                 int calories = Integer.parseInt(caloriesInput);
-                if(calories > Config.MAX_CALORIES_AMOUNT) {
+                if (calories > Config.MAX_CALORIES_AMOUNT) {
                     Toast.makeText(requireContext(), "Error, too much calories inserted!", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
                     return;
@@ -218,6 +228,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
     }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Not needed
