@@ -1,10 +1,8 @@
-package net.saidijamnig.healthapp.handler;
+package net.saidijamnig.healthapp.database;
 
 import android.content.Context;
 
 import androidx.room.Room;
-
-import net.saidijamnig.healthapp.database.AppDatabase;
 
 public class DatabaseHandler {
     private static AppDatabase historyDb;

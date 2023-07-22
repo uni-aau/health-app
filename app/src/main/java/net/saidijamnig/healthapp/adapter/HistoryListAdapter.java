@@ -17,7 +17,7 @@ import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.History;
 import net.saidijamnig.healthapp.databinding.RecyclerViewHistoryBinding;
-import net.saidijamnig.healthapp.handler.TextFormatHandler;
+import net.saidijamnig.healthapp.util.TextFormatHandler;
 
 import java.io.File;
 import java.util.ArrayList;
