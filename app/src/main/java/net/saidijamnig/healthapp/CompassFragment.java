@@ -59,7 +59,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         sotwFormatter = new SOTWFormatter(requireContext());
         compassImage = view.findViewById(R.id.image_wheel);
         arrowView = view.findViewById(R.id.image_wheel);
-        sotwLabel = view.findViewById(R.id.sotw_label);
         setupCompass();
 
         orientationTextView = view.findViewById(R.id.orientationTextView);
@@ -176,7 +175,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         latitudeTextView.setText("Latitude: " + String.format("%.6f", latitude));
         longitudeTextView.setText("Longitude: " + String.format("%.6f", longitude));
 
-        // TODO: Get brightness value and update brightnessTextView
     }
 
     private void adjustArrow(float azimuth) {
@@ -194,10 +192,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         arrowView.startAnimation(an);
     }
 
-    private void adjustSotwLabel(float azimuth) {
-        sotwLabel.setText(sotwFormatter.format(azimuth));
-    }
-
     private Compass.CompassListener getCompassListener() {
         return new Compass.CompassListener() {
             @Override
@@ -206,7 +200,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                     @Override
                     public void run() {
                         adjustArrow(azimuth);
-                        adjustSotwLabel(azimuth);
                     }
                 });
             }
