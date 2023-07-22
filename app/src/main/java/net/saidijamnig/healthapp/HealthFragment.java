@@ -18,6 +18,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -199,9 +200,17 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         builder.setView(input);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            String calories = input.getText().toString();
-            if (!calories.isEmpty()) {
-                foodCalories = Integer.parseInt(calories);
+            String caloriesInput = input.getText().toString();
+
+            if (!caloriesInput.isEmpty()) {
+                int calories = Integer.parseInt(caloriesInput);
+                if(calories > Config.MAX_CALORIES_AMOUNT) {
+                    Toast.makeText(requireContext(), "Error, too much calories inserted!", Toast.LENGTH_SHORT).show();
+                    dialog.cancel();
+                    return;
+                }
+
+                foodCalories = calories;
                 updateFoodCountText();
             }
         });

@@ -24,6 +24,8 @@ public class Config {
 
     public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
 
+    public static final int MAX_CALORIES_AMOUNT = 100000;
+
     private Config() {
         // No instantiation
     }
