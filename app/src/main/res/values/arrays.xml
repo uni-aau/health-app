@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner_values">
+        <item>Walking</item>
+        <item>Running</item>
+        <item>Bicycling</item>
+    </string-array>
+
+    <string-array name="motivation_messages">
+        <item>Keep going :)</item>
+        <item>You are capable of amazing things!</item>
+        <item>Believe in yourself!</item>
+        <item>Every step forward counts!</item>
+        <item>Turn obstacles into opportunities</item>
+        <item>Success begins with a single step</item>
+        <item>Embrace challenges and grow stronger</item>
+        <item>Strive for progress, not perfection</item>
+        <item>You are making a difference!</item>
+        <item>Keep pushing yourself to new heights!</item>
+    </string-array>
+
+</resources>
