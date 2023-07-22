@@ -36,7 +36,7 @@ import net.saidijamnig.healthapp.util.SOTWFormatter;
 import java.util.Locale;
 
 public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
-    private static final String TAG = "CompassActivity";
+    private static final String TAG = "CompassFragment";
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private ImageView compassImage;
     private Compass compass;
@@ -60,16 +60,10 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private TextView longitudeTextView;
     private TextView brightnessTextView;
 
-
-    public CompassFragment() {
-        // Required empty public constructor
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentCompassBinding binding;
-        binding = FragmentCompassBinding.inflate(inflater, container, false);
+        FragmentCompassBinding binding = FragmentCompassBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         sotwFormatter = new SOTWFormatter(requireContext());
@@ -169,7 +163,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     private void initializeGuiWithErrorMessage(String errorMessage) {
-
         orientationTextView.setText(getString(R.string.orientation, errorMessage));
         gpsOrientationTextView.setText(getString(R.string.gps_orientation, errorMessage));
         altitudeTextView.setText(getString(R.string.altitude, errorMessage));
@@ -215,7 +208,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         // Not needed
     }
 
-
     public void updateLocationTextViews(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
@@ -246,7 +238,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private Compass.CompassListener getCompassListener() {
         return azimuth -> requireActivity().runOnUiThread(() -> {
             adjustArrow(azimuth);
-            adjustSotwLabel(azimuth);
         });
     }
 
@@ -308,5 +299,20 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     public void onLocationChanged(@NonNull Location location) {
         Log.d(TAG, "Location was changed!");
         updateLocationTextViews(location);
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        // Not needed
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        // Not needed
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // Not needed
     }
 }

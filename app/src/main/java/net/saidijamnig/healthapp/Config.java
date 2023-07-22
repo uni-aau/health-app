@@ -5,11 +5,22 @@ import android.graphics.Color;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
+/**
+ * Configuration class containing constant values used throughout the application.
+ * These values include file paths, date formats, map settings, image compression options,
+ * and other configuration-related constants.
+ */
 public class Config {
+
+    // Image-related constants
     public static final int FALLBACK_IMAGE_PATH = R.drawable.no_image;
     public static final String TRACK_NAME_FORMAT = "activity_track_%s";
+
+    // Duration and distance format constants
     public static final String DURATION_FORMAT = "%02d"; // Int
     public static final String DISTANCE_FORMAT = "%.02f"; // Double
+
+    // Map-related constants
     public static final float GENERAL_CAMERA_ZOOM = 15f;
     public static final float DEFAULT_MARKER_COLOR = BitmapDescriptorFactory.HUE_RED;
     public static final String TIME_FORMAT_TRACK_NAME = "ddMMyyyy_HHmmss";
@@ -24,10 +35,15 @@ public class Config {
 
     public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
 
+    // Compass tracking settings
     public static final int COMPASS_TRACKING_UPDATE_INTERVAL = 0; // in ms
     public static final int COMPASS_TRACKING_MIN_UPDATE_DISTANCE = 0; // in meter
 
+    /**
+     * Private constructor to prevent instantiation of the Config class.
+     * All members of this class are static, and there is no need to create instances of it.
+     */
     private Config() {
-        // No instantiation
+        // Private constructor to prevent instantiation
     }
 }
