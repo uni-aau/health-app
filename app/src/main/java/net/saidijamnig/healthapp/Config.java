@@ -24,6 +24,9 @@ public class Config {
 
     public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
 
+    public static final int COMPASS_TRACKING_UPDATE_INTERVAL = 0; // in ms
+    public static final int COMPASS_TRACKING_MIN_UPDATE_DISTANCE = 0; // in meter
+
     private Config() {
         // No instantiation
     }
