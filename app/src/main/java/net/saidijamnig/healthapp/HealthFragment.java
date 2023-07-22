@@ -138,12 +138,22 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private void updateUI() {
         updateStepsCountText();
         setPulseRate();
-        waterTextView.setText(getString(R.string.text_water_glasses, String.valueOf(waterCount)));
+        updateFoodCountText();
+        updateWaterCountText();
+    }
+
+    private void updateFoodCountText() {
         foodTextView.setText(getString(R.string.text_food, String.valueOf(foodCalories)));
     }
 
+    private void updateWaterCountText() {
+        String formattedWater = getResources().getQuantityString(R.plurals.text_water_glasses, waterCount, waterCount);
+        waterTextView.setText(formattedWater);
+    }
+
     private void updateStepsCountText() {
-        stepsTextView.setText(getString(R.string.text_steps, String.valueOf(stepsCount)));
+        String formattedSteps = getResources().getQuantityString(R.plurals.text_steps, stepsCount, stepsCount);
+        stepsTextView.setText(formattedSteps);
     }
 
     private void countSteps() {
@@ -170,13 +180,13 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
     private void incrementWaterCount() {
         waterCount++;
-        updateUI();
+        updateWaterCountText();
     }
 
     private void decrementWaterCount() {
         if (waterCount > 0) {
             waterCount--;
-            updateUI();
+            updateWaterCountText();
         }
     }
 
@@ -192,7 +202,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             String calories = input.getText().toString();
             if (!calories.isEmpty()) {
                 foodCalories = Integer.parseInt(calories);
-                updateUI();
+                updateFoodCountText();
             }
         });
 

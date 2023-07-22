@@ -45,10 +45,19 @@
     <string name="text_button_stop_tracking">Stop</string>
     <string name="text_button_start_tracking">Start</string>
     <string name="text_description_map">Map Screenshot</string>
-    <string name="text_steps">Steps: %s steps</string>
+
     <string name="text_pulse">Pulse: %sbpm</string>
-    <string name="text_water_glasses">Water: %s glasses</string>
     <string name="text_food">Food: %skcal</string>
+
+    <plurals name="text_water_glasses">
+        <item quantity="one">Water: %s glass</item>
+        <item quantity="other">Water: %s glasses</item>
+    </plurals>
+
+        <plurals name="text_steps">
+            <item quantity="one">Steps: %d step</item>
+            <item quantity="other">Steps: %d steps</item>
+        </plurals>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>
