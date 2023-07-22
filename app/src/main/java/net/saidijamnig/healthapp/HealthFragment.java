@@ -24,6 +24,10 @@ import androidx.fragment.app.Fragment;
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 
+/**
+ * Fragment that displays health-related data, including step count, pulse rate, water intake, and food calories.
+ * This fragment uses sensors to measure step count and pulse rate, and allows the user to input food calories.
+ */
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
     private TextView pulseTextView;
@@ -39,6 +43,10 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private Sensor stepSensor;
     private Sensor heartRateSensor;
 
+    /**
+     * Default constructor for the HealthFragment.
+     * Requires an empty constructor.
+     */
     public HealthFragment() {
         // Requires empty constructor
     }
@@ -49,7 +57,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentHealthBinding binding;
         binding = FragmentHealthBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
@@ -57,7 +65,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
         if(!PermissionHandler.checkForActivityRecognitionPermission(requireContext())) PermissionHandler.requestActivityRecognitionPermission(requireActivity());
 
-        // Verknüpfung der Views mit den XML-Elementen
         stepsTextView = binding.textViewSteps;
         pulseTextView = binding.textViewPulse;
         waterTextView = binding.textViewWater;
@@ -68,7 +75,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         Button waterMinusButton = binding.waterMinusButton;
         Button foodInputButton = binding.foodInputButton;
 
-        // Klick-Listener für die Buttons
         pulseButton.setOnClickListener(v -> measurePulse());
         waterPlusButton.setOnClickListener(v -> incrementWaterCount());
         waterMinusButton.setOnClickListener(v -> decrementWaterCount());
@@ -90,12 +96,23 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         sensorManager.unregisterListener(this, heartRateSensor);
     }
 
+    /**
+     * Called when the fragment is no longer in the resumed state.
+     * Saves the current health-related data (steps count, water intake, and food calories) into SharedPreferences.
+     */
     @Override
     public void onPause() {
         super.onPause();
         saveData();
     }
 
+    /**
+     * Called when there is a change in sensor values.
+     * If the event is from the step detector sensor, increments the step count and updates the UI.
+     * If the event is from the heart rate sensor, updates the pulse rate and updates the UI.
+     *
+     * @param event The SensorEvent containing the sensor data.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
@@ -110,6 +127,11 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    /**
+     * Initializes the step count by registering the step detector sensor if available.
+     * If the step detector sensor is not available, displays a message indicating that no sensor is available.
+     * If the required activity recognition permission is not granted, requests the permission.
+     */
     private void initializeStepCount() {
         if (PermissionHandler.checkForActivityRecognitionPermission(requireContext())) {
             stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
@@ -124,6 +146,10 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    /**
+     * Loads the saved health-related data (steps count, water intake, and food calories) from SharedPreferences.
+     * Updates the UI with the loaded data.
+     */
     private void loadSavedData() {
         stepsCount = sharedPreferences.getInt("stepsCount", 0);
         waterCount = sharedPreferences.getInt("waterCount", 0);
@@ -131,6 +157,9 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         updateUI();
     }
 
+    /**
+     * Saves the current health-related data (steps count, water intake, and food calories) into SharedPreferences.
+     */
     private void saveData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("stepsCount", stepsCount);
@@ -139,6 +168,9 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         editor.apply();
     }
 
+    /**
+     * Updates the UI elements (TextViews) with the current health-related data (steps count, pulse rate, water intake, and food calories).
+     */
     private void updateUI() {
         updateStepsCountText();
         setPulseRate();
@@ -146,25 +178,44 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         updateWaterCountText();
     }
 
+    /**
+     * Updates the food calories TextView with the current food calories value.
+     */
     private void updateFoodCountText() {
         foodTextView.setText(getString(R.string.text_food, String.valueOf(foodCalories)));
     }
 
+    /**
+     * Updates the water intake TextView with the current water intake value.
+     * Uses a plural resource to display the correct string format based on the water count.
+     */
     private void updateWaterCountText() {
         String formattedWater = getResources().getQuantityString(R.plurals.text_water_glasses, waterCount, waterCount);
         waterTextView.setText(formattedWater);
     }
 
+    /**
+     * Updates the steps count TextView with the current steps count value.
+     * Uses a plural resource to display the correct string format based on the step count.
+     */
     private void updateStepsCountText() {
         String formattedSteps = getResources().getQuantityString(R.plurals.text_steps, stepsCount, stepsCount);
         stepsTextView.setText(formattedSteps);
     }
 
+    /**
+     * Increments the step count and updates the steps count TextView.
+     */
     private void countSteps() {
         stepsCount++;
         updateStepsCountText();
     }
 
+    /**
+     * Measures the pulse rate by registering the heart rate sensor if available.
+     * If the heart rate sensor is not available, displays a dialog indicating that the sensor is not available on the device.
+     * If the required body sensor permission is not granted, updates the pulse rate TextView with a permission message and requests the permission.
+     */
     private void measurePulse() {
         if (PermissionHandler.checkForBodySensorPermission(requireContext())) {
             heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
@@ -185,15 +236,25 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    /**
+     * Updates the pulse rate TextView with the current pulse rate value.
+     */
     private void setPulseRate() {
         pulseTextView.setText(getString(R.string.text_pulse, String.valueOf(pulseRate)));
     }
 
+    /**
+     * Increments the water count and updates the water intake TextView.
+     */
     private void incrementWaterCount() {
         waterCount++;
         updateWaterCountText();
     }
 
+    /**
+     * Decrements the water count and updates the water intake TextView.
+     * Ensures that the water count does not go below 0.
+     */
     private void decrementWaterCount() {
         if (waterCount > 0) {
             waterCount--;
@@ -201,6 +262,11 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    /**
+     * Opens a dialog to input food calories.
+     * Validates the input and updates the food calories TextView with the input value if valid.
+     * Displays an error message if the input is not valid (empty or too high).
+     */
     private void openFoodInput() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Enter Calories");
