@@ -35,16 +35,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_health">Your Health</string>
     <string name="stay_active_and_healthy">Stay active and healthy!</string>
-    <string name="schritte">Steps</string>
-    <string name="steps_count">Steps</string> />
-    <string name="pulse_rate_placeholder">Pulse</string> />
-    <string name="water_count_placeholder">Water</string> />
-    <string name="food_calories_placeholder">Food Calories</string> />
-    <string name="text_button_measure">Measure</string>
     <string name="kcal_input">Input</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
-    <string name="pulsmessung">Pulse Measurement</string>
     <string name="use_the_compass_to_track_your_orientation">Use the compass to track your orientation.</string>
     <string name="the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge">The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge</string>
     <string name="text_gps_distance">%s\nDistance (km)</string>
@@ -74,7 +67,7 @@
     <string name="text_pulse_without_suffix">Pulse: %s</string>
     <string name="text_food">Food: %skcal</string>
     <string name="text_no_permission">No perm!</string>
-    <string name="text_wating_for_data">Getting data...</string>
+    <string name="text_wating_for_data">Retrieving data…</string>
     <string name ="steps_count_with_no_suffix">Steps: %s</string>
 
     <plurals name="text_water_glasses">
