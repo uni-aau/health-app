@@ -1,180 +1,191 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
     <TextView
-        android:id="@+id/healthTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/your_health"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_centerHorizontal="true" />
+            android:text="@string/your_health"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewHealthTitle"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp" />
 
     <TextView
-        android:id="@+id/subtitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/healthTitleTextView"
-        android:layout_centerHorizontal="true"
-        android:text="@string/stay_active_and_healthy"
-        android:textSize="18sp"
-        android:textColor="#999999"
-        android:layout_marginTop="8dp" />
-
-    <LinearLayout
-        android:id="@+id/stepsLayout"
-        android:layout_width="364dp"
-        android:layout_height="63dp"
-        android:layout_below="@id/subtitleTextView"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/activity_background">
-
-        <TextView
-            android:id="@+id/stepsTextView"
-            android:layout_width="210dp"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:text="@string/schritte"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/anzahlTextView"
-            android:layout_width="151dp"
-            android:layout_height="51dp"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="top"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="6dp"
-            android:text="@string/steps_count"
+            android:text="@string/stay_active_and_healthy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewHealthSubtitle"
+            android:gravity="center"
             android:textSize="18sp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/pulseLayout"
-        android:layout_width="366dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/stepsLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/activity_background"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/pulseTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/pulsmessung"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="141dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:layout_weight="1"
-            android:text="@string/pulse_rate_placeholder" />
-
-        <Button
-            android:id="@+id/pulseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginTop="6dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:backgroundTint="#175c0a"
-            android:text="@string/messen"
-            android:textColor="@android:color/white" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/waterLayout"
-        android:layout_width="366dp"
-        android:layout_height="108dp"
-        android:layout_below="@id/pulseLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/activity_background"
-        android:orientation="horizontal">
+            android:layout_marginTop="25dp"
+            android:background="@drawable/activity_background"
+            android:id="@+id/stepsConstraintLayout">
 
         <TextView
-            android:id="@+id/waterTextView"
-            android:layout_width="165dp"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/water_count_placeholder"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+                android:text="@string/text_steps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:id="@+id/textViewSteps"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/waterMinusButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="120dp"
-            android:backgroundTint="#175c0a"
-            android:text="@string/minus"
-            android:textColor="@android:color/white" />
-
-        <Button
-            android:id="@+id/waterPlusButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginTop="6dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/activity_background"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="20dp"
-            android:backgroundTint="#175c0a"
-            android:text="@string/plus"
-            android:textColor="@android:color/white" />
+            android:layout_marginStart="20dp"
+            android:id="@+id/pulseConstraintLayout">
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/foodLayout"
-        android:layout_width="364dp"
-        android:layout_height="81dp"
-        android:layout_below="@id/waterLayout"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/activity_background"
-        android:orientation="horizontal">
+        <Button
+                android:id="@+id/pulseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:backgroundTint="#175c0a"
+                android:text="@string/text_button_measure"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" />
 
         <TextView
-            android:id="@+id/foodTextView"
-            android:layout_width="128dp"
-            android:layout_height="57dp"
-            android:padding="8dp"
-            android:text="@string/food_calories_placeholder"
-            android:textColor="@color/black"
-            android:textColorHighlight="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+                android:text="@string/text_pulse"
+                android:layout_width="150dp"
+                android:layout_height="27dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:id="@+id/textViewPulse"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/activity_background"
+            android:id="@+id/waterConstraintLayout"
+            android:scrollbarSize="20sp">
+
+        <TextView
+                android:text="@string/text_water_glasses"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:id="@+id/textViewWater"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
 
         <Button
-            android:id="@+id/foodInputButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+                android:id="@+id/waterMinusButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="bottom|start"
+                android:backgroundTint="#175c0a"
+                android:text="@string/minus"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toStartOf="@+id/waterPlusButton"
+                android:layout_marginEnd="5dp"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="5dp" />
+
+        <Button
+                android:id="@+id/waterPlusButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="bottom|end"
+                android:backgroundTint="#175c0a"
+                android:text="@string/plus"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="5dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="20dp"
-            android:backgroundTint="#175c0a"
-            android:text="@string/kcal_input"
-            android:textColor="@android:color/white"
-            android:layout_gravity="bottom|end" />
+            android:layout_marginStart="20dp"
+            android:background="@drawable/activity_background"
+            android:id="@+id/foodConstraintLayout">
 
-    </LinearLayout>
+        <TextView
+                android:text="@string/text_food"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:id="@+id/textViewCalories"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
 
-</RelativeLayout>
+        <Button
+                android:id="@+id/foodInputButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#175c0a"
+                android:text="@string/kcal_input"
+                android:textColor="@android:color/white"
+                android:layout_gravity="bottom|end"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="10dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

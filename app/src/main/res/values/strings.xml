@@ -20,8 +20,8 @@
     <string name="pulse_rate_placeholder">Pulse</string> />
     <string name="water_count_placeholder">Water</string> />
     <string name="food_calories_placeholder">Food Calories</string> />
-    <string name="messen">Measure</string>
-    <string name="kcal_input">KCAL Input</string>
+    <string name="text_button_measure">Measure</string>
+    <string name="kcal_input">Input</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="pulsmessung">Pulse Measurement</string>
@@ -45,6 +45,10 @@
     <string name="text_button_stop_tracking">Stop</string>
     <string name="text_button_start_tracking">Start</string>
     <string name="text_description_map">Map Screenshot</string>
+    <string name="text_steps">Steps\n%s steps</string>
+    <string name="text_pulse">Pulse: %sbpm</string>
+    <string name="text_water_glasses">Water: %s glasses</string>
+    <string name="text_food">Food: %skcal</string>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>
