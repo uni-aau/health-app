@@ -5,10 +5,11 @@ import androidx.room.RoomDatabase;
 
 /**
  * Represents AppDatabase of the whole app
- * Currently contains History table (GPS)
+ * Currently contains History (GPS) & Health table
  */
 // Version always needs to be incremented, when schema changes & data was migrated
-@Database(entities = {History.class}, version = 3)
+@Database(entities = {History.class, Health.class}, version = 6)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract HistoryDao historyDao();
+    public abstract HealthDao healthDao();
 }

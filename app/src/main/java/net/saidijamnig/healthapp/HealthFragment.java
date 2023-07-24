@@ -21,13 +21,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import net.saidijamnig.healthapp.database.AppDatabase;
+import net.saidijamnig.healthapp.database.DatabaseHandler;
+import net.saidijamnig.healthapp.database.Health;
+import net.saidijamnig.healthapp.database.HealthDao;
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 
+<<<<<<< HEAD
 /**
  * Fragment that displays health-related data, including step count, pulse rate, water intake, and food calories.
  * This fragment uses sensors to measure step count and pulse rate, and allows the user to input food calories.
  */
+=======
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+>>>>>>> health_db
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
     private TextView pulseTextView;
@@ -38,22 +49,13 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private int foodCalories = 0;
     private int pulseRate = 0;
 
-    private SharedPreferences sharedPreferences;
+    private HealthDao healthDao;
     private SensorManager sensorManager;
     private Sensor stepSensor;
     private Sensor heartRateSensor;
 
-    /**
-     * Default constructor for the HealthFragment.
-     * Requires an empty constructor.
-     */
     public HealthFragment() {
-        // Requires empty constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        // Requires public constructor
     }
 
     @Override
@@ -61,7 +63,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         FragmentHealthBinding binding;
         binding = FragmentHealthBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         if(!PermissionHandler.checkForActivityRecognitionPermission(requireContext())) PermissionHandler.requestActivityRecognitionPermission(requireActivity());
 
@@ -82,6 +83,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
         sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
 
+        initializeDatabase();
         loadSavedData();
         initializeStepCount();
 
@@ -103,16 +105,15 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     @Override
     public void onPause() {
         super.onPause();
+        sensorManager.unregisterListener(this, heartRateSensor);
         saveData();
     }
 
-    /**
-     * Called when there is a change in sensor values.
-     * If the event is from the step detector sensor, increments the step count and updates the UI.
-     * If the event is from the heart rate sensor, updates the pulse rate and updates the UI.
-     *
-     * @param event The SensorEvent containing the sensor data.
-     */
+    private void initializeDatabase() {
+        AppDatabase db = DatabaseHandler.getInitializeDatabase(requireContext());
+        healthDao = db.healthDao();
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
@@ -147,25 +148,52 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
 
     /**
-     * Loads the saved health-related data (steps count, water intake, and food calories) from SharedPreferences.
+     * Loads the saved health-related data (steps count, water intake, and food calories) from Room Database.
      * Updates the UI with the loaded data.
      */
     private void loadSavedData() {
-        stepsCount = sharedPreferences.getInt("stepsCount", 0);
-        waterCount = sharedPreferences.getInt("waterCount", 0);
-        foodCalories = sharedPreferences.getInt("foodCalories", 0);
-        updateUI();
+        Thread thread = new Thread(() -> {
+            String currentDate = generateCurrentDate();
+            Health healthEntry = healthDao.selectEntryByCurrentDate(currentDate);
+
+            if(healthEntry != null) {
+                stepsCount = healthEntry.lastStepsAmount;
+                waterCount = healthEntry.waterAmount;
+                foodCalories = healthEntry.foodAmount;
+            } else {
+                stepsCount = 0;
+                waterCount = 0;
+                foodCalories = 0;
+                healthDao.deleteAll();
+            }
+
+            updateUI();
+        });
+        thread.start();
     }
 
     /**
-     * Saves the current health-related data (steps count, water intake, and food calories) into SharedPreferences.
+     * Saves the current health-related data (steps count, water intake, and food calories) into Room Database.
      */
     private void saveData() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("stepsCount", stepsCount);
-        editor.putInt("waterCount", waterCount);
-        editor.putInt("foodCalories", foodCalories);
-        editor.apply();
+        Health healthEntry = new Health();
+        healthEntry.waterAmount = waterCount;
+        healthEntry.foodAmount = foodCalories;
+        healthEntry.lastStepsAmount = stepsCount;
+
+        String currentDate = generateCurrentDate();
+
+        healthEntry.date = currentDate;
+
+        Thread thread = new Thread(() -> healthDao.insertNewHealthEntry(healthEntry));
+        thread.start();
+    }
+
+    private String generateCurrentDate() {
+        Date date = new Date();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.getDefault());
+        return dateFormat.format(date);
     }
 
     /**
@@ -279,14 +307,13 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             String caloriesInput = input.getText().toString();
 
             if (!caloriesInput.isEmpty()) {
-                int calories = Integer.parseInt(caloriesInput);
-                if (calories > Config.MAX_CALORIES_AMOUNT) {
+                if (caloriesInput.length() > Config.MAX_CALORIES_LENGTH) {
                     Toast.makeText(requireContext(), "Error, too much calories inserted!", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
                     return;
                 }
 
-                foodCalories = calories;
+                foodCalories = Integer.parseInt(caloriesInput);;
                 updateFoodCountText();
             }
         });

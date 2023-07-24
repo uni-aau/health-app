@@ -62,12 +62,13 @@
     <string name="text_description_map">Map Screenshot</string>
     <string name="lightsensor_no_sensor_error">No light sensor available</string>
     <string name="error_no_location_enabled">Please enable your location!</string>
+    <string name="text_button_measure">Measure</string>
 
     <string name="text_pulse">Pulse: %sbpm</string>
     <string name="text_pulse_without_suffix">Pulse: %s</string>
     <string name="text_food">Food: %skcal</string>
     <string name="text_no_permission">No perm!</string>
-    <string name="text_wating_for_data">Retrieving data…</string>
+    <string name="text_wating_for_data">Getting data…</string>
     <string name ="steps_count_with_no_suffix">Steps: %s</string>
 
     <plurals name="text_water_glasses">

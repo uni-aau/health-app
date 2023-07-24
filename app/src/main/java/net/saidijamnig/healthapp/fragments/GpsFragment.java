@@ -212,7 +212,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      * Initializes Room Database with History Table
      */
     private void initializeDatabase() {
-        AppDatabase db = DatabaseHandler.getInitializedHistoryDatabase(requireContext());
+        AppDatabase db = DatabaseHandler.getInitializeDatabase(requireContext());
         historyDao = db.historyDao();
     }
 
