@@ -53,6 +53,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A fragment that allows users to track their GPS location, display the route on Google Maps,
+ * and save the tracked activity to the Room database.
+ */
+
 public class GpsFragment extends Fragment implements OnMapReadyCallback {
     public static final String ACTION_LOCATION_UPDATE = "ACTION_LOCATION_UPDATE";
     public static final String ACTION_DURATION_UPDATE = "ACTION_DURATION_UDPATE";
@@ -70,6 +75,8 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private Button stopTrackingButton;
     private boolean foundLocation = false;
     private int elapsedDurationTimeInMilliSeconds = 0;
+
+    // BroadcastReceiver to receive location and duration updates from the tracking service
     private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -93,6 +100,10 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private String selectedActivityType;
     private Date currentDate;
 
+    /**
+     * Default constructor for GpsFragment.
+     * Required empty public constructor.
+     */
     public GpsFragment() {
         // Required empty public constructor
     }
