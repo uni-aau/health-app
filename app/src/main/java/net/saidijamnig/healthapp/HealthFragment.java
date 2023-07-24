@@ -2,13 +2,11 @@ package net.saidijamnig.healthapp;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +28,7 @@ import net.saidijamnig.healthapp.database.Health;
 import net.saidijamnig.healthapp.database.HealthDao;
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
 import net.saidijamnig.healthapp.util.PermissionHandler;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -39,7 +38,6 @@ import java.util.concurrent.TimeUnit;
  * Fragment that displays health-related data, including step count, pulse rate, water intake, and food calories.
  * This fragment uses sensors to measure step count and pulse rate, and allows the user to input food calories.
  */
-
 
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
