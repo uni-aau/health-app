@@ -1,4 +1,4 @@
-package net.saidijamnig.healthapp;
+package net.saidijamnig.healthapp.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,6 +22,9 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import net.saidijamnig.healthapp.Config;
+import net.saidijamnig.healthapp.R;
+import net.saidijamnig.healthapp.StepCounterWorker;
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.DatabaseHandler;
 import net.saidijamnig.healthapp.database.Health;
