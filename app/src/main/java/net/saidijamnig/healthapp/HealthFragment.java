@@ -28,17 +28,14 @@ import net.saidijamnig.healthapp.database.HealthDao;
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 
-<<<<<<< HEAD
-/**
- * Fragment that displays health-related data, including step count, pulse rate, water intake, and food calories.
- * This fragment uses sensors to measure step count and pulse rate, and allows the user to input food calories.
- */
-=======
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
->>>>>>> health_db
+/**
+ * Fragment that displays health-related data, including step count, pulse rate, water intake, and food calories.
+ * This fragment uses sensors to measure step count and pulse rate, and allows the user to input food calories.
+ */
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
     private TextView pulseTextView;
