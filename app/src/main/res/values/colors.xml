@@ -10,6 +10,10 @@
 
     <color name="focused_color">#FF03DAC5</color>
     <color name="selected_color">#404948</color>
-    <color name="whiteSpecial">#FFFFFF</color>
-    <color name="blackSpecial">#000000</color>
+    <color name="white_in_white_mode">#FFFFFF</color>
+    <color name="black_in_white_mode">#000000</color>
+    <color name="health_block_text">#FF000000</color>
+    <color name="health_block_corner">#FF000000</color>
+    <color name="health_block">#c1f7b7</color>
+    <color name="button_background">#175c0a</color>
 </resources>

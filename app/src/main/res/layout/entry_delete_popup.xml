@@ -20,7 +20,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_popup_delete_question"
-                android:textColor="@color/blackSpecial"
                 android:textSize="20sp"
                 android:paddingTop="28dp"
                 android:gravity="center_horizontal"
