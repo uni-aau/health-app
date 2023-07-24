@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.database.History;
+import net.saidijamnig.healthapp.databinding.NoDataViewBinding;
 import net.saidijamnig.healthapp.databinding.RecyclerViewHistoryBinding;
 import net.saidijamnig.healthapp.util.TextFormatHandler;
 
@@ -35,10 +36,16 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     private History history;
     private OnItemLongClickListener longClickListener;
     private int selectedPosition = RecyclerView.NO_POSITION; // Initialize with an invalid position
+    private boolean isEmpty = false;
 
     public HistoryListAdapter(List<History> list, Context context) {
         this.list = (ArrayList<History>) list;
         this.context = context;
+
+        if(list.isEmpty()) {
+            isEmpty = true;
+            list.add(new History());
+        }
     }
 
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
@@ -48,22 +55,29 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     @NonNull
     @Override
     public HistoryListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerViewHistoryBinding binding = RecyclerViewHistoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new CustomViewHolder(binding);
+        if(!isEmpty) {
+            RecyclerViewHistoryBinding binding = RecyclerViewHistoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new CustomViewHolder(binding);
+        } else {
+            NoDataViewBinding binding = NoDataViewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new CustomViewHolder(binding);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull HistoryListAdapter.CustomViewHolder holder, int position) {
-        history = list.get(position);
+        if(holder.historyBinding != null) {
+            history = list.get(position);
 
-        durationTv = holder.binding.recviewTextviewDuration;
-        typeTv = holder.binding.recviewTextviewType;
-        dateTv = holder.binding.recviewTextviewDate;
-        distanceTv = holder.binding.recviewTextviewDistance;
-        activityTrack = holder.binding.recviewImageTrack;
+            durationTv = holder.historyBinding.recviewTextviewDuration;
+            typeTv = holder.historyBinding.recviewTextviewType;
+            dateTv = holder.historyBinding.recviewTextviewDate;
+            distanceTv = holder.historyBinding.recviewTextviewDistance;
+            activityTrack = holder.historyBinding.recviewImageTrack;
 
-        addDataToRecyclerView();
-        initializeImage();
+            addDataToRecyclerView();
+            initializeImage();
+        }
     }
 
     private void addDataToRecyclerView() {
@@ -115,11 +129,13 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
-        private final RecyclerViewHistoryBinding binding;
+        private final RecyclerViewHistoryBinding historyBinding;
+        private final NoDataViewBinding noDataViewBinding;
 
         public CustomViewHolder(RecyclerViewHistoryBinding binding) {
             super(binding.getRoot());
-            this.binding = binding;
+            this.noDataViewBinding = null;
+            this.historyBinding = binding;
 
             binding.getRoot().setOnLongClickListener(view -> {
                 if (longClickListener != null) {
@@ -138,6 +154,12 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
                 }
                 return false;
             });
+        }
+
+        public CustomViewHolder(NoDataViewBinding binding) {
+            super(binding.getRoot());
+            this.historyBinding = null;
+            this.noDataViewBinding = binding;
         }
     }
 }
