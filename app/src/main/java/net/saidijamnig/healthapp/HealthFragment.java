@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import net.saidijamnig.healthapp.database.AppDatabase;
@@ -42,27 +43,19 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private int pulseRate = 0;
 
     private HealthDao healthDao;
-
-    private SharedPreferences sharedPreferences;
     private SensorManager sensorManager;
     private Sensor stepSensor;
     private Sensor heartRateSensor;
 
     public HealthFragment() {
-        // Requires empty constructor
+        // Requires public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentHealthBinding binding;
         binding = FragmentHealthBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         if(!PermissionHandler.checkForActivityRecognitionPermission(requireContext())) PermissionHandler.requestActivityRecognitionPermission(requireActivity());
 
@@ -162,18 +155,12 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
 
     private void saveData() {
-/*        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("stepsCount", stepsCount);
-        editor.putInt("waterCount", waterCount);
-        editor.putInt("foodCalories", foodCalories);
-        editor.apply();*/
         Health healthEntry = new Health();
         healthEntry.waterAmount = waterCount;
         healthEntry.foodAmount = foodCalories;
         healthEntry.lastStepsAmount = stepsCount;
 
         String currentDate = generateCurrentDate();
-        System.out.println("CurrentDate DEBUG = " + currentDate);
 
         healthEntry.date = currentDate;
 
