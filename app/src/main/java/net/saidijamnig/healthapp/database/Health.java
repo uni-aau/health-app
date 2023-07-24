@@ -14,16 +14,13 @@ public class Health {
     public int uid;
 
     @ColumnInfo(name = "health_water")
-    public String waterAmount;
+    public int waterAmount;
 
     @ColumnInfo(name = "health_food")
-    public String foodAmount;
-
-    @ColumnInfo(name = "health_pulse")
-    public String lastMeasuredPulse;
+    public int foodAmount;
 
     @ColumnInfo(name = "health_steps")
-    public String lastStepsAmount;
+    public int lastStepsAmount;
 
     @ColumnInfo(name = "health_date")
     public String date;
