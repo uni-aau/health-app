@@ -31,7 +31,6 @@ import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
 import net.saidijamnig.healthapp.util.Compass;
-import net.saidijamnig.healthapp.util.SOTWFormatter;
 
 import java.util.Locale;
 
@@ -52,7 +51,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private float[] geomagnetic;
     private float azimuth;
     private float currentAzimuth;
-    private SOTWFormatter sotwFormatter;
     private TextView orientationTextView;
     private TextView gpsOrientationTextView;
     private TextView altitudeTextView;
@@ -66,7 +64,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         FragmentCompassBinding binding = FragmentCompassBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        sotwFormatter = new SOTWFormatter(requireContext());
         compassImage = binding.imageWheel;
         arrowView = binding.imageWheel;
         sotwLabel = binding.sotwLabel;
@@ -282,16 +279,15 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         }
     }
 
-    // TODO use sowt formatter
     private String getDirection(float azimuth) {
         if (azimuth >= 315 || azimuth < 45) {
-            return "North";
+            return getString(R.string.direction_north);
         } else if (azimuth >= 45 && azimuth < 135) {
-            return "East";
+            return getString(R.string.direction_east);
         } else if (azimuth >= 135 && azimuth < 225) {
-            return "South";
+            return getString(R.string.direction_south);
         } else {
-            return "West";
+            return getString(R.string.direction_west);
         }
     }
 
