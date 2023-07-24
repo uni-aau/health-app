@@ -21,8 +21,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import net.saidijamnig.healthapp.database.AppDatabase;
+import net.saidijamnig.healthapp.database.DatabaseHandler;
+import net.saidijamnig.healthapp.database.Health;
+import net.saidijamnig.healthapp.database.HealthDao;
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
 import net.saidijamnig.healthapp.util.PermissionHandler;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
@@ -33,6 +41,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private int waterCount = 0;
     private int foodCalories = 0;
     private int pulseRate = 0;
+
+    private HealthDao healthDao;
 
     private SharedPreferences sharedPreferences;
     private SensorManager sensorManager;
@@ -76,6 +86,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
         sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
 
+        initializeDatabase();
         loadSavedData();
         initializeStepCount();
 
@@ -95,6 +106,11 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         super.onPause();
         sensorManager.unregisterListener(this, heartRateSensor);
         saveData();
+    }
+
+    private void initializeDatabase() {
+        AppDatabase db = DatabaseHandler.getInitializeDatabase(requireContext());
+        healthDao = db.healthDao();
     }
 
     @Override
@@ -126,18 +142,51 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     }
 
     private void loadSavedData() {
-        stepsCount = sharedPreferences.getInt("stepsCount", 0);
-        waterCount = sharedPreferences.getInt("waterCount", 0);
-        foodCalories = sharedPreferences.getInt("foodCalories", 0);
-        updateUI();
+        Thread thread = new Thread(() -> {
+            String currentDate = generateCurrentDate();
+            Health healthEntry = healthDao.selectEntryByCurrentDate(currentDate);
+
+            if(healthEntry != null) {
+                stepsCount = healthEntry.lastStepsAmount;
+                waterCount = healthEntry.waterAmount;
+                foodCalories = healthEntry.foodAmount;
+            } else {
+                stepsCount = 0;
+                waterCount = 0;
+                foodCalories = 0;
+                healthDao.deleteAll();
+            }
+
+            updateUI();
+        });
+        thread.start();
     }
 
     private void saveData() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+/*        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("stepsCount", stepsCount);
         editor.putInt("waterCount", waterCount);
         editor.putInt("foodCalories", foodCalories);
-        editor.apply();
+        editor.apply();*/
+        Health healthEntry = new Health();
+        healthEntry.waterAmount = waterCount;
+        healthEntry.foodAmount = foodCalories;
+        healthEntry.lastStepsAmount = stepsCount;
+
+        String currentDate = generateCurrentDate();
+        System.out.println("CurrentDate DEBUG = " + currentDate);
+
+        healthEntry.date = currentDate;
+
+        Thread thread = new Thread(() -> healthDao.insertNewHealthEntry(healthEntry));
+        thread.start();
+    }
+
+    private String generateCurrentDate() {
+        Date date = new Date();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.getDefault());
+        return dateFormat.format(date);
     }
 
     private void updateUI() {
