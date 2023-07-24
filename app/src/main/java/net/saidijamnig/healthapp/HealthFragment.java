@@ -64,7 +64,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         binding = FragmentHealthBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        if(!PermissionHandler.checkForActivityRecognitionPermission(requireContext())) PermissionHandler.requestActivityRecognitionPermission(requireActivity());
+        if (!PermissionHandler.checkForActivityRecognitionPermission(requireContext()))
+            PermissionHandler.requestActivityRecognitionPermission(requireActivity());
 
         stepsTextView = binding.textViewSteps;
         pulseTextView = binding.textViewPulse;
@@ -178,7 +179,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             String currentDate = generateCurrentDate();
             Health healthEntry = healthDao.selectEntryByCurrentDate(currentDate);
 
-            if(healthEntry != null) {
+            if (healthEntry != null) {
                 stepsCount = healthEntry.lastStepsAmount;
                 waterCount = healthEntry.waterAmount;
                 foodCalories = healthEntry.foodAmount;
@@ -316,28 +317,28 @@ public class HealthFragment extends Fragment implements SensorEventListener {
      */
     private void openFoodInput() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Enter Calories");
+        builder.setTitle(getString(R.string.enter_calories_text));
 
         final EditText input = new EditText(requireContext());
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
 
-        builder.setPositiveButton("OK", (dialog, which) -> {
+        builder.setPositiveButton(getString(R.string.ok_button_text), (dialog, which) -> {
             String caloriesInput = input.getText().toString();
 
             if (!caloriesInput.isEmpty()) {
                 if (caloriesInput.length() > Config.MAX_CALORIES_LENGTH) {
-                    Toast.makeText(requireContext(), "Error, too much calories inserted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.error_too_much_calories), Toast.LENGTH_SHORT).show();
                     dialog.cancel();
                     return;
                 }
 
-                foodCalories = Integer.parseInt(caloriesInput);;
+                foodCalories = Integer.parseInt(caloriesInput);
                 updateFoodCountText();
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(getString(R.string.cancel_button_text), (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
