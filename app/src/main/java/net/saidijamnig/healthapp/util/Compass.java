@@ -5,30 +5,27 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 public class Compass implements SensorEventListener {
-    private static final String TAG = "Compass";
     private CompassListener listener;
     private final SensorManager sensorManager;
-    private final Sensor gsensor;
-    private final Sensor msensor;
+    private final Sensor gSensor;
+    private final Sensor mSensor;
     private final float[] mGravity = new float[3];
     private final float[] mGeomagnetic = new float[3];
     private final float[] R = new float[9];
     private final float[] I = new float[9];
-    private float azimuth;
     private float azimuthFix;
 
     public Compass(Context context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     public void start() {
-        sensorManager.registerListener(this, gsensor, SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this, msensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void stop() {
@@ -49,6 +46,7 @@ public class Compass implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        float azimuth;
         final float alpha = 0.97f;
 
         synchronized (this) {
