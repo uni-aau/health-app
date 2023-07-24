@@ -18,13 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
 import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
-import net.saidijamnig.healthapp.StepCounterWorker;
 import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.DatabaseHandler;
 import net.saidijamnig.healthapp.database.Health;
@@ -35,7 +30,6 @@ import net.saidijamnig.healthapp.util.PermissionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Fragment that displays health-related data, including step count, pulse rate, water intake, and food calories.
@@ -97,7 +91,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         sensorManager.unregisterListener(this, stepSensor);
         sensorManager.unregisterListener(this, heartRateSensor);
     }
@@ -156,22 +149,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             stepsTextView.setText(getString(R.string.steps_count_with_no_suffix, getString(R.string.text_no_permission)));
             PermissionHandler.requestActivityRecognitionPermission(requireActivity());
         }
-
-//        sensorManager.unregisterListener(this, stepSensor);
-
-        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(
-                StepCounterWorker.class,
-                10, //update interval in min
-                TimeUnit.MINUTES)
-                .build();
-
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-                "StepCounterWork",
-                ExistingPeriodicWorkPolicy.REPLACE,
-                workRequest
-        );
     }
-
 
     /**
      * Loads the saved health-related data (steps count, water intake, and food calories) from Room Database.
