@@ -23,6 +23,7 @@ public class DatabaseHandler {
     public static synchronized void closeDatabase() {
         if (db != null) {
             db.close();
+            db = null;
         }
     }
 
