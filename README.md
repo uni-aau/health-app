@@ -1,7 +1,7 @@
 # Health App
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=uni-aau_health-app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=uni-aau_health-app)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=uni-aau_health-app&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=uni-aau_health-app)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=uni-aau_health-app&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=uni-aau_health-app)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=uni-aau_health-app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=uni-aau_health-app)
 
 The HealthApp is a comprehensive health and fitness application that empowers users to take control of their well-being and achieve their fitness goals.
 
