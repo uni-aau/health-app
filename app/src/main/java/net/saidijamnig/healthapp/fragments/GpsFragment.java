@@ -116,6 +116,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_DURATION_UPDATE));
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(locationUpdateReceiver, new IntentFilter(ACTION_LOCATION_UPDATE));
 
+        checkForegroundPermission();
         initializeDatabase();
         initializeGuiElements();
         initializeSpinner();
@@ -140,6 +141,12 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         stopTrackingButton.setOnClickListener(view1 -> stopTracking());
 
         binding.gpsLogo.setImageResource(R.drawable.logo);
+    }
+
+    private void checkForegroundPermission() {
+        if(!PermissionHandler.checkForForegroundPermission(requireContext())) {
+            PermissionHandler.requestForegroundPermission(requireActivity());
+        }
     }
 
     private void initializeSpinner() {
@@ -376,7 +383,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
             Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
-            PermissionHandler.requestGpsPermissions(requireActivity());
+            PermissionHandler.requestGpsPermission(requireActivity());
         }
     }
 
@@ -411,7 +418,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private boolean checkRequiredPermissions() {
-        return PermissionHandler.checkForRequiredPermissions(requireContext());
+        return PermissionHandler.checkForRequiredGpsPermission(requireContext());
     }
 
     // TODO does not work
@@ -420,7 +427,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         System.out.println("Requestcode" + requestCode);
         if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
-            if (PermissionHandler.checkForRequiredPermissions(requireContext())) {
+            if (PermissionHandler.checkForRequiredGpsPermission(requireContext())) {
                 Log.d(TAG, "Fetching new location (permission granted)");
                 fetchLocationAndUpdateMap();
             } else {
