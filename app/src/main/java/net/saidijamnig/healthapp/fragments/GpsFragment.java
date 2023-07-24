@@ -100,13 +100,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     private String selectedActivityType;
     private Date currentDate;
 
-    /**
-     * Default constructor for GpsFragment.
-     * Required empty public constructor.
-     */
-    public GpsFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

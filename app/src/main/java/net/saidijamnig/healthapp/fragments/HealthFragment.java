@@ -51,10 +51,6 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private Sensor stepSensor;
     private Sensor heartRateSensor;
 
-    public HealthFragment() {
-        // Requires public constructor
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentHealthBinding binding;
