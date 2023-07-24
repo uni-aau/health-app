@@ -153,7 +153,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             PermissionHandler.requestActivityRecognitionPermission(requireActivity());
         }
 
-        sensorManager.unregisterListener(this, stepSensor);
+//        sensorManager.unregisterListener(this, stepSensor);
 
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(
                 StepCounterWorker.class,
@@ -202,10 +202,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         healthEntry.waterAmount = waterCount;
         healthEntry.foodAmount = foodCalories;
         healthEntry.lastStepsAmount = stepsCount;
-
-        String currentDate = generateCurrentDate();
-
-        healthEntry.date = currentDate;
+        healthEntry.date = generateCurrentDate();
 
         Thread thread = new Thread(() -> healthDao.insertNewHealthEntry(healthEntry));
         thread.start();
@@ -214,7 +211,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private String generateCurrentDate() {
         Date date = new Date();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Config.TIME_FORMAT_HEALTH, Locale.getDefault());
         return dateFormat.format(date);
     }
 

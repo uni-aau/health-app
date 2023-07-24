@@ -14,6 +14,7 @@ public class Config {
     public static final float DEFAULT_MARKER_COLOR = BitmapDescriptorFactory.HUE_RED;
     public static final String TIME_FORMAT_TRACK_NAME = "ddMMyyyy_HHmmss";
     public static final String TIME_FORMAT_GENERAL = "dd-MM-yyyy HH:mm:ss";
+    public static final String TIME_FORMAT_HEALTH = "yyyy_MM_dd";
     public static final float MAP_LINE_WIDTH = 10f;
     public static final int MAP_LINE_COLOR = Color.BLUE;
     public static final int COMPRESS_QUALITY = 90;
