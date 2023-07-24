@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import net.saidijamnig.healthapp.database.AppDatabase;
@@ -263,14 +262,13 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             String caloriesInput = input.getText().toString();
 
             if (!caloriesInput.isEmpty()) {
-                int calories = Integer.parseInt(caloriesInput);
-                if (calories > Config.MAX_CALORIES_AMOUNT) {
+                if (caloriesInput.length() > Config.MAX_CALORIES_LENGTH) {
                     Toast.makeText(requireContext(), "Error, too much calories inserted!", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
                     return;
                 }
 
-                foodCalories = calories;
+                foodCalories = Integer.parseInt(caloriesInput);;
                 updateFoodCountText();
             }
         });
