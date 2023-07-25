@@ -14,7 +14,7 @@ public interface HealthDao {
     @Query("SELECT * FROM health WHERE health_date = :date")
     Health selectEntryByCurrentDate(String date);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insertNewHealthEntry(Health healthEntry);
 
     @Query("DELETE FROM health")

@@ -182,7 +182,10 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         healthEntry.lastStepsAmount = stepsCount;
         healthEntry.date = generateCurrentDate();
 
-        Thread thread = new Thread(() -> healthDao.insertNewHealthEntry(healthEntry));
+        Thread thread = new Thread(() -> {
+            healthDao.deleteAll();
+            healthDao.insertNewHealthEntry(healthEntry);
+        });
         thread.start();
     }
 
