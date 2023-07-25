@@ -196,6 +196,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                 anim.setFillAfter(true);
 
                 compassImage.startAnimation(anim);
+                updateCompassTextViews();
             }
         }
     }
@@ -205,14 +206,18 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         // Not needed
     }
 
+    private void updateCompassTextViews() {
+        String orientationSuffix = getString(R.string.orientation_suffix);
+        orientationTextView.setText(getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
+        gpsOrientationTextView.setText(getString(R.string.gps_orientation, getDirection(azimuth)));
+    }
+
+
     public void updateLocationTextViews(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         double altitude = location.getAltitude();
 
-        String orientationSuffix = getString(R.string.orientation_suffix);
-        orientationTextView.setText(getString(R.string.orientation_with_suffix, String.format(Locale.getDefault(), "%.2f", azimuth), orientationSuffix));
-        gpsOrientationTextView.setText(getString(R.string.gps_orientation, getDirection(azimuth)));
         String altitudeSuffix = getString(R.string.altitude_suffix);
         altitudeTextView.setText(getString(R.string.altitude_with_suffix, String.format(Locale.getDefault(), "%.2f", altitude), altitudeSuffix));
         latitudeTextView.setText(getString(R.string.latitude, String.format(Locale.getDefault(), "%.6f", latitude)));
@@ -251,7 +256,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                 );
             } else {
                 Log.e(TAG, "Error requesting location - Not enabled");
-                Toast.makeText(requireContext(), getString(R.string.error_no_location_enabled), Toast.LENGTH_SHORT).show();
+                initializeGuiWithErrorMessage(getString(R.string.error_no_location_enabled));
             }
         } else {
             initializeGuiWithErrorMessage(getString(R.string.compass_location_not_granted));
@@ -295,20 +300,5 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     public void onLocationChanged(@NonNull Location location) {
         Log.d(TAG, "Location was changed!");
         updateLocationTextViews(location);
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-        // Not needed
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-        // Not needed
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // Not needed
     }
 }
