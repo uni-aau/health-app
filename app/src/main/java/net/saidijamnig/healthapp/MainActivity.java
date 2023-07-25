@@ -21,9 +21,9 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_FRAGMENT_TAG = "selected_fragment_tag";
-    private String selectedFragmentTag; // To store the currently selected fragment tag
     private static final int DEFAULT_SELECTED_ITEM_ID = R.id.gps;
     ActivityMainBinding binding;
+    private String selectedFragmentTag; // To store the currently selected fragment tag
     private String[] motivationMessages;
     private Random random;
 
@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
         binding.floatingPoint.setOnClickListener(view -> handleFloatingPointClick());
 
         // Restores old fragment when e.g. layout switched to darkmode
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             selectedFragmentTag = savedInstanceState.getString(SELECTED_FRAGMENT_TAG);
-            if(selectedFragmentTag != null) {
+            if (selectedFragmentTag != null) {
                 restoreFragment(selectedFragmentTag);
             }
         } else {

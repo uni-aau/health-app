@@ -10,6 +10,7 @@ import androidx.room.Room;
  */
 public class DatabaseHandler {
     private static AppDatabase db;
+
     /**
      * Private constructor to prevent instantiation of the DatabaseHandler class.
      * All members of this class are static, and there is no need to create instances of it.

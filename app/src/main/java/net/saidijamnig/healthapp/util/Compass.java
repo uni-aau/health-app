@@ -7,7 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class Compass implements SensorEventListener {
-    private CompassListener listener;
     private final SensorManager sensorManager;
     private final Sensor gSensor;
     private final Sensor mSensor;
@@ -15,6 +14,7 @@ public class Compass implements SensorEventListener {
     private final float[] mGeomagnetic = new float[3];
     private final float[] R = new float[9];
     private final float[] I = new float[9];
+    private CompassListener listener;
     private float azimuthFix;
 
     public Compass(Context context) {

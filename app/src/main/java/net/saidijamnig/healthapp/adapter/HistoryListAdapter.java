@@ -42,7 +42,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         this.list = (ArrayList<History>) list;
         this.context = context;
 
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             isEmpty = true;
             list.add(new History());
         }
@@ -55,7 +55,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     @NonNull
     @Override
     public HistoryListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(!isEmpty) {
+        if (!isEmpty) {
             RecyclerViewHistoryBinding binding = RecyclerViewHistoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new CustomViewHolder(binding);
         } else {
@@ -66,7 +66,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull HistoryListAdapter.CustomViewHolder holder, int position) {
-        if(holder.historyBinding != null) {
+        if (holder.historyBinding != null) {
             history = list.get(position);
 
             durationTv = holder.historyBinding.recviewTextviewDuration;

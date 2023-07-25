@@ -38,6 +38,7 @@ public class HistoryFragment extends Fragment {
     private FragmentHistoryBinding binding;
     private ArrayList<History> historyElements = new ArrayList<>();
     private int position;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

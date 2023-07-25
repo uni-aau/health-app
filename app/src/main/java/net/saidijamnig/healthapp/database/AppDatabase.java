@@ -11,5 +11,6 @@ import androidx.room.RoomDatabase;
 @Database(entities = {History.class, Health.class}, version = 7)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract HistoryDao historyDao();
+
     public abstract HealthDao healthDao();
 }

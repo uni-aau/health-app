@@ -137,7 +137,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void checkForegroundPermission() {
-        if(!PermissionHandler.checkForForegroundPermission(requireContext())) {
+        if (!PermissionHandler.checkForForegroundPermission(requireContext())) {
             PermissionHandler.requestForegroundPermission(requireActivity());
         }
     }
