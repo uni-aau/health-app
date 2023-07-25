@@ -239,7 +239,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         if (!isTracking) {
             Log.i(TAG, "Starting tracking location");
             Intent locationService = new Intent(requireContext(), LocationTrackingService.class);
-            requireActivity().startService(locationService);
+            requireActivity().startForegroundService(locationService); // used to utilize gps in background
 
             isTracking = true;
             stopTrackingButton.setEnabled(true);
