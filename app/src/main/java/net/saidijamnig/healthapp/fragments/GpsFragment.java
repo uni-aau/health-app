@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -341,8 +343,9 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         LatLngBounds bounds = boundsBuilder.build();
         if (mapFragment != null) {
             mapFragment.getMapAsync(googleMap -> {
-                int width = getResources().getDisplayMetrics().widthPixels;
-                int height = getResources().getDisplayMetrics().heightPixels;
+                View mapView = mapFragment.getView();
+                int width = mapView.getWidth();
+                int height = mapView.getHeight();
                 int padding = (int) (height * 0.05f);
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
@@ -428,7 +431,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        System.out.println("Requestcode" + requestCode);
         if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
             if (PermissionHandler.checkForRequiredGpsPermission(requireContext())) {
                 Log.d(TAG, "Fetching new location (permission granted)");
