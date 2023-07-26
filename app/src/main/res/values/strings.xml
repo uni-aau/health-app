@@ -34,7 +34,7 @@
     <string name="compass">Compass</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_health">Your Health</string>
-    <string name="stay_active_and_healthy">Stay active and healthy!</string>
+    <string name="stay_active_and_healthy">Stay active and healthy!\n(Resets at midnight)</string>
     <string name="kcal_input">Input</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
@@ -80,7 +80,7 @@
     <string name="text_popup_enter_calories_title">Enter or add your calorie amount</string>
     <string name="text_button_add">Add</string>
     <string name="text_button_replace">Set</string>
-    <string name="text_pulse_subtitle_hint">Click and hold finger to sensor</string>
+    <string name="text_pulse_subtitle_hint">Click &amp; hold finger to sensor</string>
     <string name="text_no_step_sensor_available">No step sensor available!</string>
 
     <plurals name="text_water_glasses">
