@@ -269,7 +269,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                 @Override
                 public void onSensorChanged(SensorEvent event) {
                     float brightness = event.values[0];
-                    brightnessTextView.setText(requireContext().getString(R.string.brightness, String.valueOf(brightness)));
+                    brightnessTextView.setText(getString(R.string.brightness, String.valueOf(brightness)));
                 }
 
                 @Override
@@ -280,7 +280,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
             sensorManager.registerListener(lightListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
         } else {
-            brightnessTextView.setText(getString(R.string.lightsensor_no_sensor_error));
+            brightnessTextView.setText(getString(R.string.brightness, getString(R.string.lightsensor_no_sensor_error)));
         }
     }
 
