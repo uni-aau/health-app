@@ -22,6 +22,7 @@ The HealthApp is a comprehensive health and fitness application that empowers us
 - **Code Quality** - Ensures high code quality standards with the integration of Sonarcloud to measure code quality metrics.
 - **Sensors** - Utilizes a variety of sensors, such as Accelerometer and MagneticField Sensor, to enhance application functionality.
 - **Supports internationalization** - All locales are translatable
+- **Uses ViewBinding for improved performance**
 - **Supports Darkmode**
 
 ## Getting Started
