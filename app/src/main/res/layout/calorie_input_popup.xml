@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/caloriePopupPopupConstraint">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutCaloriePopUp"
+            android:layout_width="315dp"
+            android:layout_height="250dp"
+            android:background="@drawable/popup_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <TextView
+                android:id="@+id/textView_calorie_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_popup_enter_calories_title"
+                android:textSize="20sp"
+                android:paddingTop="28dp"
+                android:gravity="center_horizontal"
+                app:layout_constraintTop_toTopOf="@id/layoutCaloriePopUp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp" />
+
+        <Button
+                android:id="@+id/button_set_calorie_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:text="@string/text_button_add"
+                android:textSize="14sp"
+                app:cornerRadius="12dp"
+                android:background="@drawable/general_button_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/button_replace_calorie_amount"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
+
+        <Button
+                android:id="@+id/button_cancel_calorie_amount_input"
+                android:text="@string/cancel_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:background="@drawable/general_button_layout"
+                app:layout_constraintStart_toEndOf="@+id/button_replace_calorie_amount"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
+
+        <Button
+                android:id="@+id/button_replace_calorie_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:text="@string/text_button_replace"
+                android:textSize="14sp"
+                app:cornerRadius="12dp"
+                android:background="@drawable/general_button_layout"
+                app:layout_constraintStart_toEndOf="@+id/button_set_calorie_amount"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/button_cancel_calorie_amount_input"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp" />
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editText_calories_input"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_calorie_title"
+                app:layout_constraintVertical_bias="0.282"
+                app:layout_constraintBottom_toTopOf="@+id/button_replace_calorie_amount"
+                app:layout_constraintHorizontal_bias="0.5" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+            android:contentDescription="@string/text_logo_description"
+            android:id="@+id/logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/logo"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layoutCaloriePopUp"
+            app:layout_constraintBottom_toTopOf="@id/layoutCaloriePopUp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

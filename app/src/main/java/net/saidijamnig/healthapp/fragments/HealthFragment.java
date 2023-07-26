@@ -2,6 +2,7 @@ package net.saidijamnig.healthapp.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -25,6 +26,7 @@ import net.saidijamnig.healthapp.database.AppDatabase;
 import net.saidijamnig.healthapp.database.DatabaseHandler;
 import net.saidijamnig.healthapp.database.Health;
 import net.saidijamnig.healthapp.database.HealthDao;
+import net.saidijamnig.healthapp.databinding.CalorieInputPopupBinding;
 import net.saidijamnig.healthapp.databinding.FragmentHealthBinding;
 import net.saidijamnig.healthapp.util.PermissionHandler;
 
@@ -298,6 +300,25 @@ public class HealthFragment extends Fragment implements SensorEventListener {
      */
     private void openFoodInput() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        CalorieInputPopupBinding popupBinding = CalorieInputPopupBinding.inflate(LayoutInflater.from(requireContext()));
+        builder.setView(popupBinding.getRoot());
+
+        AlertDialog alertDialog = builder.create();
+
+        popupBinding.buttonCancelCalorieAmountInput.setOnClickListener(view1 -> alertDialog.dismiss());
+        popupBinding.buttonSetCalorieAmount.setOnClickListener(view1 -> {
+            alertDialog.dismiss();
+        });
+        popupBinding.buttonReplaceCalorieAmount.setOnClickListener(view1 -> {
+            alertDialog.dismiss();
+        });
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+
+/*
         builder.setTitle(getString(R.string.enter_calories_text));
 
         final EditText input = new EditText(requireContext());
@@ -321,6 +342,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
         builder.setNegativeButton(getString(R.string.cancel_button_text), (dialog, which) -> dialog.cancel());
         builder.show();
+ */
     }
 
     @Override
