@@ -21,7 +21,7 @@ public class Config {
     public static final String DISTANCE_FORMAT = "%.02f"; // Double
 
     // Map-related constants
-    public static final float GENERAL_CAMERA_ZOOM = 15f;
+    public static final float GENERAL_CAMERA_ZOOM = 16f; // the higher the nearer
     public static final float DEFAULT_MARKER_COLOR = BitmapDescriptorFactory.HUE_RED;
     public static final String TIME_FORMAT_TRACK_NAME = "ddMMyyyy_HHmmss";
     public static final String TIME_FORMAT_GENERAL = "dd-MM-yyyy HH:mm:ss";
