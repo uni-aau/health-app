@@ -13,7 +13,7 @@
             android:id="@+id/no_data_view_constraint_layout">
 
         <TextView
-                android:text="There are currently no entries saved!\nStart a new track to display it here :)"
+                android:text="@string/text_history_currently_no_entries_saved"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView2"

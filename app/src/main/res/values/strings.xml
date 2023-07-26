@@ -74,6 +74,7 @@
     <string name="ok_button_text">OK</string>
     <string name="enter_calories_text">Enter Calories</string>
     <string name="cancel_button_text">Cancel</string>
+    <string name="text_history_currently_no_entries_saved">There are currently no entries saved!\nStart a new track to display it here :)</string>
 
     <plurals name="text_water_glasses">
         <item quantity="one">Water: %s glass</item>
