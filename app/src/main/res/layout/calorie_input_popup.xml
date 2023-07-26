@@ -30,7 +30,7 @@
                 android:layout_marginTop="10dp" />
 
         <Button
-                android:id="@+id/button_set_calorie_amount"
+                android:id="@+id/button_add_calorie_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:text="@string/text_button_add"
@@ -63,7 +63,7 @@
                 android:textSize="14sp"
                 app:cornerRadius="12dp"
                 android:background="@drawable/general_button_layout"
-                app:layout_constraintStart_toEndOf="@+id/button_set_calorie_amount"
+                app:layout_constraintStart_toEndOf="@+id/button_add_calorie_amount"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintEnd_toStartOf="@+id/button_cancel_calorie_amount_input"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText_calories_input"
+                android:id="@+id/calories_input"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_calorie_title"

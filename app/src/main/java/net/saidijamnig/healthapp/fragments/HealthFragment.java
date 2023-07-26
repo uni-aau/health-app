@@ -8,7 +8,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +42,10 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView stepsTextView;
     private TextView pulseTextView;
     private TextView waterTextView;
-    private TextView foodTextView;
+    private TextView caloriesAmountTextView;
     private int stepsCount = 0;
     private int waterCount = 0;
-    private int foodCalories = 0;
+    private int caloriesAmount = 0;
     private int pulseRate = 0;
 
     private HealthDao healthDao;
@@ -66,7 +65,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         stepsTextView = binding.textViewSteps;
         pulseTextView = binding.textViewPulse;
         waterTextView = binding.textViewWater;
-        foodTextView = binding.textViewCalories;
+        caloriesAmountTextView = binding.textViewCalories;
 
         Button pulseButton = binding.pulseButton;
         Button waterPlusButton = binding.waterPlusButton;
@@ -162,11 +161,11 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             if (healthEntry != null) {
                 stepsCount = healthEntry.lastStepsAmount;
                 waterCount = healthEntry.waterAmount;
-                foodCalories = healthEntry.foodAmount;
+                caloriesAmount = healthEntry.foodAmount;
             } else {
                 stepsCount = 0;
                 waterCount = 0;
-                foodCalories = 0;
+                caloriesAmount = 0;
                 healthDao.deleteAll();
             }
 
@@ -181,7 +180,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private void saveData() {
         Health healthEntry = new Health();
         healthEntry.waterAmount = waterCount;
-        healthEntry.foodAmount = foodCalories;
+        healthEntry.foodAmount = caloriesAmount;
         healthEntry.lastStepsAmount = stepsCount;
         healthEntry.date = generateCurrentDate();
 
@@ -205,15 +204,15 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private void updateUI() {
         updateStepsCountText();
         setPulseRate();
-        updateFoodCountText();
+        updateCaloriesAmountText();
         updateWaterCountText();
     }
 
     /**
      * Updates the food calories TextView with the current food calories value.
      */
-    private void updateFoodCountText() {
-        foodTextView.setText(getString(R.string.text_food, String.valueOf(foodCalories)));
+    private void updateCaloriesAmountText() {
+        caloriesAmountTextView.setText(getString(R.string.text_food, String.valueOf(caloriesAmount)));
     }
 
     /**
@@ -299,17 +298,29 @@ public class HealthFragment extends Fragment implements SensorEventListener {
      * Displays an error message if the input is not valid (empty or too high).
      */
     private void openFoodInput() {
+        EditText caloriesInput;
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         CalorieInputPopupBinding popupBinding = CalorieInputPopupBinding.inflate(LayoutInflater.from(requireContext()));
         builder.setView(popupBinding.getRoot());
-
         AlertDialog alertDialog = builder.create();
 
+        caloriesInput = popupBinding.caloriesInput;
+
         popupBinding.buttonCancelCalorieAmountInput.setOnClickListener(view1 -> alertDialog.dismiss());
-        popupBinding.buttonSetCalorieAmount.setOnClickListener(view1 -> {
+        popupBinding.buttonAddCalorieAmount.setOnClickListener(view1 -> {
+            String caloriesInputText = caloriesInput.getText().toString();
+            if(checkInputValidity(caloriesInputText)) {
+                caloriesAmount += Integer.parseInt(caloriesInputText);
+                updateCaloriesAmountText();
+            }
             alertDialog.dismiss();
         });
         popupBinding.buttonReplaceCalorieAmount.setOnClickListener(view1 -> {
+            String caloriesInputText = caloriesInput.getText().toString();
+            if(checkInputValidity(caloriesInputText)) {
+                caloriesAmount = Integer.parseInt(caloriesInputText);
+                updateCaloriesAmountText();
+            }
             alertDialog.dismiss();
         });
 
@@ -317,32 +328,16 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
+    }
 
-/*
-        builder.setTitle(getString(R.string.enter_calories_text));
-
-        final EditText input = new EditText(requireContext());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        builder.setView(input);
-
-        builder.setPositiveButton(getString(R.string.ok_button_text), (dialog, which) -> {
-            String caloriesInput = input.getText().toString();
-
-            if (!caloriesInput.isEmpty()) {
-                if (caloriesInput.length() > Config.MAX_CALORIES_LENGTH) {
-                    Toast.makeText(requireContext(), getString(R.string.error_too_much_calories), Toast.LENGTH_SHORT).show();
-                    dialog.cancel();
-                    return;
-                }
-
-                foodCalories = Integer.parseInt(caloriesInput);
-                updateFoodCountText();
+    private boolean checkInputValidity(String caloriesInputText) {
+        if (!caloriesInputText.isEmpty()) {
+            if (caloriesInputText.length() > Config.MAX_CALORIES_LENGTH) {
+                Toast.makeText(requireContext(), getString(R.string.error_too_much_calories), Toast.LENGTH_SHORT).show();
+                return false;
             }
-        });
-
-        builder.setNegativeButton(getString(R.string.cancel_button_text), (dialog, which) -> dialog.cancel());
-        builder.show();
- */
+        } else return false;
+        return true;
     }
 
     @Override
