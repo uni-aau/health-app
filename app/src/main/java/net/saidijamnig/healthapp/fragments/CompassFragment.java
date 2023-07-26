@@ -1,9 +1,7 @@
 package net.saidijamnig.healthapp.fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,17 +18,16 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import net.saidijamnig.healthapp.Config;
 import net.saidijamnig.healthapp.R;
 import net.saidijamnig.healthapp.databinding.FragmentCompassBinding;
 import net.saidijamnig.healthapp.util.Compass;
+import net.saidijamnig.healthapp.util.PermissionHandler;
 
 import java.util.Locale;
 
@@ -40,7 +37,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     private ImageView compassImage;
     private Compass compass;
     private ImageView arrowView;
-    private TextView sotwLabel;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
@@ -66,7 +62,6 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
 
         compassImage = binding.imageWheel;
         arrowView = binding.imageWheel;
-        sotwLabel = binding.sotwLabel;
         setupCompass();
 
         orientationTextView = binding.orientationTextView;
@@ -76,12 +71,16 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         longitudeTextView = binding.longitudeTextView;
         brightnessTextView = binding.brightnessTextView;
 
-        initializeGuiWithErrorMessage(getString(R.string.waiting_for_data));
-
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+        initializeLocationTextViewsWithErrorMessage(getString(R.string.waiting_for_data));
+        if (checkCompassSensorAvailability())
+            initializeCompassTextViewsWithErrorMessage(getString(R.string.waiting_for_data));
+        else
+            initializeCompassTextViewsWithErrorMessage(getString(R.string.error_no_compass_sensor_available));
 
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -92,17 +91,15 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     private boolean checkForLocationPermission() {
-        // Check location permission
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-
+        if (!PermissionHandler.checkForRequiredGpsPermission(requireContext())) {
+            PermissionHandler.requestGpsPermission(requireActivity());
             return false;
         }
         return true;
+    }
+
+    private boolean checkCompassSensorAvailability() {
+        return accelerometer != null && magnetometer != null;
     }
 
     @Override
@@ -134,16 +131,20 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
             lightListener = null;
         }
 
-        sensorManager.unregisterListener(this, accelerometer);
-        sensorManager.unregisterListener(this, magnetometer);
+        if (checkCompassSensorAvailability()) {
+            sensorManager.unregisterListener(this, accelerometer);
+            sensorManager.unregisterListener(this, magnetometer);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+        if (checkCompassSensorAvailability()) {
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
     @Override
@@ -159,9 +160,12 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         compass.setListener(cl);
     }
 
-    private void initializeGuiWithErrorMessage(String errorMessage) {
+    private void initializeCompassTextViewsWithErrorMessage(String errorMessage) {
         orientationTextView.setText(getString(R.string.orientation, errorMessage));
         gpsOrientationTextView.setText(getString(R.string.gps_orientation, errorMessage));
+    }
+
+    private void initializeLocationTextViewsWithErrorMessage(String errorMessage) {
         altitudeTextView.setText(getString(R.string.altitude, errorMessage));
         latitudeTextView.setText(getString(R.string.latitude, errorMessage));
         longitudeTextView.setText(getString(R.string.longitude, errorMessage));
@@ -178,8 +182,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
         }
         if (gravity != null && geomagnetic != null) {
             float[] rotationMatrix = new float[9];
-            boolean success = SensorManager.getRotationMatrix(rotationMatrix,
-                    null, gravity, geomagnetic);
+            boolean success = SensorManager.getRotationMatrix(rotationMatrix, null, gravity, geomagnetic);
             if (success) {
                 float[] orientation = new float[3];
                 SensorManager.getOrientation(rotationMatrix, orientation);
@@ -256,10 +259,10 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                 );
             } else {
                 Log.e(TAG, "Error requesting location - Not enabled");
-                initializeGuiWithErrorMessage(getString(R.string.error_no_location_enabled));
+                initializeLocationTextViewsWithErrorMessage(getString(R.string.error_no_location_enabled));
             }
         } else {
-            initializeGuiWithErrorMessage(getString(R.string.compass_location_not_granted));
+            initializeLocationTextViewsWithErrorMessage(getString(R.string.compass_location_not_granted));
         }
     }
 
