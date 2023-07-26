@@ -2,6 +2,7 @@ package net.saidijamnig.healthapp;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         binding.bottomNavigationView.setSelectedItemId(DEFAULT_SELECTED_ITEM_ID); // start position
         binding.floatingPoint.setOnClickListener(view -> handleFloatingPointClick());
+
+        // Disables placeholder click in the middle
+        MenuItem disabledMenuItem = binding.bottomNavigationView.getMenu().findItem(R.id.placeholder);
+        disabledMenuItem.setEnabled(false);
 
         // Restores old fragment when e.g. layout switched to darkmode
         if (savedInstanceState != null) {
