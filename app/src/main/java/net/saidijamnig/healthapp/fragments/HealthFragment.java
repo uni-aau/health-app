@@ -308,19 +308,11 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
         popupBinding.buttonCancelCalorieAmountInput.setOnClickListener(view1 -> alertDialog.dismiss());
         popupBinding.buttonAddCalorieAmount.setOnClickListener(view1 -> {
-            String caloriesInputText = caloriesInput.getText().toString();
-            if(checkInputValidity(caloriesInputText)) {
-                caloriesAmount += Integer.parseInt(caloriesInputText);
-                updateCaloriesAmountText();
-            }
+            handleCalorieInput(caloriesInput.getText().toString(), false);
             alertDialog.dismiss();
         });
         popupBinding.buttonReplaceCalorieAmount.setOnClickListener(view1 -> {
-            String caloriesInputText = caloriesInput.getText().toString();
-            if(checkInputValidity(caloriesInputText)) {
-                caloriesAmount = Integer.parseInt(caloriesInputText);
-                updateCaloriesAmountText();
-            }
+            handleCalorieInput(caloriesInput.getText().toString(), true);
             alertDialog.dismiss();
         });
 
@@ -330,10 +322,25 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         alertDialog.show();
     }
 
-    private boolean checkInputValidity(String caloriesInputText) {
+    private void handleCalorieInput(String caloriesInputText, boolean isReplaceMode) {
+        if (checkInputValidity(caloriesInputText, isReplaceMode)) {
+            int calories = Integer.parseInt(caloriesInputText);
+            if (!isReplaceMode) caloriesAmount += calories;
+            else caloriesAmount = calories;
+
+            updateCaloriesAmountText();
+        }
+    }
+
+    private boolean checkInputValidity(String caloriesInputText, boolean isReplaceMode) {
         if (!caloriesInputText.isEmpty()) {
             if (caloriesInputText.length() > Config.MAX_CALORIES_LENGTH) {
                 Toast.makeText(requireContext(), getString(R.string.error_too_much_calories), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            int newCaloriesAmount = Integer.parseInt(caloriesInputText) + caloriesAmount;
+            if(!isReplaceMode && newCaloriesAmount > Config.MAX_CALORIES_AMOUNT) {
+                Toast.makeText(requireContext(), getString(R.string.error_too_much_calories_added), Toast.LENGTH_SHORT).show();
                 return false;
             }
         } else return false;

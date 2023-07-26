@@ -35,6 +35,7 @@ public class Config {
     public static final boolean GPS_NOTIFICATION_IS_ONGOING = true;
     public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
     public static final int MAX_CALORIES_LENGTH = 6;
+    public static final int MAX_CALORIES_AMOUNT = 100000000;
 
     // Compass tracking settings
     public static final int COMPASS_TRACKING_UPDATE_INTERVAL = 0; // in ms

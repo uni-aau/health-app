@@ -71,6 +71,7 @@
     <string name="text_wating_for_data">Getting data…</string>
     <string name ="steps_count_with_no_suffix">Steps: %s</string>
     <string name="error_too_much_calories">Error, too much calories inserted!</string>
+    <string name="error_too_much_calories_added">Error, calories input would exceed max. calories amount!</string>
     <string name="ok_button_text">OK</string>
     <string name="enter_calories_text">Enter Calories</string>
     <string name="cancel_button_text">Cancel</string>
