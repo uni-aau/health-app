@@ -67,7 +67,8 @@
     <string name="text_pulse">Pulse: %sbpm</string>
     <string name="text_pulse_without_suffix">Pulse: %s</string>
     <string name="text_food">Food: %skcal</string>
-    <string name="text_no_permission">No perm!</string>
+    <string name="text_no_permission">No permission granted!</string>
+    <string name="text_no_body_sensor_available">No body sensor available!</string>
     <string name="text_wating_for_data">Getting data…</string>
     <string name ="steps_count_with_no_suffix">Steps: %s</string>
     <string name="error_too_much_calories">Error, too much calories inserted!</string>
@@ -78,7 +79,9 @@
     <string name="text_history_currently_no_entries_saved">There are currently no entries saved!\nStart a new track to display it here :)</string>
     <string name="text_popup_enter_calories_title">Enter or add your calorie amount</string>
     <string name="text_button_add">Add</string>
-    <string name="text_button_replace">Replace</string>
+    <string name="text_button_replace">Set</string>
+    <string name="text_pulse_subtitle_hint">Click and hold finger to sensor</string>
+    <string name="text_no_step_sensor_available">No step sensor available!</string>
 
     <plurals name="text_water_glasses">
         <item quantity="one">Water: %s glass</item>

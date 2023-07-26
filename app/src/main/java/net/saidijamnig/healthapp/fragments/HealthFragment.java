@@ -8,6 +8,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import net.saidijamnig.healthapp.Config;
@@ -43,6 +46,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private TextView pulseTextView;
     private TextView waterTextView;
     private TextView caloriesAmountTextView;
+    private TextView pulseTextViewSubtitle;
     private int stepsCount = 0;
     private int waterCount = 0;
     private int caloriesAmount = 0;
@@ -52,6 +56,8 @@ public class HealthFragment extends Fragment implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor stepSensor;
     private Sensor heartRateSensor;
+    private int errorTextColor;
+    private int generalTextColor;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +72,10 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         pulseTextView = binding.textViewPulse;
         waterTextView = binding.textViewWater;
         caloriesAmountTextView = binding.textViewCalories;
+        pulseTextViewSubtitle = binding.textViewPulseSubtitle;
+
+        errorTextColor = ContextCompat.getColor(requireContext(), R.color.text_error_message);
+        generalTextColor = ContextCompat.getColor(requireContext(), R.color.health_block_text);
 
         Button pulseButton = binding.pulseButton;
         Button waterPlusButton = binding.waterPlusButton;
@@ -81,7 +91,11 @@ public class HealthFragment extends Fragment implements SensorEventListener {
 
         initializeDatabase();
         loadSavedData();
-        initializeStepCount();
+
+
+        // To determine if permission was granted or not (only very small delay)
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::initializeStepCount, 10);
 
         return view;
     }
@@ -139,11 +153,14 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         if (PermissionHandler.checkForActivityRecognitionPermission(requireContext())) {
             stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             if (stepSensor != null) {
+                stepsTextView.setTextColor(generalTextColor);
                 sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
             } else {
-                stepsTextView.setText(getString(R.string.steps_count_with_no_suffix, "No sensor available!"));
+                stepsTextView.setTextColor(errorTextColor);
+                stepsTextView.setText(getString(R.string.steps_count_with_no_suffix, getString(R.string.text_no_step_sensor_available)));
             }
         } else {
+            stepsTextView.setTextColor(errorTextColor);
             stepsTextView.setText(getString(R.string.steps_count_with_no_suffix, getString(R.string.text_no_permission)));
             PermissionHandler.requestActivityRecognitionPermission(requireActivity());
         }
@@ -251,17 +268,17 @@ public class HealthFragment extends Fragment implements SensorEventListener {
             heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
             if (heartRateSensor != null) {
                 pulseTextView.setText(getString(R.string.text_pulse_without_suffix, getString(R.string.text_wating_for_data)));
+                pulseTextViewSubtitle.setText(getString(R.string.text_pulse_subtitle_hint));
+                pulseTextViewSubtitle.setTextColor(generalTextColor);
                 sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("Sensor not available");
-                builder.setMessage("Heart rate sensor is not available on this device.");
-                builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-                builder.show();
+                pulseTextViewSubtitle.setText(getString(R.string.text_no_body_sensor_available));
+                pulseTextViewSubtitle.setTextColor(errorTextColor);
             }
         } else {
-            pulseTextView.setText(getString(R.string.text_pulse_without_suffix, getString(R.string.text_no_permission)));
+            pulseTextViewSubtitle.setText(getString(R.string.text_no_permission));
+            pulseTextViewSubtitle.setTextColor(errorTextColor);
             PermissionHandler.requestBodySensorPermission(requireActivity());
         }
     }

@@ -14,4 +14,5 @@
     <color name="health_block">#c1f7b7</color>
     <color name="button_background">#0f9d58</color>
     <color name="button_background_disabled">#e4dfe3</color>
+    <color name="text_error_message">#D80505</color>
 </resources>
