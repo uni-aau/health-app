@@ -168,17 +168,29 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
 
     private void initializeTrackingProcess() {
         if (LocationTrackingService.isActive) {
-            startTrackingButton.setEnabled(false);
-            stopTrackingButton.setEnabled(true);
+            enableStopButtonAndDisableStartButton();
             isTracking = true;
 
             initializeCurrentTrackingValues();
         } else {
-            stopTrackingButton.setEnabled(false);
-            startTrackingButton.setEnabled(true);
+            disableStopButtonAndEnableStartButton();
             initializeStartValues();
             isTracking = false;
         }
+    }
+
+    private void enableStopButtonAndDisableStartButton() {
+        startTrackingButton.setEnabled(false);
+        startTrackingButton.setBackgroundResource(R.drawable.general_button_layout_disabled);
+        stopTrackingButton.setEnabled(true);
+        stopTrackingButton.setBackgroundResource(R.drawable.general_button_layout);
+    }
+
+    private void disableStopButtonAndEnableStartButton() {
+        startTrackingButton.setEnabled(true);
+        startTrackingButton.setBackgroundResource(R.drawable.general_button_layout);
+        stopTrackingButton.setEnabled(false);
+        stopTrackingButton.setBackgroundResource(R.drawable.general_button_layout_disabled);
     }
 
     @Override
@@ -242,8 +254,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             requireActivity().startForegroundService(locationService); // used to utilize gps in background
 
             isTracking = true;
-            stopTrackingButton.setEnabled(true);
-            startTrackingButton.setEnabled(false);
+            enableStopButtonAndDisableStartButton();
         }
     }
 
@@ -275,8 +286,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             saveTrackToDatabase();
             resetTrackingVariables();
 
-            stopTrackingButton.setEnabled(false);
-            startTrackingButton.setEnabled(true);
+            disableStopButtonAndEnableStartButton();
         }
     }
 
