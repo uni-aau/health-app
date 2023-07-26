@@ -267,7 +267,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
         if (PermissionHandler.checkForBodySensorPermission(requireContext())) {
             heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
             if (heartRateSensor != null) {
-                pulseTextView.setText(getString(R.string.text_pulse_without_suffix, getString(R.string.text_wating_for_data)));
+                pulseTextView.setText(getString(R.string.text_pulse_without_suffix, getString(R.string.text_waiting_for_data)));
                 pulseTextViewSubtitle.setText(getString(R.string.text_pulse_subtitle_hint));
                 pulseTextViewSubtitle.setTextColor(generalTextColor);
                 sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);

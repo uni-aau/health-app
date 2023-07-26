@@ -22,7 +22,7 @@
             android:layout_below="@id/titleTextView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="@string/use_the_compass_to_track_your_orientation"
+            android:text="@string/compass_subtitle"
             android:textSize="16sp" />
 
     <ImageView
@@ -57,7 +57,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="320dp"
             android:layout_marginEnd="18dp"
-            android:text="@string/the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge"
+            android:text="@string/compass_quote"
             android:textSize="14sp"
             android:gravity="center" />
 

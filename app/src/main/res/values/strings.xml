@@ -1,11 +1,22 @@
 <resources>
     <string name="app_name">Health App</string>
-    <string name="compass_image">Kompassbild</string>
-    <string name="action_settings">Settings</string>
 
+    <string name="logo">Health App</string>
+    <string name="health">Health</string>
+    <string name="gps">GPS</string>
+    <string name="history">History</string>
+    <string name="compass">Compass</string>
+    <string name="text_logo_description">Logo</string>
+    <string name="text_button_no">No</string>
+    <string name="text_button_yes">Yes</string>
+    <string name="text_button_cancel">Cancel</string>
+    <string name="text_button_add">Add</string>
+    <string name="text_button_replace">Set</string>
+    <string name="text_no_permission">No permission granted!</string>
+
+    <!-- Compass -->
     <string name="compass_wheel">Compass Picture</string>
     <string name="compass_pointer">Compass Pointer</string>
-
     <string name="orientation">Orientation: %s</string>
     <string name="orientation_with_suffix">Orientation: %s%s</string>
     <string name="gps_orientation">GPS Orientation: %s</string>
@@ -17,8 +28,6 @@
     <string name="waiting_for_data">Waiting for data…</string>
     <string name="orientation_suffix">°</string>
     <string name="altitude_suffix">m</string>
-    <string name="compass_location_not_granted">"Permission not granted!"</string>
-
     <string name="direction_north">North</string>
     <string name="direction_east">East</string>
     <string name="direction_south">South</string>
@@ -27,59 +36,28 @@
     <string name="direction_northwest">North West</string>
     <string name="direction_southeast">South East</string>
     <string name="direction_southwest">South West</string>
-    <string name="logo">Health App</string>
-    <string name="health">Health</string>
-    <string name="gps">GPS</string>
-    <string name="history">History</string>
-    <string name="compass">Compass</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="compass_subtitle">Use the compass to track your orientation</string>
+    <string name="compass_quote">The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge</string>
+    <string name="lightsensor_no_sensor_error">No light sensor available!</string>
+    <string name="error_no_location_enabled">No location enabled!</string>
+    <string name="error_no_compass_sensor_available">No compass sensor available!</string>
+    <string name="text_waiting_for_data">Getting data…</string>
+
+    <!-- Health -->
     <string name="your_health">Your Health</string>
     <string name="stay_active_and_healthy">Stay active and healthy!\n(Resets at midnight)</string>
     <string name="kcal_input">Input</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
-    <string name="use_the_compass_to_track_your_orientation">Use the compass to track your orientation.</string>
-    <string name="the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge">The compass rose is nothing but a star with an infinite number of rays pointing in all directions. - Joan D. Vinge</string>
-    <string name="text_gps_distance">%s\nDistance (km)</string>
-    <string name="text_gps_calories">%s\nCalories (kcal)</string>
-    <string name="text_duration">Dauer</string>
-    <string name="text_gps_duration_status">%s : %s : %s</string>
-    <string name="text_history_distance">Distanz: %s m</string>
-    <string name="text_history_type">Typ: %s</string>
-    <string name="text_history_date">%s</string>
-    <string name="text_history_duration">Dauer: %s : %s : %s</string>
-    <string name="text_history_activity_title_noplural">Activity History (Hold to delete entry)</string>
-
-    <string name="text_button_no">No</string>
-    <string name="text_button_yes">Yes</string>
-    <string name="text_popup_delete_question">Do you really want to delete entry id %s?</string>
-    <string name="text_logo_description">Logo</string>
-    <string name="gps_service_notification_title">GPS Tracking Running!</string>
-    <string name="gps_service_notification_description">A gps track is running in background!</string>
-    <string name="text_button_print_tracks">Print Tracks</string>
-    <string name="text_button_stop_tracking">Stop</string>
-    <string name="text_button_start_tracking">Start</string>
-    <string name="text_description_map">Map Screenshot</string>
-    <string name="lightsensor_no_sensor_error">No light sensor available!</string>
-    <string name="error_no_location_enabled">No location enabled!</string>
     <string name="text_button_measure">Measure</string>
-<string name="error_no_compass_sensor_available">No compass sensor available!</string>
     <string name="text_pulse">Pulse: %sbpm</string>
     <string name="text_pulse_without_suffix">Pulse: %s</string>
-    <string name="text_food">Food: %skcal</string>
-    <string name="text_no_permission">No permission granted!</string>
+    <string name="text_food">Food: %s kcal</string>
     <string name="text_no_body_sensor_available">No body sensor available!</string>
-    <string name="text_wating_for_data">Getting data…</string>
-    <string name ="steps_count_with_no_suffix">Steps: %s</string>
+    <string name="steps_count_with_no_suffix">Steps: %s</string>
     <string name="error_too_much_calories">Error, too much calories inserted!</string>
     <string name="error_too_much_calories_added">Error, calories input would exceed max. calories amount!</string>
-    <string name="ok_button_text">OK</string>
-    <string name="enter_calories_text">Enter Calories</string>
-    <string name="cancel_button_text">Cancel</string>
-    <string name="text_history_currently_no_entries_saved">There are currently no entries saved!\nStart a new track to display it here :)</string>
     <string name="text_popup_enter_calories_title">Enter or add your calorie amount</string>
-    <string name="text_button_add">Add</string>
-    <string name="text_button_replace">Set</string>
     <string name="text_pulse_subtitle_hint">Click &amp; hold finger to sensor</string>
     <string name="text_no_step_sensor_available">No step sensor available!</string>
 
@@ -88,13 +66,31 @@
         <item quantity="other">Water: %s glasses</item>
     </plurals>
 
-        <plurals name="text_steps">
-            <item quantity="one">Steps: %d step</item>
-            <item quantity="other">Steps: %d steps</item>
-        </plurals>
+    <plurals name="text_steps">
+        <item quantity="one">Steps: %d step</item>
+        <item quantity="other">Steps: %d steps</item>
+    </plurals>
 
     <plurals name="text_history_activity_title">
         <item quantity="one">Activity History (%d entry)</item>
         <item quantity="other">Activity History (%d entries)</item>
     </plurals>
+
+    <!-- GPS -->
+    <string name="text_gps_distance">%s\nDistance (m)</string>
+    <string name="text_gps_calories">%s\nCalories (kcal)</string>
+    <string name="text_duration">Duration</string>
+    <string name="text_gps_duration_status">%s : %s : %s</string>
+    <string name="text_history_distance">Distance: %s m</string>
+    <string name="text_history_type">Typ: %s</string>
+    <string name="text_history_date">%s</string>
+    <string name="text_history_duration">Duration: %s : %s : %s</string>
+    <string name="text_history_activity_title_no_plural">Activity History (Hold to delete entry)</string>
+    <string name="text_popup_delete_question">Do you really want to delete entry id %s?</string>
+    <string name="gps_service_notification_title">GPS Tracking Running!</string>
+    <string name="gps_service_notification_description">A gps track is running in background!</string>
+    <string name="text_button_stop_tracking">Stop</string>
+    <string name="text_button_start_tracking">Start</string>
+    <string name="text_description_map">Map Screenshot</string>
+    <string name="text_history_currently_no_entries_saved">There are currently no entries saved!\nStart a new track to display it here :)</string>
 </resources>

@@ -8,7 +8,7 @@
         android:id="@+id/history_constraint_layout">
 
     <TextView
-            android:text="@string/text_history_activity_title_noplural"
+            android:text="@string/text_history_activity_title_no_plural"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

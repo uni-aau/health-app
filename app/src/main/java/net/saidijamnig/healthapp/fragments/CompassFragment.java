@@ -259,7 +259,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
                 initializeLocationTextViewsWithErrorMessage(getString(R.string.error_no_location_enabled));
             }
         } else {
-            initializeLocationTextViewsWithErrorMessage(getString(R.string.compass_location_not_granted));
+            initializeLocationTextViewsWithErrorMessage(getString(R.string.text_no_permission));
         }
     }
 
