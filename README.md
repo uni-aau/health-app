@@ -19,7 +19,13 @@ The HealthApp is a comprehensive health and fitness application that empowers us
 - **<u>Activity History</u>**
   - Provides a comprehensive display of saved activity tracks, including corresponding map screenshots and specific data.
   - Possibility to delete tracks completely by holding on an entry.
-  
+- **Data Persistency** - Implements data handling through a robust backend Room database.
+- **Code Quality** - Ensures high code quality standards with the integration of Sonarcloud to measure code quality metrics.
+- **Sensors** - Utilizes a variety of sensors, such as Accelerometer and MagneticField Sensor, to enhance application functionality.
+- **Supports Internationalization** - All locales (also Toasts) are translatable.
+- **Uses ViewBinding for improved performance**
+- **Supports Darkmode**
+
 <p align="center">
   <img src="/assets/health_2.png" alt="Health Page">
   <img src="/assets/gps_2.png" alt="GPS Tracking">
@@ -27,13 +33,6 @@ The HealthApp is a comprehensive health and fitness application that empowers us
   <img src="/assets/compass_2.png" alt="Compass">
   <img src="/assets/history_2.png" alt="Track History">
 </p>
-
-- **Data Persistency** - Implements data handling through a robust backend Room database.
-- **Code Quality** - Ensures high code quality standards with the integration of Sonarcloud to measure code quality metrics.
-- **Sensors** - Utilizes a variety of sensors, such as Accelerometer and MagneticField Sensor, to enhance application functionality.
-- **Supports Internationalization** - All locales (also Toasts) are translatable.
-- **Uses ViewBinding for improved performance**
-- **Supports Darkmode**
 
 ## Getting Started
 ### Dependencies
