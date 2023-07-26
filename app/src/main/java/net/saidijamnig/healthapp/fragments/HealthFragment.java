@@ -356,7 +356,7 @@ public class HealthFragment extends Fragment implements SensorEventListener {
                 return false;
             }
             int newCaloriesAmount = Integer.parseInt(caloriesInputText) + caloriesAmount;
-            if(!isReplaceMode && newCaloriesAmount > Config.MAX_CALORIES_AMOUNT) {
+            if (!isReplaceMode && newCaloriesAmount > Config.MAX_CALORIES_AMOUNT) {
                 Toast.makeText(requireContext(), getString(R.string.error_too_much_calories_added), Toast.LENGTH_SHORT).show();
                 return false;
             }
