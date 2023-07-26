@@ -40,7 +40,6 @@ public class LocationTrackingService extends Service {
     public static boolean isActive = false;
     public static double totalDistance = 0.0;
     public static int elapsedDurationTimeInMilliSeconds = 0;
-    private int totalCalories = 0;
     private CountDownTimer timer;
     private Handler handler;
     private Location previousLocation;
@@ -208,7 +207,6 @@ public class LocationTrackingService extends Service {
     private void resetTrackingVariables() {
         previousLocation = null;
         totalDistance = 0.0;
-        totalCalories = 0;
     }
 
 
