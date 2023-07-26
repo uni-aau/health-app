@@ -427,21 +427,6 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         return PermissionHandler.checkForRequiredGpsPermission(requireContext());
     }
 
-    // TODO does not work
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionHandler.REQUEST_LOCATION_PERMISSION) {
-            if (PermissionHandler.checkForRequiredGpsPermission(requireContext())) {
-                Log.d(TAG, "Fetching new location (permission granted)");
-                fetchLocationAndUpdateMap();
-            } else {
-                // Handle the case when the permissions are not granted.
-                Toast.makeText(requireContext(), "You need to grant permission to access location!2", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     /**
      * Sets the start values for the GPS TextViews
      * Formats duration (to hours, minutes & seconds)

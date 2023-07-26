@@ -71,14 +71,8 @@
         <item quantity="other">Steps: %d steps</item>
     </plurals>
 
-    <plurals name="text_history_activity_title">
-        <item quantity="one">Activity History (%d entry)</item>
-        <item quantity="other">Activity History (%d entries)</item>
-    </plurals>
-
     <!-- GPS -->
     <string name="text_gps_distance">%s\nDistance (m)</string>
-    <string name="text_gps_calories">%s\nCalories (kcal)</string>
     <string name="text_duration">Duration</string>
     <string name="text_gps_duration_status">%s : %s : %s</string>
     <string name="text_history_distance">Distance: %s m</string>
@@ -93,4 +87,5 @@
     <string name="text_button_start_tracking">Start</string>
     <string name="text_description_map">Map Screenshot</string>
     <string name="text_history_currently_no_entries_saved">There are currently no entries saved!\nStart a new track to display it here :)</string>
+    <string name="text_floating_point">Floating Point</string>
 </resources>

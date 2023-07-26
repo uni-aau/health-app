@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/bottomNavigationView"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             app:menu="@menu/bottom_nav"
             android:background="@drawable/transparent_background"
 
@@ -33,7 +33,7 @@
         android:src="@drawable/logo"
         app:layout_anchor="@id/bottomAppBar"
 
-        />
+            android:contentDescription="@string/text_floating_point" />
 
     <FrameLayout
             android:layout_width="match_parent"
