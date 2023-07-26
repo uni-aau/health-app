@@ -58,7 +58,8 @@
             android:layout_marginTop="320dp"
             android:layout_marginEnd="18dp"
             android:text="@string/the_compass_rose_is_nothing_but_a_star_with_an_infinite_number_of_rays_pointing_in_all_directions_joan_d_vinge"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:gravity="center" />
 
     <TextView
             android:id="@+id/sotw_label"
