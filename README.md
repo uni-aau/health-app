@@ -21,10 +21,11 @@ The HealthApp is a comprehensive health and fitness application that empowers us
   - Possibility to delete tracks completely by holding on an entry.
   
 <p align="center">
-  <img src="/assets/health.png" alt="Health Page">
-  <img src="/assets/gps.png" alt="GPS Tracking">
-  <img src="/assets/compass.png" alt="Compass">
-  <img src="/assets/history.png" alt="Track History">
+  <img src="/assets/health_2.png" alt="Health Page">
+  <img src="/assets/gps_2.png" alt="GPS Tracking">
+  <br>
+  <img src="/assets/compass_2.png" alt="Compass">
+  <img src="/assets/history_2.png" alt="Track History">
 </p>
 
 - **Data Persistency** - Implements data handling through a robust backend Room database.
