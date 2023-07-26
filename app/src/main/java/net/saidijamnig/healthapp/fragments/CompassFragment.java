@@ -33,7 +33,6 @@ import java.util.Locale;
 
 public class CompassFragment extends Fragment implements SensorEventListener, LocationListener {
     private static final String TAG = "CompassFragment";
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
     private ImageView compassImage;
     private Compass compass;
     private ImageView arrowView;
@@ -241,9 +240,7 @@ public class CompassFragment extends Fragment implements SensorEventListener, Lo
     }
 
     private Compass.CompassListener getCompassListener() {
-        return azimuth -> requireActivity().runOnUiThread(() -> {
-            adjustArrow(azimuth);
-        });
+        return azimuth -> requireActivity().runOnUiThread(() -> adjustArrow(azimuth));
     }
 
     @SuppressLint("MissingPermission")

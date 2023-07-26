@@ -79,7 +79,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:text="@string/gps_orientation"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
     <TextView
@@ -91,7 +91,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="52dp"
             android:text="@string/orientation"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
     <TextView
@@ -103,7 +103,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:text="@string/latitude"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
     <TextView
@@ -115,7 +115,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:text="@string/longitude"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
     <TextView
@@ -127,7 +127,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:text="@string/brightness"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
     <TextView
@@ -139,7 +139,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:text="@string/altitude"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
 </RelativeLayout>
