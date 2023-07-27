@@ -88,4 +88,8 @@
     <string name="text_description_map">Map Screenshot</string>
     <string name="text_history_currently_no_entries_saved">There are currently no entries saved!\nStart a new track to display it here :)</string>
     <string name="text_floating_point">Floating Point</string>
+    <string name="text_error_fetching_location">Failed to get current location</string>
+    <string name="text_error_no_internet_or_gps">Error, please enable your GPS and/or Internet connection and try again!</string>
+    <string name="text_error_no_location_found">Error, no location was found!</string>
+    <string name="text_error_no_permission">You need to grant permission to access location!</string>
 </resources>

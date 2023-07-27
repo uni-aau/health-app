@@ -265,12 +265,12 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
         boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if (!isGpsEnabled || !isNetworkEnabled) {
-            Toast.makeText(getActivity(), "Error, please enable your GPS and/or Internet Connection and try again!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.text_error_no_internet_or_gps), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!foundLocation) {
-            Toast.makeText(getActivity(), "Error, no location was found!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.text_error_no_location_found), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -387,7 +387,7 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
             fetchLocationAndUpdateMap();
         } else {
             Log.e("TAG", "Error resolving permissions for onMapReady - Not granted");
-            Toast.makeText(requireContext(), "You need to grant permission to access location!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.text_error_no_permission), Toast.LENGTH_SHORT).show();
             PermissionHandler.requestGpsPermission(requireActivity());
         }
     }

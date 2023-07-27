@@ -172,7 +172,7 @@ public class LocationTrackingService extends Service {
                         }
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to get current location", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(this, getString(R.string.text_error_fetching_location), Toast.LENGTH_SHORT).show());
         handler.postDelayed(this::trackLocation, Config.MAP_UPDATE_INTERVAL);
     }
 
