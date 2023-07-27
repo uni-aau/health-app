@@ -35,7 +35,7 @@
             android:layout_marginTop="20dp" />
 
     <Spinner
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="32dp"
             android:id="@+id/gps_spinner_type"
             app:layout_constraintStart_toEndOf="@+id/gps_textview_distance"
