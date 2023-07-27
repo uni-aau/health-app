@@ -215,20 +215,21 @@ public class GpsFragment extends Fragment implements OnMapReadyCallback {
      */
     private void handleLocationUpdates(boolean isInitializationProcess) {
         setGpsTrackTextViews();
+        if(points.size() != 0) {
+            LatLng latLng = points.get(points.size() - 1);
+            Log.d(TAG, "LatLng = " + latLng + " distance = " + totalDistance);
 
-        LatLng latLng = points.get(points.size() - 1);
-        Log.d(TAG, "LatLng = " + latLng + " distance = " + totalDistance);
-
-        mapFragment.getMapAsync(map -> {
-            map.clear();
-            map.addPolyline(new PolylineOptions()
-                    .width(Config.MAP_LINE_WIDTH)
-                    .color(Config.MAP_LINE_COLOR)
-                    .addAll(points)
-            );
-            float currentSelectedZoom = isInitializationProcess ? Config.GENERAL_CAMERA_ZOOM : map.getCameraPosition().zoom;
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, currentSelectedZoom));
-        });
+            mapFragment.getMapAsync(map -> {
+                map.clear();
+                map.addPolyline(new PolylineOptions()
+                        .width(Config.MAP_LINE_WIDTH)
+                        .color(Config.MAP_LINE_COLOR)
+                        .addAll(points)
+                );
+                float currentSelectedZoom = isInitializationProcess ? Config.GENERAL_CAMERA_ZOOM : map.getCameraPosition().zoom;
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, currentSelectedZoom));
+            });
+        }
     }
 
     /**
