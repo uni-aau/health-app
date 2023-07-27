@@ -5,4 +5,5 @@
     <color name="white_in_white_mode">#000000</color>
     <color name="black_in_white_mode">#FFFFFF</color>
     <color name="popup_background_color">#242424</color>
+    <color name="health_block">#c0c0c0</color>
 </resources>
