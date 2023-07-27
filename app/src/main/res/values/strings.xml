@@ -50,7 +50,7 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="text_button_measure">Measure</string>
-    <string name="text_pulse">Pulse: %sbpm</string>
+    <string name="text_pulse">Pulse: %s bpm</string>
     <string name="text_pulse_without_suffix">Pulse: %s</string>
     <string name="text_food">Food: %s kcal</string>
     <string name="text_no_body_sensor_available">No body sensor available!</string>
