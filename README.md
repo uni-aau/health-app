@@ -13,6 +13,7 @@ The HealthApp is a comprehensive health and fitness application that empowers us
   - Integrated **map** that precisely tracks various **sport activities**.
   - **Records** the distance covered during the activity and **visualizes** it on the map.
   - **Saves** relevant activity **data** and a **screenshot** of the mapped route upon activity completion.
+  - Track also **runs** in **background** when app is closed but a track started
 - **<u>Compass</u>**
   - Utilizes a built-in **compass feature** to determine **direction** and **orientation**, proving particularly valuable for outdoor activities like hiking and route exploration.
   - Integration of a **light sensor** measurement enhances user experience.
