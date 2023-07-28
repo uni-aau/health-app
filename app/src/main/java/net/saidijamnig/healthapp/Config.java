@@ -17,8 +17,8 @@ public class Config {
     public static final String TRACK_NAME_FORMAT = "activity_track_%s";
 
     // Duration and distance format constants
-    public static final String DURATION_FORMAT = "%02d"; // Int
-    public static final String DISTANCE_FORMAT = "%.02f"; // Double
+    public static final String DURATION_FORMAT = "%02d"; // Int (2 digits and a leading 0 if necessary)
+    public static final String DISTANCE_FORMAT = "%.02f"; // Double (two digits after comma and a leading 0 if necessary)
 
     // Map-related constants
     public static final float GENERAL_CAMERA_ZOOM = 16f; // the higher the nearer
@@ -30,12 +30,15 @@ public class Config {
     public static final int MAP_LINE_COLOR = Color.BLUE;
     public static final int COMPRESS_QUALITY = 90;
     public static final Bitmap.CompressFormat COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
-    public static final long MAP_UPDATE_INTERVAL = 3000L;
+    public static final long MAP_UPDATE_INTERVAL = 1000L; // Determines the frequency of location updates
+    // Notification Builder
     public static final int GPS_NOTIFICATION_COLOR = Color.BLUE;
     public static final boolean GPS_NOTIFICATION_IS_ONGOING = true;
-    public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
+    // Health Page
     public static final int MAX_CALORIES_LENGTH = 6;
     public static final int MAX_CALORIES_AMOUNT = 100000000;
+
+    public static final int NAVBAR_HEIGHT = 200; // Used to determine padding for recycler view entry
 
     // Compass tracking settings
     public static final int COMPASS_TRACKING_UPDATE_INTERVAL = 0; // in ms

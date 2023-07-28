@@ -30,7 +30,7 @@ public class DatabaseHandler {
     public static synchronized AppDatabase getInitializeDatabase(Context context) {
         if (db == null) {
             db = Room.databaseBuilder(context, AppDatabase.class, "database")
-                    .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
+//                    .fallbackToDestructiveMigration() // Deletes whole database when version gets changed
                     .build();
         }
         return db;
